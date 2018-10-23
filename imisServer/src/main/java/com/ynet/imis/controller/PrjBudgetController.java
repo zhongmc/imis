@@ -4,7 +4,7 @@
 * @description 
 * @created Wed Oct 10 2018 10:38:38 GMT+0800 (中国标准时间)
 * @copyright YNET
-* @last-modified Fri Oct 19 2018 17:17:26 GMT+0800 (中国标准时间)
+* @last-modified Tue Oct 23 2018 19:01:18 GMT+0800 (中国标准时间)
 */
 
 package com.ynet.imis.controller;
@@ -78,6 +78,7 @@ public class PrjBudgetController {
         // prjBudget.setAvgManMonthCost(new BigDecimal(12000));
         prjBudget.setPrjNo(project.getPrjNo());
         prjBudget.setPrjName(project.getName());
+        prjBudget.setDepId(depId);
 
         while (calendar.before(endCal)) {
             int year = calendar.get(Calendar.YEAR);

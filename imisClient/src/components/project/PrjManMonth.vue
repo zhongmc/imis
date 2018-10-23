@@ -107,7 +107,7 @@ export default {
         _this.tableLoading = false;
         if (resp && resp.status == 200) {
           var data = resp.data;
-          _this.$message({ type: data.status, message: data.msg });
+          _this.$message({ type: data.status, message: data.message });
         }
       });
     },
