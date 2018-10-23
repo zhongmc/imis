@@ -33,7 +33,7 @@
 
   export default{
     mounted: function () {
-      this.loadMyDeps();
+      this.loadMyDeps();``
     },
 
     methods: {
