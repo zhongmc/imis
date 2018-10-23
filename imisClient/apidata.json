@@ -1,0 +1,509 @@
+{
+
+    "login":
+{"status":"success",
+    "msg":{"id":3,"name":"系统管理员","phone":"18568887789",
+        "telephone":"029-82881234","address":"深圳南山",
+        "enabled":true,"username":"admin","remark":null,
+        "roles":[{"id":6,"name":"ROLE_admin","nameZh":"系统管理员"}],
+        "userface":"../assets/userFace.jpg"}
+    },
+
+"sysmenu":
+[
+    {"id":2,"path":"/home","component":"pages/Home.vue","name":"员工资料","iconCls":"fa fa-user-circle-o",
+        "children":[
+            {"id":null,
+                "path":"/emp/basic","component":"components/emp/EmpBasic.vue",
+                "name":"基本资料","iconCls":null,
+                "children":[],"meta":{"keepAlive":false,"requireAuth":true}}],
+        "meta":{"keepAlive":false,"requireAuth":true}
+    },
+
+    {
+        "id":8, "path":"/home","component":"pages/Home.vue", "name":"客户管理","iconCls":"fa fa-address-card-o",
+        "children":[
+            {"id":null,"path":"/custom/basic","component":"components/custom/CustomMana.vue","name":"客户基础信息","iconCls":null,"children":[],"meta":{"keepAlive":false,"requireAuth":true}},
+            {"id":null,"path":"/custom/contactor","component":"components/custom/CustomContactor.vue","name":"客户干系人","iconCls":null,"children":[],"meta":{"keepAlive":false,"requireAuth":true}},
+            {"id":null,"path":"/custom/trace","component":"components/custom/CustomTrace.vue","name":"客户跟踪","iconCls":null,"children":[],"meta":{"keepAlive":false,"requireAuth":true}}
+        ],
+        "meta":{"keepAlive":false,"requireAuth":true}        
+    },
+
+
+    {
+        "id":7, "path":"/home","component":"pages/Home.vue", "name":"项目管理","iconCls":"fa fa-address-card-o",
+        "children":[
+            {"id":null,"path":"/prj/basic","component":"components/project/PrjBasic.vue","name":"项目基础信息","iconCls":null,"children":[],"meta":{"keepAlive":false,"requireAuth":true}},
+            {"id":null,"path":"/prj/budget/:id","component":"components/project/PrjBudget.vue","name":"项目预算", "iconCls":null,"children":[], "hidden":true, "meta":{"keepAlive":false,"requireAuth":true}},
+            {"id":null,"path":"/prj/chance","component":"components/project/PrjChance.vue","name":"项目机会","iconCls":null,"children":[], "meta":{"keepAlive":false,"requireAuth":true}}
+        ],
+        "meta":{"keepAlive":false,"requireAuth":true}        
+    },
+    
+    {
+        "id":8, "path":"/home","component":"pages/Home.vue", "name":"部门预算","iconCls":"fa fa-address-card-o",
+        "children":[
+            {"id":null,"path":"/budget/basic","component":"components/budget/BudgetBasic.vue","name":"部门预算","iconCls":null,"children":[],"meta":{"keepAlive":false,"requireAuth":true}},
+            {"id":null,"path":"/budget/collect","component":"components/budget/BudgetCollect.vue","name":"部门预算汇总","iconCls":null,"children":[],"meta":{"keepAlive":false,"requireAuth":true}}
+        ],
+        "meta":{"keepAlive":false,"requireAuth":true}        
+    },
+
+    {"id":3, "path":"/home","component":"pages/Home.vue", "name":"人事管理","iconCls":"fa fa-address-card-o",
+        "children":[
+            {"id":null,"path":"/per/ec","component":"PerEc","name":"员工奖惩","iconCls":null,"children":[],"meta":{"keepAlive":false,"requireAuth":true}},
+            {"id":null,"path":"/per/train","component":"PerTrain","name":"员工培训","iconCls":null,"children":[],"meta":{"keepAlive":false,"requireAuth":true}},
+            {"id":null,"path":"/per/salary","component":"PerSalary","name":"员工调薪","iconCls":null,"children":[],"meta":{"keepAlive":false,"requireAuth":true}},
+            {"id":null,"path":"/per/mv","component":"PerMv","name":"员工调动","iconCls":null,"children":[],"meta":{"keepAlive":false,"requireAuth":true}}],
+            "meta":{"keepAlive":false,"requireAuth":true}},
+    {"id":4,"path":"/home","component":"pages/Home.vue","name":"薪资管理","iconCls":"fa fa-money",
+        "children":[
+            {"id":null,"path":"/sal/sob","component":"SalSob","name":"工资账套管理","iconCls":null,"children":[],"meta":{"keepAlive":false,"requireAuth":true}},
+            {"id":null,"path":"/sal/sobcfg","component":"SalSobCfg","name":"员工账套设置","iconCls":null,"children":[],"meta":{"keepAlive":false,"requireAuth":true}},
+            {"id":null,"path":"/sal/table","component":"SalTable","name":"工资表管理","iconCls":null,"children":[],"meta":{"keepAlive":false,"requireAuth":true}},
+            {"id":null,"path":"/sal/month","component":"SalMonth","name":"月末处理","iconCls":null,"children":[],"meta":{"keepAlive":false,"requireAuth":true}},
+            {"id":null,"path":"/sal/search","component":"SalSearch","name":"工资表查询","iconCls":null,"children":[],"meta":{"keepAlive":false,"requireAuth":true}}],"meta":{"keepAlive":false,"requireAuth":true}},
+    {"id":5,"path":"/home","component":"pages/Home.vue","name":"统计管理","iconCls":"fa fa-bar-chart",
+        "children":[
+            {"id":null,"path":"/sta/all","component":"StaAll","name":"综合信息统计","iconCls":null,"children":[],"meta":{"keepAlive":false,"requireAuth":true}},
+            {"id":null,"path":"/sta/score","component":"StaScore","name":"员工积分统计","iconCls":null,"children":[],"meta":{"keepAlive":false,"requireAuth":true}},
+            {"id":null,"path":"/sta/pers","component":"StaPers","name":"人事信息统计","iconCls":null,"children":[],"meta":{"keepAlive":false,"requireAuth":true}},
+            {"id":null,"path":"/sta/record","component":"StaRecord","name":"人事记录统计","iconCls":null,"children":[],"meta":{"keepAlive":false,"requireAuth":true}}
+            ],
+        "meta":{"keepAlive":false,"requireAuth":true}
+    },
+    {"id":6,"path":"/home","component":"pages/Home.vue","name":"系统管理","iconCls":"fa fa-windows",
+        "children":[
+            {"id":null,"path":"/sys/basic", "component":"components/system/SysBasic.vue","name":"基础信息设置","iconCls":null,"children":[],"meta":{"keepAlive":false,"requireAuth":true}},
+            {"id":null,"path":"/sys/budget","component":"components/system/SysBudget.vue","name":"预算设置","iconCls":null,"children":[],"meta":{"keepAlive":false,"requireAuth":true}},
+            {"id":null,"path":"/sys/cfg","component":"SysCfg","name":"系统管理","iconCls":null,"children":[],"meta":{"keepAlive":false,"requireAuth":true}},
+            {"id":null,"path":"/sys/log","component":"SysLog","name":"操作日志管理","iconCls":null,"children":[],"meta":{"keepAlive":false,"requireAuth":true}},
+            {"id":null,"path":"/sys/hr","component":"SysHr","name":"操作员管理","iconCls":null,"children":[],"meta":{"keepAlive":false,"requireAuth":true}},
+            {"id":null,"path":"/sys/data","component":"SysData","name":"备份恢复数据库","iconCls":null,"children":[],"meta":{"keepAlive":false,"requireAuth":true}},
+            {"id":null,"path":"/sys/init","component":"SysInit","name":"初始化数据库","iconCls":null,"children":[],"meta":{"keepAlive":false,"requireAuth":true}}
+            ],
+            "meta":{"keepAlive":false,"requireAuth":true}
+    }
+],
+
+
+"sysmsgs":
+[{"id":77,"mid":18,"type":0,"hrid":3,"state":1,"msgContent":{"id":18,"message":"通知内容3","title":"通知标题3","createDate":1517631581000}},{"id":72,"mid":17,"type":0,"hrid":3,"state":1,"msgContent":{"id":17,"message":"通知内容2","title":"通知标题2","createDate":1517629957000}},{"id":67,"mid":16,"type":0,"hrid":3,"state":1,"msgContent":{"id":16,"message":"通知内容1","title":"通知标题1","createDate":1517629299000}},{"id":62,"mid":15,"type":0,"hrid":3,"state":1,"msgContent":{"id":15,"message":"3333333333333333333333","title":"22222222","createDate":1517579157000}},{"id":57,"mid":14,"type":0,"hrid":3,"state":1,"msgContent":{"id":14,"message":"11111111111111111","title":"2222222222","createDate":1517575579000}}],
+"info":
+{"entropy":-1891898050,"origins":["*:*"],"cookie_needed":true,"websocket":true},
+
+
+"myDeps":
+[
+    {"id":3, "name":"北部大区","parentId":1},
+    {"id":31, "name":"北一部","parentId":3 },
+    {"id":32, "name":"北二部","parentId":3 },
+    {"id":33, "name":"北三部","parentId":3 }
+],
+
+
+"budgetSettings":
+{
+    "bePrjBudget":true,
+    "beCommonBudget":true,
+    "budgetTypes":[{"id":1, "name":"部门管理", "desc":"备注"},{"id":2, "name":"部门售前", "desc":"备注"}, {"id":3, "name":"部门闲置", "desc":"备注"}],
+    "costGroups":[{"id":1, "name":"人工费用"},{"id":2, "name":"四项费用"}, {"id":3, "name":"福利费用"}, {"id":4, "name":"办工费用"}, {"id":5, "name":"公共费用"},{"id":6, "name":"其它"}],
+    "costItems":[
+        {"id":1, "name":"人数", "groupId":1, "beAmount":false, "amountFormula":null, "desc":"备注"},
+        {"id":2, "name":"人工成本-计提工资", "groupId":1, "beAmount":true, "amountFormula":null, "desc":"备注"},
+        {"id":3, "name":"社保公积金", "groupId":1, "beAmount":true, "amountFormula":"0.2*$2", "desc":"备注"},
+        {"id":4, "name":"午餐费", "groupId":1, "beAmount":true, "amountFormula":"264*$1", "desc":"备注"},
+        {"id":5, "name":"差旅-交通费", "groupId":2, "beAmount":true, "amountFormula":null, "desc":"备注"}
+    ]
+
+},
+
+"commBudgets":
+[
+    {"id":1, "departmentId":2,"budgetName":"购买软件", "amount":30000, "bgDate":1577808000000, "desc":"测试系统软件"},
+    {"id":2, "budgetName":"福利", "amount":60000,  "bgDate":1577808000000, "desc":"test"}
+],
+
+"prjBudgets":
+[
+    {
+        "prjId":1, "prjNo":"20180501-001", "bgYear":2018, "departmentId":1, "prjManCostAvg":15000, "prjName":"test prj", "costAmount":2300,
+        "amounts":[
+            {"amount":0, "costAmount":0, "manMonth":1, "realManMonth":4, "month":1}, {"amount":0, "costAmount":0, "manMonth":6, "month":2},{"amount":0, "costAmount":0, "manMonth":4, "realManMonth":4, "month":3}, {"amount":0, "costAmount":0, "manMonth":6, "month":4},
+            {"amount":0, "costAmount":0, "manMonth":4, "realManMonth":4, "month":5}, {"amount":0, "costAmount":0, "manMonth":6, "month":6},{"amount":0, "costAmount":0, "manMonth":4, "realManMonth":4, "month":7}, {"amount":0, "costAmount":0, "manMonth":6, "month":8},
+            {"amount":0, "costAmount":0, "manMonth":4, "realManMonth":4, "month":9}, {"amount":0, "costAmount":0, "manMonth":6, "month":10},{"amount":0, "costAmount":0, "manMonth":4, "realManMonth":4, "month":11}, {"amount":0, "costAmount":0, "manMonth":12, "month":12}
+        ]
+    },
+    {
+        "prjId":2, "prjNo":"20180101-001", "bgYear":2018, "departmentId":1, "prjManCostAvg":15000, "prjName":"test prj 2", "costAmount":4300,
+        "amounts":[
+            {"amount":1, "costAmount":0, "manMonth":1, "realManMonth":4, "month":1}, {"amount":0, "costAmount":0, "manMonth":6, "month":2},{"amount":0, "costAmount":0, "manMonth":4, "realManMonth":4, "month":3}, {"amount":0, "costAmount":0, "manMonth":6, "month":4},
+            {"amount":5, "costAmount":0, "manMonth":5, "realManMonth":4, "month":5}, {"amount":0, "costAmount":0, "manMonth":6, "month":6},{"amount":0, "costAmount":0, "manMonth":4, "realManMonth":4, "month":7}, {"amount":0, "costAmount":0, "manMonth":6, "month":8},
+            {"amount":9, "costAmount":0, "manMonth":4, "realManMonth":4, "month":9}, {"amount":0, "costAmount":0, "manMonth":6, "month":10},{"amount":0, "costAmount":0, "manMonth":4, "realManMonth":4, "month":11}, {"amount":12, "costAmount":0, "manMonth":12, "month":12}
+        ]
+    }
+
+],
+
+"depBudgetTable":
+[
+    {
+        "id":1, 
+        "bgYear":2018,
+        "departmentId":1,
+        "label":"主营业务收入", 
+        "amounts":[{"amount":1, "costAmount":2, "month":1},{"amount":1, "costAmount":2, "month":2},{"amount":1, "costAmount":2, "month":4},{"amount":1, "costAmount":2, "month":5},
+                    {"amount":1, "costAmount":2, "month":5},{"amount":1, "costAmount":2, "month":6},{"amount":1, "costAmount":2, "month":7},{"amount":1, "costAmount":2, "month":8},
+                    {"amount":1, "costAmount":2},{"amount":1, "costAmount":2},{"amount":1, "costAmount":2},{"amount":1, "costAmount":2}]
+    },
+    
+    {
+        "id":2, 
+        "bgYear":2018,
+        "departmentId":1,
+        "label":"主营业务成本", 
+        "amounts":[{"amount":15000.0, "costAmount":2},{"amount":1, "costAmount":2},{"amount":1, "costAmount":2},{"amount":1, "costAmount":2},
+            {"amount":12000, "costAmount":2},{"amount":1, "costAmount":2},{"amount":1, "costAmount":2},{"amount":1, "costAmount":2},
+            {"amount":16000, "costAmount":2},{"amount":1, "costAmount":2},{"amount":1, "costAmount":2},{"amount":1, "costAmount":2}]
+    },
+
+    {
+        "id":3, 
+        "bgYear":2018,
+        "departmentId":1,
+        "label":"经营费用", 
+        "amounts":[{"amount":3000.0, "costAmount":2},{"amount":1, "costAmount":2},{"amount":1, "costAmount":2},{"amount":1, "costAmount":2},
+            {"amount":3000, "costAmount":2},{"amount":1, "costAmount":2},{"amount":1, "costAmount":2},{"amount":1, "costAmount":2},
+            {"amount":5000, "costAmount":2},{"amount":1, "costAmount":2},{"amount":1, "costAmount":2},{"amount":1, "costAmount":2}]
+    },
+    {
+        "id":4, 
+        "bgYear":2018,
+        "departmentId":1,
+        "refItem":1, "costGroupId":1, "costItemId":4,
+        "amounts":[{"amount":264.0, "costAmount":2},{"amount":1, "costAmount":2},{"amount":1, "costAmount":2},{"amount":1, "costAmount":2},
+            {"amount":3000, "costAmount":2},{"amount":1, "costAmount":2},{"amount":1, "costAmount":2},{"amount":1, "costAmount":2},
+            {"amount":5000, "costAmount":2},{"amount":1, "costAmount":2},{"amount":1, "costAmount":2},{"amount":1, "costAmount":2}]
+    },
+
+    {
+        "id":5, 
+        "bgYear":2018,
+        "departmentId":1,
+        "refItem":-1, "costGroupId":2, "costItemId":5,
+        "amounts":[{"amount":3000.0, "costAmount":2},{"amount":1, "costAmount":2},{"amount":1, "costAmount":2},{"amount":1, "costAmount":2},
+            {"amount":3000, "costAmount":2},{"amount":1, "costAmount":2},{"amount":1, "costAmount":2},{"amount":1, "costAmount":2},
+            {"amount":5000, "costAmount":2},{"amount":1, "costAmount":2},{"amount":1, "costAmount":2},{"amount":1, "costAmount":2}]
+    }
+],
+
+"depCostCollect":
+[
+    {
+        "id":1, 
+        "bgYear":2018,
+        "departmentId":1,
+        "refItem":-1, "costGroupId":1, "costItemId":1,
+        "amounts":[{"amount":1, "costAmount":2, "month":1},{"amount":1, "costAmount":2, "month":2},{"amount":1, "costAmount":2},{"amount":1, "costAmount":2},
+                    {"amount":1, "costAmount":2},{"amount":1, "costAmount":2},{"amount":1, "costAmount":2},{"amount":1, "costAmount":2},
+                    {"amount":1, "costAmount":2},{"amount":1, "costAmount":2},{"amount":1, "costAmount":2},{"amount":1, "costAmount":2}]
+    },
+    
+    {
+        "id":2, 
+        "bgYear":2018,
+        "departmentId":1,
+        "refItem":-1, "costGroupId":1, "costItemId":2,
+        "amounts":[{"amount":15000.0, "costAmount":2},{"amount":1, "costAmount":2},{"amount":1, "costAmount":2},{"amount":1, "costAmount":2},
+            {"amount":12000, "costAmount":2},{"amount":1, "costAmount":2},{"amount":1, "costAmount":2},{"amount":1, "costAmount":2},
+            {"amount":16000, "costAmount":2},{"amount":1, "costAmount":2},{"amount":1, "costAmount":2},{"amount":1, "costAmount":2}]
+    },
+
+    {
+        "id":3, 
+        "bgYear":2018,
+        "departmentId":1,
+        "refItem":2, "costGroupId":1, "costItemId":3,
+        "amounts":[{"amount":3000.0, "costAmount":2},{"amount":1, "costAmount":2},{"amount":1, "costAmount":2},{"amount":1, "costAmount":2},
+            {"amount":3000, "costAmount":2},{"amount":1, "costAmount":2},{"amount":1, "costAmount":2},{"amount":1, "costAmount":2},
+            {"amount":5000, "costAmount":2},{"amount":1, "costAmount":2},{"amount":1, "costAmount":2},{"amount":1, "costAmount":2}]
+    },
+    {
+        "id":4, 
+        "bgYear":2018,
+        "departmentId":1,
+        "refItem":1, "costGroupId":1, "costItemId":4,
+        "amounts":[{"amount":264.0, "costAmount":2},{"amount":1, "costAmount":2},{"amount":1, "costAmount":2},{"amount":1, "costAmount":2},
+            {"amount":3000, "costAmount":2},{"amount":1, "costAmount":2},{"amount":1, "costAmount":2},{"amount":1, "costAmount":2},
+            {"amount":5000, "costAmount":2},{"amount":1, "costAmount":2},{"amount":1, "costAmount":2},{"amount":1, "costAmount":2}]
+    },
+
+    {
+        "id":5, 
+        "bgYear":2018,
+        "departmentId":1,
+        "refItem":-1, "costGroupId":2, "costItemId":5,
+        "amounts":[{"amount":3000.0, "costAmount":2},{"amount":1, "costAmount":2},{"amount":1, "costAmount":2},{"amount":1, "costAmount":2},
+            {"amount":3000, "costAmount":2},{"amount":1, "costAmount":2},{"amount":1, "costAmount":2},{"amount":1, "costAmount":2},
+            {"amount":5000, "costAmount":2},{"amount":1, "costAmount":2},{"amount":1, "costAmount":2},{"amount":1, "costAmount":2}]
+    }
+],
+
+"costBudgets11":
+[
+    {
+        "id":1, 
+        "bgYear":2018,
+        "departmentId":1,
+        "refItem":-1, "costGroupId":1, "costItemId":1,
+        "amounts":[{"amount":1, "costAmount":2, "month":1},{"amount":1, "costAmount":2, "month":2},{"amount":1, "costAmount":2},{"amount":1, "costAmount":2},
+                    {"amount":1, "costAmount":2},{"amount":1, "costAmount":2},{"amount":1, "costAmount":2},{"amount":1, "costAmount":2},
+                    {"amount":1, "costAmount":2},{"amount":1, "costAmount":2},{"amount":1, "costAmount":2},{"amount":1, "costAmount":2}]
+    },
+    
+    {
+        "id":2, 
+        "bgYear":2018,
+        "departmentId":1,
+        "refItem":-1, "costGroupId":1, "costItemId":2,
+        "amounts":[{"amount":15000.0, "costAmount":2},{"amount":1, "costAmount":2},{"amount":1, "costAmount":2},{"amount":1, "costAmount":2},
+            {"amount":12000, "costAmount":2},{"amount":1, "costAmount":2},{"amount":1, "costAmount":2},{"amount":1, "costAmount":2},
+            {"amount":16000, "costAmount":2},{"amount":1, "costAmount":2},{"amount":1, "costAmount":2},{"amount":1, "costAmount":2}]
+    },
+
+    {
+        "id":3, 
+        "bgYear":2018,
+        "departmentId":1,
+        "refItem":2, "costGroupId":1, "costItemId":3,
+        "amounts":[{"amount":3000.0, "costAmount":2},{"amount":1, "costAmount":2},{"amount":1, "costAmount":2},{"amount":1, "costAmount":2},
+            {"amount":3000, "costAmount":2},{"amount":1, "costAmount":2},{"amount":1, "costAmount":2},{"amount":1, "costAmount":2},
+            {"amount":5000, "costAmount":2},{"amount":1, "costAmount":2},{"amount":1, "costAmount":2},{"amount":1, "costAmount":2}]
+    },
+    {
+        "id":4, 
+        "bgYear":2018,
+        "departmentId":1,
+        "refItem":1, "costGroupId":1, "costItemId":4,
+        "amounts":[{"amount":264.0, "costAmount":2},{"amount":1, "costAmount":2},{"amount":1, "costAmount":2},{"amount":1, "costAmount":2},
+            {"amount":3000, "costAmount":2},{"amount":1, "costAmount":2},{"amount":1, "costAmount":2},{"amount":1, "costAmount":2},
+            {"amount":5000, "costAmount":2},{"amount":1, "costAmount":2},{"amount":1, "costAmount":2},{"amount":1, "costAmount":2}]
+    },
+
+    {
+        "id":5, 
+        "bgYear":2018,
+        "departmentId":1,
+        "refItem":-1, "costGroupId":2, "costItemId":5,
+        "amounts":[{"amount":3000.0, "costAmount":2},{"amount":1, "costAmount":2},{"amount":1, "costAmount":2},{"amount":1, "costAmount":2},
+            {"amount":3000, "costAmount":2},{"amount":1, "costAmount":2},{"amount":1, "costAmount":2},{"amount":1, "costAmount":2},
+            {"amount":5000, "costAmount":2},{"amount":1, "costAmount":2},{"amount":1, "costAmount":2},{"amount":1, "costAmount":2}]
+    }
+
+],
+
+
+
+"prj":
+{
+    "prjs":[
+        {"id":1,
+            "prjNo":"2017-0445-30",
+            "name":"网银一期",
+            "customId":1,
+            "customName":"交通银行",
+            "prjTypeId":2,
+            "department":{"id":31,"name":"北一部","parentId":3,"enabled":true,"children":[],"parent":false},
+
+            "gender":"男",
+            "birthday":631123200000,
+            "idCard":"610122199001011256",
+            "wedlock":"已婚","nativePlace":"陕西",
+            "email":"laowang@qq.com","phone":"18565558897","address":"深圳市南山区",
+            "posName":null,"engageForm":"劳务合同","tiptopDegree":"本科",
+            "specialty":"信息管理与信息系统",
+            "school":"深圳大学","beginDate":1514736000000,"workState":"在职",
+            "workID":"00000001","contractTerm":2.0,"conversionTime":1522512000000,
+            "notWorkDate":null,
+            "beginContract":1514736000000,"endContract":1577808000000,
+            "workAge":null,
+            "nation":{"id":1,"name":"汉族"},
+            "jobLevel":{"id":9,"name":"教授","titleLevel":"正高级","createDate":null},
+            "position":{"id":29,"name":"技术总监","createDate":null},
+            "politicsStatus":{"id":13,"name":"普通公民"},"salary":null
+        }
+    ],
+
+    "count":35
+},
+
+"prjBudget":{
+
+    "prjId":1, "prjNo":"20180501-001", "bgYear":2017, "departmentId":1, 
+    "prjManCostAvg":15000, "prjName":"test prj", "contractAmount":0, "curYearAmount":0,
+    "amounts":[
+        {"amount":0, "costAmount":0, "manMonth":1, "realManMonth":4, "year":2017, "month":7}, {"amount":0, "costAmount":0, "manMonth":6, "year":2017, "month":8},{"amount":0, "costAmount":0, "manMonth":4, "realManMonth":4, "year":2017, "month":9}, {"amount":0, "costAmount":0, "manMonth":6, "year":2017, "month":10},
+        {"amount":0, "costAmount":0, "manMonth":4, "realManMonth":4, "year":2017, "month":11}, {"amount":0, "costAmount":0, "manMonth":6, "year":2017,  "month":12},
+        {"amount":0, "costAmount":0, "manMonth":4, "realManMonth":4, "year":2018, "month":1}, {"amount":0, "costAmount":0, "manMonth":6, "year":2018, "month":2},
+        {"amount":0, "costAmount":0, "manMonth":4, "realManMonth":4, "year":2018, "month":3}, {"amount":0, "costAmount":0, "manMonth":6, "year":2018, "month":4},{"amount":0, "costAmount":0, "manMonth":4, "realManMonth":4, "year":2018, "month":5}, {"amount":0, "costAmount":0, "manMonth":12, "year":2018, "month":6}
+    ],
+    "costs":[
+        {"id":1, "departmentId":2,"costName":"购买软件", "amount":30000, "bgDate":1577808000000, "desc":"测试系统软件"},
+        {"id":2, "costName":"福利", "amount":60000,  "bgDate":1577808000000, "desc":"test"},
+        {"id":3, "costName":"差补", "amount":80000,  "bgDate":1577808000000, "desc":"test"}
+    ]
+},
+
+"prjCost":
+[
+    {"id":1, "prjId":2, "departmentId":2,"name":"购买软件", "amount":30000, "bgDate":1577808000000, "desc":"测试系统软件"},
+    {"id":2, "prjId":2, "name":"加班补助", "amount":60000,  "bgDate":1577808000000, "desc":"test"}
+],
+
+"prjIncome":
+[
+    {"id":1, "prjId":2, "departmentId":2,"name":"首付款", "amount":30000, "bgDate":1577808000000, "desc":"测试系统软件"},
+    {"id":2, "prjId":2, "name":"验收通过款", "amount":60000,  "bgDate":1577808000000, "desc":"test"}
+],
+
+"prjConfirm":
+[
+    {"id":1, "prjId":2, "departmentId":2,"name":"一期确权", "amount":30000, "bgDate":1577808000000, "desc":"测试系统软件"},
+    {"id":2, "prjId":2, "name":"验收", "amount":60000,  "bgDate":1577808000000, "desc":"test"}
+],
+
+
+"basicdata":  
+{
+    "joblevels":[
+        {"id":9,"name":"教授","titleLevel":"正高级","createDate":1515676754000},
+        {"id":10,"name":"副教授","titleLevel":"副高级","createDate":1515676760000},
+        {"id":12,"name":"助教","titleLevel":"初级","createDate":1515677739000},
+        {"id":13,"name":"讲师","titleLevel":"中级","createDate":1515681732000},
+        {"id":14,"name":"初级工程师","titleLevel":"初级","createDate":1515917930000},{"id":15,"name":"中级工程师","titleLevel":"中级","createDate":1515917940000},{"id":16,"name":"高级工程师","titleLevel":"副高级","createDate":1515917954000},{"id":17,"name":"骨灰级工程师","titleLevel":"正高级","createDate":1515917964000}],
+    "politics":[
+        {"id":1,"name":"中共党员"},{"id":2,"name":"中共预备党员"},{"id":3,"name":"共青团员"},{"id":4,"name":"民革党员"},{"id":5,"name":"民盟盟员"},{"id":6,"name":"民建会员"},{"id":7,"name":"民进会员"},{"id":8,"name":"农工党党员"},{"id":9,"name":"致公党党员"},{"id":10,"name":"九三学社社员"},{"id":11,"name":"台盟盟员"},{"id":12,"name":"无党派民主人士"},{"id":13,"name":"普通公民"}],
+    "deps":[{"id":1,"name":"股东会","parentId":-1,"enabled":true,"children":[{"id":4,"name":"董事会","parentId":1,"enabled":true,"children":[{"id":5,"name":"总办","parentId":4,"enabled":true,"children":[{"id":8,"name":"财务部","parentId":5,"enabled":true,"children":[],"parent":false},{"id":78,"name":"市场部","parentId":5,"enabled":true,"children":[{"id":81,"name":"华北市场部","parentId":78,"enabled":true,"children":[{"id":85,"name":"石家庄市场部","parentId":81,"enabled":true,"children":[],"parent":false}],"parent":true},{"id":82,"name":"华南市场部","parentId":78,"enabled":true,"children":[],"parent":false},{"id":86,"name":"西北市场部","parentId":78,"enabled":true,"children":[{"id":87,"name":"西安市场","parentId":86,"enabled":true,"children":[{"id":89,"name":"莲湖区市场","parentId":87,"enabled":true,"children":[],"parent":false}],"parent":true}],"parent":true}],"parent":true},{"id":91,"name":"技术部","parentId":5,"enabled":true,"children":[],"parent":false},{"id":92,"name":"运维部","parentId":5,"enabled":true,"children":[],"parent":false}],"parent":true}],"parent":true}],"parent":true}],
+    "positions":[{"id":29,"name":"技术总监","createDate":1515676422000},{"id":30,"name":"运营总监","createDate":1515676428000},{"id":31,"name":"市场总监","createDate":1515676436000},{"id":32,"name":"总经理","createDate":1515677707000},{"id":33,"name":"研发工程师","createDate":1515917231000},{"id":34,"name":"运维工程师","createDate":1515917501000}],
+    "nations":[{"id":1,"name":"汉族"},{"id":2,"name":"蒙古族"},{"id":3,"name":"回族"},{"id":4,"name":"藏族"},{"id":5,"name":"维吾尔族"},{"id":6,"name":"苗族"},{"id":7,"name":"彝族"},{"id":8,"name":"壮族"},{"id":9,"name":"布依族"},{"id":10,"name":"朝鲜族"},{"id":11,"name":"满族"},{"id":12,"name":"侗族"},{"id":13,"name":"瑶族"},{"id":14,"name":"白族"},{"id":15,"name":"土家族"},{"id":16,"name":"哈尼族"},{"id":17,"name":"哈萨克族"},{"id":18,"name":"傣族"},{"id":19,"name":"黎族"},{"id":20,"name":"傈僳族"},{"id":21,"name":"佤族"},{"id":22,"name":"畲族"},{"id":23,"name":"高山族"},{"id":24,"name":"拉祜族"},{"id":25,"name":"水族"},{"id":26,"name":"东乡族"},{"id":27,"name":"纳西族"},{"id":28,"name":"景颇族"},{"id":29,"name":"柯尔克孜族"},{"id":30,"name":"土族"},{"id":31,"name":"达斡尔族"},{"id":32,"name":"仫佬族"},{"id":33,"name":"羌族"},{"id":34,"name":"布朗族"},{"id":35,"name":"撒拉族"},{"id":36,"name":"毛难族"},{"id":37,"name":"仡佬族"},{"id":38,"name":"锡伯族"},{"id":39,"name":"阿昌族"},{"id":40,"name":"普米族"},{"id":41,"name":"塔吉克族"},{"id":42,"name":"怒族"},{"id":43,"name":"乌孜别克族"},{"id":44,"name":"俄罗斯族"},{"id":45,"name":"鄂温克族"},{"id":46,"name":"崩龙族"},{"id":47,"name":"保安族"},{"id":48,"name":"裕固族"},{"id":49,"name":"京族"},{"id":50,"name":"塔塔尔族"},{"id":51,"name":"独龙族"},{"id":52,"name":"鄂伦春族"},{"id":53,"name":"赫哲族"},{"id":54,"name":"门巴族"},{"id":55,"name":"珞巴族"},{"id":56,"name":"基诺族"}],"workID":"00000048"},
+
+
+"emp":
+{"emps":[
+    {"id":1,"name":"江南一点雨","gender":"男","birthday":631123200000,"idCard":"610122199001011256","wedlock":"已婚","nativePlace":"陕西",
+        "email":"laowang@qq.com","phone":"18565558897","address":"深圳市南山区","posName":null,"engageForm":"劳务合同","tiptopDegree":"本科","specialty":"信息管理与信息系统",
+        "school":"深圳大学","beginDate":1514736000000,"workState":"在职","workID":"00000001","contractTerm":2.0,"conversionTime":1522512000000,"notWorkDate":null,
+        "beginContract":1514736000000,"endContract":1577808000000,"workAge":null,
+        "department":{"id":5,"name":"总办","parentId":null,"enabled":false,"children":[],"parent":false},
+        "nation":{"id":1,"name":"汉族"},"jobLevel":{"id":9,"name":"教授","titleLevel":"正高级","createDate":null},"position":{"id":29,"name":"技术总监","createDate":null},
+        "politicsStatus":{"id":13,"name":"普通公民"},"salary":null},
+        
+        {"id":2,"name":"陈静","gender":"女","birthday":602265600000,"idCard":"421288198902011234",
+        "wedlock":"已婚","nativePlace":"海南","email":"chenjing@qq.com","phone":"18795556693","address":"海南省海口市美兰区","posName":null,"engageForm":"劳动合同",
+        "tiptopDegree":"高中","specialty":"市场营销","school":"武汉大学","beginDate":1433779200000,"workState":"在职","workID":"00000002","contractTerm":3.0,
+        "conversionTime":1441814400000,"notWorkDate":null,"beginContract":1433779200000,"endContract":1528387200000,"workAge":null,
+        "department":{"id":8,"name":"财务部","parentId":null,"enabled":false,"children":[],"parent":false},"nation":{"id":1,"name":"汉族"},"jobLevel":{"id":12,"name":"助教","titleLevel":"初级","createDate":null},"position":{"id":30,"name":"运营总监","createDate":null},
+        "politicsStatus":{"id":1,"name":"中共党员"},"salary":null},{"id":3,"name":"赵琳浩","gender":"男","birthday":731174400000,"idCard":"610122199303041456","wedlock":"未婚","nativePlace":"陕西","email":"zhao@qq.com","phone":"15698887795","address":"陕西省西安市莲湖区","posName":null,"engageForm":"劳动合同","tiptopDegree":"博士","specialty":"电子工程","school":"哈尔滨理工大学","beginDate":1514736000000,"workState":"在职","workID":"00000003","contractTerm":3.5,"conversionTime":1522512000000,"notWorkDate":null,"beginContract":1514736000000,"endContract":1626192000000,"workAge":null,"department":{"id":91,"name":"技术部","parentId":null,"enabled":false,"children":[],"parent":false},"nation":{"id":1,"name":"汉族"},"jobLevel":{"id":12,"name":"助教","titleLevel":"初级","createDate":null},"position":{"id":33,"name":"研发工程师","createDate":null},"politicsStatus":{"id":3,"name":"共青团员"},"salary":null},{"id":4,"name":"鹿存亮","gender":"男","birthday":631296000000,"idCard":"610122199001031456","wedlock":"已婚","nativePlace":"陕西","email":"zhao@qq.com","phone":"15612347795","address":"陕西省西安市莲湖区","posName":null,"engageForm":"劳动合同","tiptopDegree":"高中","specialty":"电子工程","school":"哈尔滨理工大学","beginDate":1514736000000,"workState":"在职","workID":"00000004","contractTerm":3.5,"conversionTime":1522512000000,"notWorkDate":null,"beginContract":1514736000000,"endContract":1626192000000,"workAge":null,"department":{"id":92,"name":"运维部","parentId":null,"enabled":false,"children":[],"parent":false},"nation":{"id":1,"name":"汉族"},"jobLevel":{"id":12,"name":"助教","titleLevel":"初级","createDate":null},"position":{"id":34,"name":"运维工程师","createDate":null},"politicsStatus":{"id":3,"name":"共青团员"},"salary":null},{"id":5,"name":"姚森","gender":"男","birthday":665683200000,"idCard":"610122199102058952","wedlock":"已婚","nativePlace":"河南","email":"yaosen@qq.com","phone":"14785559936","address":"河南洛阳人民大道58号","posName":null,"engageForm":"劳动合同","tiptopDegree":"硕士","specialty":"室内装修设计","school":"西北大学","beginDate":1483286400000,"workState":"在职","workID":"00000005","contractTerm":7.0,"conversionTime":1491062400000,"notWorkDate":null,"beginContract":1483286400000,"endContract":1705420800000,"workAge":null,"department":{"id":92,"name":"运维部","parentId":null,"enabled":false,"children":[],"parent":false},"nation":{"id":1,"name":"汉族"},"jobLevel":{"id":15,"name":"中级工程师","titleLevel":"中级","createDate":null},"position":{"id":34,"name":"运维工程师","createDate":null},"politicsStatus":{"id":3,"name":"共青团员"},"salary":null},{"id":6,"name":"云星","gender":"女","birthday":726163200000,"idCard":"610122199301054789","wedlock":"已婚","nativePlace":"陕西西安","email":"yunxing@qq.com","phone":"15644442252","address":"陕西西安新城区","posName":null,"engageForm":"劳务合同","tiptopDegree":"硕士","specialty":"通信工程","school":"西安电子科技学校","beginDate":1514736000000,"workState":"在职","workID":"00000006","contractTerm":5.25,"conversionTime":1522512000000,"notWorkDate":null,"beginContract":1514736000000,"endContract":1681315200000,"workAge":null,"department":{"id":92,"name":"运维部","parentId":null,"enabled":false,"children":[],"parent":false},"nation":{"id":1,"name":"汉族"},"jobLevel":{"id":16,"name":"高级工程师","titleLevel":"副高级","createDate":null},"position":{"id":34,"name":"运维工程师","createDate":null},"politicsStatus":{"id":1,"name":"中共党员"},"salary":null},{"id":7,"name":"贾旭明","gender":"男","birthday":752947200000,"idCard":"610122199311111234","wedlock":"已婚","nativePlace":"广东广州","email":"jiaxuming@qq.com","phone":"15644441234","address":"广东省广州市天河区冼村路","posName":null,"engageForm":"劳务合同","tiptopDegree":"初中","specialty":"通信工程","school":"西北大学","beginDate":1514736000000,"workState":"在职","workID":"00000007","contractTerm":5.25,"conversionTime":1522512000000,"notWorkDate":null,"beginContract":1514736000000,"endContract":1681315200000,"workAge":null,"department":{"id":78,"name":"市场部","parentId":null,"enabled":false,"children":[],"parent":false},"nation":{"id":1,"name":"汉族"},"jobLevel":{"id":15,"name":"中级工程师","titleLevel":"中级","createDate":null},"position":{"id":33,"name":"研发工程师","createDate":null},"politicsStatus":{"id":4,"name":"民革党员"},"salary":null},{"id":8,"name":"张黎明","gender":"男","birthday":665337600000,"idCard":"610144199102014569","wedlock":"已婚","nativePlace":"广东","email":"zhangliming@qq.com","phone":"18979994478","address":"广东珠海","posName":null,"engageForm":"劳动合同","tiptopDegree":"高中","specialty":"考古","school":"清华大学","beginDate":1514736000000,"workState":"在职","workID":"00000008","contractTerm":7.0,"conversionTime":1522512000000,"notWorkDate":null,"beginContract":1514736000000,"endContract":1738166400000,"workAge":null,"department":{"id":91,"name":"技术部","parentId":null,"enabled":false,"children":[],"parent":false},"nation":{"id":1,"name":"汉族"},"jobLevel":{"id":15,"name":"中级工程师","titleLevel":"中级","createDate":null},"position":{"id":33,"name":"研发工程师","createDate":null},"politicsStatus":{"id":6,"name":"民建会员"},"salary":null},{"id":9,"name":"薛磊","gender":"男","birthday":709920000000,"idCard":"610144199207017895","wedlock":"已婚","nativePlace":"陕西西安","email":"xuelei@qq.com","phone":"15648887741","address":"西安市雁塔区","posName":null,"engageForm":"劳动合同","tiptopDegree":"初中","specialty":"无","school":"华胥中学","beginDate":1514736000000,"workState":"在职","workID":"00000009","contractTerm":6.0,"conversionTime":1522512000000,"notWorkDate":null,"beginContract":1514736000000,"endContract":1705420800000,"workAge":null,"department":{"id":92,"name":"运维部","parentId":null,"enabled":false,"children":[],"parent":false},"nation":{"id":1,"name":"汉族"},"jobLevel":{"id":14,"name":"初级工程师","titleLevel":"初级","createDate":null},"position":{"id":34,"name":"运维工程师","createDate":null},"politicsStatus":{"id":13,"name":"普通公民"},"salary":null},{"id":10,"name":"张洁","gender":"女","birthday":655401600000,"idCard":"420177199010093652","wedlock":"未婚","nativePlace":"海南","email":"zhangjie@qq.com","phone":"13695557742","address":"海口市美兰区","posName":null,"engageForm":"劳动合同","tiptopDegree":"高中","specialty":"无","school":"海南侨中","beginDate":1514736000000,"workState":"在职","workID":"00000010","contractTerm":1.0,"conversionTime":1517328000000,"notWorkDate":null,"beginContract":1514736000000,"endContract":1546272000000,"workAge":null,"department":{"id":92,"name":"运维部","parentId":null,"enabled":false,"children":[],"parent":false},"nation":{"id":1,"name":"汉族"},"jobLevel":{"id":16,"name":"高级工程师","titleLevel":"副高级","createDate":null},"position":{"id":34,"name":"运维工程师","createDate":null},"politicsStatus":{"id":5,"name":"民盟盟员"},"salary":null}
+        ],"count":196},
+"positions":
+[{"id":29,"name":"技术总监","createDate":1515676422000},
+    {"id":30,"name":"分部总监","createDate":1515676428000},
+    {"id":31,"name":"市场总监","createDate":1515676436000},
+    {"id":32,"name":"总经理","createDate":1515677707000},
+    {"id":33,"name":"研发工程师","createDate":1515917231000},
+    {"id":34,"name":"运维工程师","createDate":1515917501000}],
+
+"joblevels":
+[{"id":9,"name":"教授","titleLevel":"正高级","createDate":1515676754000},
+    {"id":10,"name":"副教授","titleLevel":"副高级","createDate":1515676760000},
+    {"id":12,"name":"助教","titleLevel":"初级","createDate":1515677739000},
+    {"id":13,"name":"讲师","titleLevel":"中级","createDate":1515681732000},
+    {"id":14,"name":"初级工程师","titleLevel":"初级","createDate":1515917930000},
+    {"id":15,"name":"中级工程师","titleLevel":"中级","createDate":1515917940000},
+    {"id":16,"name":"高级工程师","titleLevel":"副高级","createDate":1515917954000},
+    {"id":17,"name":"骨灰级工程师","titleLevel":"正高级","createDate":1515917964000}],
+
+"roles":
+[{"id":1,"name":"ROLE_manager","nameZh":"部门经理"},{"id":2,"name":"ROLE_personnel","nameZh":"人事专员"},{"id":3,"name":"ROLE_recruiter","nameZh":"招聘主管"},{"id":4,"name":"ROLE_train","nameZh":"培训主管"},{"id":5,"name":"ROLE_performance","nameZh":"薪酬绩效主管"},{"id":13,"name":"ROLE_test2","nameZh":"测试角色2"},{"id":14,"name":"ROLE_test1","nameZh":"测试角色1"}],
+
+"all":
+[{"id":5,"name":"李白","phone":"18568123489","telephone":"029-82123434","address":"海口美兰","enabled":true,"username":"libai","remark":null,"roles":[{"id":1,"name":"ROLE_manager","nameZh":"部门经理"},{"id":4,"name":"ROLE_train","nameZh":"培训主管"}],"userface":"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1514093920321&di=913e88c23f382933ef430024afd9128a&imgtype=0&src=http%3A%2F%2Fp.3761.com%2Fpic%2F9771429316733.jpg"},{"id":10,"name":"韩愈","phone":"18568123666","telephone":"029-82111555","address":"广州番禺","enabled":true,"username":"hanyu","remark":null,"roles":[{"id":3,"name":"ROLE_recruiter","nameZh":"招聘主管"},{"id":4,"name":"ROLE_train","nameZh":"培训主管"}],"userface":"https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=1406745149,1563524794&fm=27&gp=0.jpg"},{"id":11,"name":"柳宗元","phone":"18568123377","telephone":"029-82111333","address":"广州天河","enabled":true,"username":"liuzongyuan","remark":null,"roles":[{"id":3,"name":"ROLE_recruiter","nameZh":"招聘主管"},{"id":2,"name":"ROLE_personnel","nameZh":"人事专员"},{"id":4,"name":"ROLE_train","nameZh":"培训主管"},{"id":5,"name":"ROLE_performance","nameZh":"薪酬绩效主管"}],"userface":"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1515233756&di=0856d923a0a37a87fd26604a2c871370&imgtype=jpg&er=1&src=http%3A%2F%2Fwww.qqzhi.com%2Fuploadpic%2F2014-09-27%2F041716704.jpg"},{"id":12,"name":"曾巩","phone":"18568128888","telephone":"029-82111222","address":"广州越秀","enabled":true,"username":"zenggong","remark":null,"roles":[{"id":4,"name":"ROLE_train","nameZh":"培训主管"},{"id":3,"name":"ROLE_recruiter","nameZh":"招聘主管"}],"userface":"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1517070040185&di=be0375e0c3db6c311b837b28c208f318&imgtype=0&src=http%3A%2F%2Fimg2.soyoung.com%2Fpost%2F20150213%2F6%2F20150213141918532.jpg"}],
+
+"customs":
+[
+    {"id":1, "name":"广发银行", "parentId":-1, "enabled":true, "departmentId":1,
+        "children":[
+                {"id":11, "name":"广发银行互联网金融部", "parentId":1, "enabled":true, "departmentId":1, "children":[]},
+                {"id":12, "name":"广发银行科技部部", "parentId":1, "enabled":true, "departmentId":2, "children":[]},
+                {"id":13, "name":"广发银行信用卡部", "parentId":1, "enabled":true, "departmentId":1, "children":[]}
+        ] 
+    },
+
+    {"id":2, "name":"恒丰银行", "parentId":-1, "enabled":true, "departmentId":3,
+        "children":[
+                {"id":11, "name":"恒丰银行移动金融部", "parentId":2, "enabled":true, "departmentId":3, "children":[]},
+                {"id":12, "name":"恒丰银行北研", "parentId":2, "enabled":true, "departmentId":3, "children":[]},
+                {"id":13, "name":"恒丰银行科技中心", "parentId":2, "enabled":true, "departmentId":4, "children":[]}
+        ] 
+    }
+],
+
+
+"dep":
+[
+    {"id":1, "name":"易诚互动","parentId":-1, "enabled":true,
+        "children":[
+            {"id":2, "name":"运营部","parentId":1, 
+                "children":[
+                    {"id":21, "name":"财务部","parentId":2 },
+                    {"id":22, "name":"运营管理部","parentId":2 },
+                    {"id":23, "name":"人力资源部","parentId":2 }
+                ]},
+            {"id":3, "name":"北部大区","parentId":1, 
+                "children":[
+                    {"id":31, "name":"北一部","parentId":3 },
+                    {"id":32, "name":"北二部","parentId":3 },
+                    {"id":33, "name":"北三部","parentId":3 }
+
+                ]},
+            {"id":4, "name":"东部大区","parentId":1, 
+                "children":[
+                    {"id":41, "name":"东一部","parentId":4 },
+                    {"id":42, "name":"东二部","parentId":4 },
+                    {"id":43, "name":"东三部","parentId":4 }
+
+                ]},
+            {"id":5, "name":"南部大区","parentId":1, 
+                "children":[
+                    {"id":51, "name":"南一部","parentId":5 },
+                    {"id":52, "name":"南二部","parentId":5 },
+                    {"id":53, "name":"南三部","parentId":5 }
+
+                ]}
+        ]
+    }
+
+],
+
+"deps":
+[{"id":1,"name":"股东会","parentId":-1,"enabled":true,"children":[],"parent":true},{"id":4,"name":"董事会","parentId":1,"enabled":true,"children":[],"parent":true},{"id":5,"name":"总办","parentId":4,"enabled":true,"children":[],"parent":true},{"id":8,"name":"财务部","parentId":5,"enabled":true,"children":[],"parent":false},{"id":78,"name":"市场部","parentId":5,"enabled":true,"children":[],"parent":true},{"id":81,"name":"华北市场部","parentId":78,"enabled":true,"children":[],"parent":true},{"id":82,"name":"华南市场部","parentId":78,"enabled":true,"children":[],"parent":false},{"id":85,"name":"石家庄市场部","parentId":81,"enabled":true,"children":[],"parent":false},{"id":86,"name":"西北市场部","parentId":78,"enabled":true,"children":[],"parent":true},{"id":87,"name":"西安市场","parentId":86,"enabled":true,"children":[],"parent":true},{"id":89,"name":"莲湖区市场","parentId":87,"enabled":true,"children":[],"parent":false},{"id":91,"name":"技术部","parentId":5,"enabled":true,"children":[],"parent":false},{"id":92,"name":"运维部","parentId":5,"enabled":true,"children":[],"parent":false}]
+,
+"menuTree":
+{
+    "mids":[7,8,9,10,12,13],
+    "menus":[
+        {"id":1,"path":null,"component":null,"name":"所有","iconCls":null,
+            "children":[
+                {"id":2,"path":null,"component":null,"name":"员工资料","iconCls":null,"children":[{"id":7,"path":null,"component":null,"name":"基本资料","iconCls":null,"children":null,"meta":null}],"meta":null},{"id":3,"path":null,"component":null,"name":"人事管理","iconCls":null,"children":[{"id":10,"path":null,"component":null,"name":"员工奖惩","iconCls":null,"children":null,"meta":null},{"id":11,"path":null,"component":null,"name":"员工培训","iconCls":null,"children":null,"meta":null},{"id":12,"path":null,"component":null,"name":"员工调薪","iconCls":null,"children":null,"meta":null},{"id":13,"path":null,"component":null,"name":"员工调动","iconCls":null,"children":null,"meta":null}],"meta":null},{"id":4,"path":null,"component":null,"name":"薪资管理","iconCls":null,"children":[{"id":14,"path":null,"component":null,"name":"工资账套管理","iconCls":null,"children":null,"meta":null},{"id":15,"path":null,"component":null,"name":"员工账套设置","iconCls":null,"children":null,"meta":null},{"id":16,"path":null,"component":null,"name":"工资表管理","iconCls":null,"children":null,"meta":null},{"id":17,"path":null,"component":null,"name":"月末处理","iconCls":null,"children":null,"meta":null},{"id":18,"path":null,"component":null,"name":"工资表查询","iconCls":null,"children":null,"meta":null}],"meta":null},{"id":5,"path":null,"component":null,"name":"统计管理","iconCls":null,"children":[{"id":19,"path":null,"component":null,"name":"综合信息统计","iconCls":null,"children":null,"meta":null},{"id":20,"path":null,"component":null,"name":"员工积分统计","iconCls":null,"children":null,"meta":null},{"id":21,"path":null,"component":null,"name":"人事信息统计","iconCls":null,"children":null,"meta":null},{"id":22,"path":null,"component":null,"name":"人事记录统计","iconCls":null,"children":null,"meta":null}],"meta":null},{"id":6,"path":null,"component":null,"name":"系统管理","iconCls":null,"children":[{"id":23,"path":null,"component":null,"name":"基础信息设置","iconCls":null,"children":null,"meta":null},{"id":24,"path":null,"component":null,"name":"系统管理","iconCls":null,"children":null,"meta":null},{"id":25,"path":null,"component":null,"name":"操作日志管理","iconCls":null,"children":null,"meta":null},{"id":26,"path":null,"component":null,"name":"操作员管理","iconCls":null,"children":null,"meta":null},{"id":27,"path":null,"component":null,"name":"备份恢复数据库","iconCls":null,"children":null,"meta":null},{"id":28,"path":null,"component":null,"name":"初始化数据库","iconCls":null,"children":null,"meta":null}],"meta":null}],"meta":null}]}
+,
+"sob":
+[{"id":9,"bonus":4000,"lunchSalary":800,"trafficSalary":500,"basicSalary":9000,"allSalary":null,"pensionBase":2000,"pensionPer":0.07,"createDate":1516723200000,"medicalBase":2000,"medicalPer":0.07,"accumulationFundBase":2000,"accumulationFundPer":0.07,"name":"市场部工资账套"},{"id":10,"bonus":2000,"lunchSalary":400,"trafficSalary":1000,"basicSalary":2000,"allSalary":null,"pensionBase":2000,"pensionPer":0.07,"createDate":1514736000000,"medicalBase":2000,"medicalPer":0.07,"accumulationFundBase":2000,"accumulationFundPer":0.07,"name":"人事部工资账套"},{"id":13,"bonus":3000,"lunchSalary":500,"trafficSalary":500,"basicSalary":10000,"allSalary":null,"pensionBase":4000,"pensionPer":0.07,"createDate":1516809600000,"medicalBase":4000,"medicalPer":0.07,"accumulationFundBase":4000,"accumulationFundPer":0.07,"name":"运维部工资账套"},{"id":14,"bonus":1000,"lunchSalary":200,"trafficSalary":800,"basicSalary":5000,"allSalary":null,"pensionBase":2000,"pensionPer":20.0,"createDate":1532188800000,"medicalBase":2000,"medicalPer":10.0,"accumulationFundBase":3000,"accumulationFundPer":10.0,"name":"测试"}]
+,
+"empSalary":
+{"emps":[{"id":1,"name":"江南一点雨","gender":"男","birthday":631123200000,"idCard":"610122199001011256","wedlock":"已婚","nativePlace":"陕西","email":"laowang@qq.com","phone":"18565558897","address":"深圳市南山区","posName":null,"engageForm":"劳务合同","tiptopDegree":"本科","specialty":"信息管理与信息系统","school":"深圳大学","beginDate":1514736000000,"workState":"在职","workID":"00000001","contractTerm":2.0,"conversionTime":1522512000000,"notWorkDate":null,"beginContract":1514736000000,"endContract":1577808000000,"workAge":null,"department":{"id":5,"name":"总办","parentId":null,"enabled":false,"children":[],"parent":false},"nation":null,"jobLevel":null,"position":null,"politicsStatus":null,"salary":{"id":9,"bonus":4000,"lunchSalary":800,"trafficSalary":500,"basicSalary":9000,"allSalary":null,"pensionBase":2000,"pensionPer":0.07,"createDate":1516723200000,"medicalBase":2000,"medicalPer":0.07,"accumulationFundBase":2000,"accumulationFundPer":0.07,"name":"市场部工资账套"}},{"id":2,"name":"陈静","gender":"女","birthday":602265600000,"idCard":"421288198902011234","wedlock":"已婚","nativePlace":"海南","email":"chenjing@qq.com","phone":"18795556693","address":"海南省海口市美兰区","posName":null,"engageForm":"劳动合同","tiptopDegree":"高中","specialty":"市场营销","school":"武汉大学","beginDate":1433779200000,"workState":"在职","workID":"00000002","contractTerm":3.0,"conversionTime":1441814400000,"notWorkDate":null,"beginContract":1433779200000,"endContract":1528387200000,"workAge":null,"department":{"id":8,"name":"财务部","parentId":null,"enabled":false,"children":[],"parent":false},"nation":null,"jobLevel":null,"position":null,"politicsStatus":null,"salary":{"id":13,"bonus":3000,"lunchSalary":500,"trafficSalary":500,"basicSalary":10000,"allSalary":null,"pensionBase":4000,"pensionPer":0.07,"createDate":1516809600000,"medicalBase":4000,"medicalPer":0.07,"accumulationFundBase":4000,"accumulationFundPer":0.07,"name":"运维部工资账套"}},{"id":3,"name":"赵琳浩","gender":"男","birthday":731174400000,"idCard":"610122199303041456","wedlock":"未婚","nativePlace":"陕西","email":"zhao@qq.com","phone":"15698887795","address":"陕西省西安市莲湖区","posName":null,"engageForm":"劳动合同","tiptopDegree":"博士","specialty":"电子工程","school":"哈尔滨理工大学","beginDate":1514736000000,"workState":"在职","workID":"00000003","contractTerm":3.5,"conversionTime":1522512000000,"notWorkDate":null,"beginContract":1514736000000,"endContract":1626192000000,"workAge":null,"department":{"id":91,"name":"技术部","parentId":null,"enabled":false,"children":[],"parent":false},"nation":null,"jobLevel":null,"position":null,"politicsStatus":null,"salary":{"id":9,"bonus":4000,"lunchSalary":800,"trafficSalary":500,"basicSalary":9000,"allSalary":null,"pensionBase":2000,"pensionPer":0.07,"createDate":1516723200000,"medicalBase":2000,"medicalPer":0.07,"accumulationFundBase":2000,"accumulationFundPer":0.07,"name":"市场部工资账套"}},{"id":4,"name":"鹿存亮","gender":"男","birthday":631296000000,"idCard":"610122199001031456","wedlock":"已婚","nativePlace":"陕西","email":"zhao@qq.com","phone":"15612347795","address":"陕西省西安市莲湖区","posName":null,"engageForm":"劳动合同","tiptopDegree":"高中","specialty":"电子工程","school":"哈尔滨理工大学","beginDate":1514736000000,"workState":"在职","workID":"00000004","contractTerm":3.5,"conversionTime":1522512000000,"notWorkDate":null,"beginContract":1514736000000,"endContract":1626192000000,"workAge":null,"department":{"id":92,"name":"运维部","parentId":null,"enabled":false,"children":[],"parent":false},"nation":null,"jobLevel":null,"position":null,"politicsStatus":null,"salary":{"id":10,"bonus":2000,"lunchSalary":400,"trafficSalary":1000,"basicSalary":2000,"allSalary":null,"pensionBase":2000,"pensionPer":0.07,"createDate":1514736000000,"medicalBase":2000,"medicalPer":0.07,"accumulationFundBase":2000,"accumulationFundPer":0.07,"name":"人事部工资账套"}},{"id":5,"name":"姚森","gender":"男","birthday":665683200000,"idCard":"610122199102058952","wedlock":"已婚","nativePlace":"河南","email":"yaosen@qq.com","phone":"14785559936","address":"河南洛阳人民大道58号","posName":null,"engageForm":"劳动合同","tiptopDegree":"硕士","specialty":"室内装修设计","school":"西北大学","beginDate":1483286400000,"workState":"在职","workID":"00000005","contractTerm":7.0,"conversionTime":1491062400000,"notWorkDate":null,"beginContract":1483286400000,"endContract":1705420800000,"workAge":null,"department":{"id":92,"name":"运维部","parentId":null,"enabled":false,"children":[],"parent":false},"nation":null,"jobLevel":null,"position":null,"politicsStatus":null,"salary":{"id":9,"bonus":4000,"lunchSalary":800,"trafficSalary":500,"basicSalary":9000,"allSalary":null,"pensionBase":2000,"pensionPer":0.07,"createDate":1516723200000,"medicalBase":2000,"medicalPer":0.07,"accumulationFundBase":2000,"accumulationFundPer":0.07,"name":"市场部工资账套"}},{"id":6,"name":"云星","gender":"女","birthday":726163200000,"idCard":"610122199301054789","wedlock":"已婚","nativePlace":"陕西西安","email":"yunxing@qq.com","phone":"15644442252","address":"陕西西安新城区","posName":null,"engageForm":"劳务合同","tiptopDegree":"硕士","specialty":"通信工程","school":"西安电子科技学校","beginDate":1514736000000,"workState":"在职","workID":"00000006","contractTerm":5.25,"conversionTime":1522512000000,"notWorkDate":null,"beginContract":1514736000000,"endContract":1681315200000,"workAge":null,"department":{"id":92,"name":"运维部","parentId":null,"enabled":false,"children":[],"parent":false},"nation":null,"jobLevel":null,"position":null,"politicsStatus":null,"salary":{"id":13,"bonus":3000,"lunchSalary":500,"trafficSalary":500,"basicSalary":10000,"allSalary":null,"pensionBase":4000,"pensionPer":0.07,"createDate":1516809600000,"medicalBase":4000,"medicalPer":0.07,"accumulationFundBase":4000,"accumulationFundPer":0.07,"name":"运维部工资账套"}},{"id":7,"name":"贾旭明","gender":"男","birthday":752947200000,"idCard":"610122199311111234","wedlock":"已婚","nativePlace":"广东广州","email":"jiaxuming@qq.com","phone":"15644441234","address":"广东省广州市天河区冼村路","posName":null,"engageForm":"劳务合同","tiptopDegree":"初中","specialty":"通信工程","school":"西北大学","beginDate":1514736000000,"workState":"在职","workID":"00000007","contractTerm":5.25,"conversionTime":1522512000000,"notWorkDate":null,"beginContract":1514736000000,"endContract":1681315200000,"workAge":null,"department":{"id":78,"name":"市场部","parentId":null,"enabled":false,"children":[],"parent":false},"nation":null,"jobLevel":null,"position":null,"politicsStatus":null,"salary":{"id":13,"bonus":3000,"lunchSalary":500,"trafficSalary":500,"basicSalary":10000,"allSalary":null,"pensionBase":4000,"pensionPer":0.07,"createDate":1516809600000,"medicalBase":4000,"medicalPer":0.07,"accumulationFundBase":4000,"accumulationFundPer":0.07,"name":"运维部工资账套"}},{"id":8,"name":"张黎明","gender":"男","birthday":665337600000,"idCard":"610144199102014569","wedlock":"已婚","nativePlace":"广东","email":"zhangliming@qq.com","phone":"18979994478","address":"广东珠海","posName":null,"engageForm":"劳动合同","tiptopDegree":"高中","specialty":"考古","school":"清华大学","beginDate":1514736000000,"workState":"在职","workID":"00000008","contractTerm":7.0,"conversionTime":1522512000000,"notWorkDate":null,"beginContract":1514736000000,"endContract":1738166400000,"workAge":null,"department":{"id":91,"name":"技术部","parentId":null,"enabled":false,"children":[],"parent":false},"nation":null,"jobLevel":null,"position":null,"politicsStatus":null,"salary":{"id":10,"bonus":2000,"lunchSalary":400,"trafficSalary":1000,"basicSalary":2000,"allSalary":null,"pensionBase":2000,"pensionPer":0.07,"createDate":1514736000000,"medicalBase":2000,"medicalPer":0.07,"accumulationFundBase":2000,"accumulationFundPer":0.07,"name":"人事部工资账套"}},{"id":9,"name":"薛磊","gender":"男","birthday":709920000000,"idCard":"610144199207017895","wedlock":"已婚","nativePlace":"陕西西安","email":"xuelei@qq.com","phone":"15648887741","address":"西安市雁塔区","posName":null,"engageForm":"劳动合同","tiptopDegree":"初中","specialty":"无","school":"华胥中学","beginDate":1514736000000,"workState":"在职","workID":"00000009","contractTerm":6.0,"conversionTime":1522512000000,"notWorkDate":null,"beginContract":1514736000000,"endContract":1705420800000,"workAge":null,"department":{"id":92,"name":"运维部","parentId":null,"enabled":false,"children":[],"parent":false},"nation":null,"jobLevel":null,"position":null,"politicsStatus":null,"salary":{"id":10,"bonus":2000,"lunchSalary":400,"trafficSalary":1000,"basicSalary":2000,"allSalary":null,"pensionBase":2000,"pensionPer":0.07,"createDate":1514736000000,"medicalBase":2000,"medicalPer":0.07,"accumulationFundBase":2000,"accumulationFundPer":0.07,"name":"人事部工资账套"}},{"id":10,"name":"张洁","gender":"女","birthday":655401600000,"idCard":"420177199010093652","wedlock":"未婚","nativePlace":"海南","email":"zhangjie@qq.com","phone":"13695557742","address":"海口市美兰区","posName":null,"engageForm":"劳动合同","tiptopDegree":"高中","specialty":"无","school":"海南侨中","beginDate":1514736000000,"workState":"在职","workID":"00000010","contractTerm":1.0,"conversionTime":1517328000000,"notWorkDate":null,"beginContract":1514736000000,"endContract":1546272000000,"workAge":null,"department":{"id":92,"name":"运维部","parentId":null,"enabled":false,"children":[],"parent":false},"nation":null,"jobLevel":null,"position":null,"politicsStatus":null,"salary":{"id":13,"bonus":3000,"lunchSalary":500,"trafficSalary":500,"basicSalary":10000,"allSalary":null,"pensionBase":4000,"pensionPer":0.07,"createDate":1516809600000,"medicalBase":4000,"medicalPer":0.07,"accumulationFundBase":4000,"accumulationFundPer":0.07,"name":"运维部工资账套"}}],"count":196}
+
+
+
+}
+
