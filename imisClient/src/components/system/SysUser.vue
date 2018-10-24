@@ -21,7 +21,7 @@
         </div>
         <div>
           <div style="width: 100%;display: flex;justify-content: center">
-            <img :src="item.avadaImage" alt="item.name" style="width: 100px;height: 70px;border-radius: 70px">
+            <img :src="item.avadaImage" :alt="item.nickName" style="width: 100px;height: 70px;border-radius: 70px">
           </div>
           <div style="margin-top: 20px">
             <div  class="user-info"><span>用户ID: {{item.userName}}</span></div>
@@ -36,7 +36,7 @@
                 inactive-color="#aaaaaa"
                 active-text="启用"
                 active-value="ACTIVE"
-                inactive-value="INACTIVE"
+                inactive-value="FREEZE"
                 :key="item.id"
                 @change="switchChange(item.status,item.id,index)"
                 inactive-text="禁用">
@@ -57,7 +57,7 @@
                 placement="right"
                 title="角色列表"
                 width="200"
-                @hide="updateHrRoles(item.id,index)"
+                @hide="updateUserRoles(item.id,index)"
                 :key="item.id"
                 trigger="click">
                 <el-select v-model="selRoles" multiple placeholder="请选择角色">
@@ -79,9 +79,9 @@
         </div>
       </el-card>
 
-      <div>           
-        <el-button type="primary" size="mini" icon="el-icon-plus" @click="showAddUserView">
-            添加新用户
+      <div style="display:flex;align-items:center;">           
+        <el-button type="primary" circle=true icon="el-icon-plus" @click="showAddUserView">
+           
           </el-button>
        </div>
     </div>
@@ -250,7 +250,7 @@ export default {
       this.loadAllRoles();
     },
 
-    updateHrRoles(hrId, index) {
+    updateUserRoles(userId, index) {
       this.moreBtnState = false;
       var _this = this;
       if (this.selRolesBak.length == this.selRoles.length) {
@@ -267,28 +267,31 @@ export default {
         }
       }
       this.eploading.splice(index, 1, true);
-      this.putRequest("/system/hr/roles", {
-        hrId: hrId,
+      this.putRequest("/system/user/roles", {
+        userId: userId,
         rids: this.selRoles
       }).then(resp => {
         _this.eploading.splice(index, 1, false);
         if (resp && resp.status == 200) {
           var data = resp.data;
-          _this.$message({ type: data.status, message: data.msg });
+          _this.$message({ type: data.status, message: data.message });
           if (data.status == "success") {
-            _this.refreshHr(hrId, index);
+            _this.refreshUser(userId, index);
           }
         }
       });
     },
-    refreshHr(hrId, index) {
+
+    refreshUser(userId, index) {
       var _this = this;
+      console.log("Refresh user: " + userId + " " + index);
       _this.cardLoading.splice(index, 1, true);
-      this.putRequest("/system/hr/id/" + hrId).then(resp => {
+      this.getRequest("/system/user/id/" + userId).then(resp => {
         _this.cardLoading.splice(index, 1, false);
         _this.users.splice(index, 1, resp.data);
       });
     },
+
     loadSelRoles(hrRoles, index) {
       this.moreBtnState = true;
       this.selRoles = [];
@@ -307,22 +310,22 @@ export default {
         }
       });
     },
-    switchChange(newValue, hrId, index) {
+    switchChange(newValue, userId, index) {
       var _this = this;
       _this.cardLoading.splice(index, 1, true);
-      this.putRequest("/system/user/", {
-        enabled: newValue,
-        id: hrId
+      this.putRequest("/system/user/active", {
+        status: newValue,
+        id: userId
       }).then(resp => {
         _this.cardLoading.splice(index, 1, false);
         if (resp && resp.status == 200) {
           var data = resp.data;
-          _this.$message({ type: data.status, message: data.msg });
+          _this.$message({ type: data.status, message: data.message });
           if (data.status == "error") {
-            _this.refreshHr(hrId, index);
+            _this.refreshUser(userId, index);
           }
         } else {
-          _this.refreshHr(hrId, index);
+          _this.refreshUser(userId, index);
         }
       });
     },
@@ -349,19 +352,34 @@ export default {
       this.getRequest("/system/user/" + searchWords).then(resp => {
         if (resp && resp.status == 200) {
           _this.users = resp.data;
+          var length = resp.data.length;
+
+          _this.cardLoading = Array.apply(null, Array(length)).map(function(
+            item,
+            i
+          ) {
+            return false;
+          });
+
+          _this.eploading = Array.apply(null, Array(length)).map(function(
+            item,
+            i
+          ) {
+            return false;
+          });
         }
-        this.fullloading = false;
+        _this.fullloading = false;
       });
     },
 
-    deleteUser(hrId) {
+    deleteUser(userId) {
       var _this = this;
       this.fullloading = true;
-      this.deleteRequest("/system/user/" + hrId).then(resp => {
+      this.deleteRequest("/system/user/id/" + userId).then(resp => {
         _this.fullloading = false;
         if (resp && resp.status == 200) {
           var data = resp.data;
-          _this.$message({ type: data.status, message: data.msg });
+          _this.$message({ type: data.status, message: data.message });
           if (data.status == "success") {
             _this.initCards();
             _this.loadAllRoles();

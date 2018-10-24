@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import com.ynet.imis.bean.CostCollectionItem;
 import com.ynet.imis.domain.budget.CostBudgetInfo;
+import com.ynet.imis.domain.budget.CostGroup;
 import com.ynet.imis.domain.budget.CostItem;
 import com.ynet.imis.domain.budget.DepCommBudget;
 import com.ynet.imis.domain.budget.PrjBudget;
@@ -39,11 +41,13 @@ public class DepBudgetController {
     private Logger logger = LoggerFactory.getLogger(getClass());
 
     @RequestMapping(value = "/dep/{depId}/{typeId}", method = RequestMethod.GET)
-    public List<CostBudgetInfo> getProjectBudgetByPrjId(@PathVariable Long depId, @PathVariable Long typeId) {
+    public List<CostBudgetInfo> getCostBudgetInfosByDepId(@PathVariable Long depId, @PathVariable Long typeId) {
 
-        logger.info("Get department cost budget info :" + depId);
+        logger.info("Get department cost budget info :" + depId + " of type: " + typeId);
 
-        List<CostBudgetInfo> costBudgetInfos = depBudgetService.getCostBudgetInfosByDepId(depId, typeId);
+        int year = Calendar.getInstance().get(Calendar.YEAR);
+
+        List<CostBudgetInfo> costBudgetInfos = depBudgetService.getCostBudgetInfosByDepId(depId, typeId, year);
 
         if (costBudgetInfos != null && costBudgetInfos.size() != 0)
             return costBudgetInfos;
@@ -54,7 +58,6 @@ public class DepBudgetController {
 
         List<CostBudgetInfo> infos = new ArrayList<CostBudgetInfo>();
 
-        int year = Calendar.getInstance().get(Calendar.YEAR);
         for (int i = 0; i < costItems.size(); i++) {
             CostItem costItem = costItems.get(i);
             for (int k = 0; k < 12; k++) {
@@ -145,6 +148,40 @@ public class DepBudgetController {
 
     }
 
-    /////department collection table 
+    ///// department collection table
+
+    // 部门费用汇总
+    @RequestMapping(value = "/dep/costColl/{depId}", method = RequestMethod.GET)
+    public List<CostCollectionItem> getCostBudgetInfosByDepId(@PathVariable Long depId) {
+
+        logger.info("Get department cost budget collection :" + depId);
+        int year = Calendar.getInstance().get(Calendar.YEAR);
+
+        List<CostCollectionItem> items = new ArrayList<CostCollectionItem>();
+
+        List<CostBudgetInfo> costBudgetInfos = depBudgetService.getCostCollectionByDepId(depId, year);
+
+        if (costBudgetInfos == null || costBudgetInfos.size() == 0)
+            return items;
+
+        List<CostItem> costItems = budgetAdminService.getCostItems();
+        // List<CostGroup> costGroups = budgetAdminService.getCostGroups();
+
+        for (int i = 0; i < costItems.size(); i++) {
+            CostItem costItem = costItems.get(i);
+            CostGroup costGroup = costItem.getGroup();
+            CostCollectionItem item = new CostCollectionItem(costGroup.getName(), costItem.getName());
+            items.add(item);
+            List<CostBudgetInfo> costs = depBudgetService.getCostCollectionByItemDepId(depId, costItem.getId(), year);
+
+            for (int k = 0; k < costs.size(); k++) {
+                CostBudgetInfo cost = costs.get(k);
+                item.addAmount(cost.getMonth(), cost.getAmount());
+            }
+        }
+
+        logger.info(" dep cost collection: " + ImisUtils.objectJsonStr(items));
+        return items;
+    }
 
 }

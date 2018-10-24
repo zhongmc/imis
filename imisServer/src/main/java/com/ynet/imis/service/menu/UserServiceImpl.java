@@ -7,6 +7,7 @@ import javax.transaction.Transactional;
 
 import com.ynet.imis.domain.menu.Role;
 import com.ynet.imis.domain.menu.User;
+import com.ynet.imis.domain.menu.User.UserStatus;
 import com.ynet.imis.repository.menu.RoleRepository;
 import com.ynet.imis.repository.menu.UserRepository;
 import com.ynet.imis.utils.ImisUtils;
@@ -47,6 +48,16 @@ public class UserServiceImpl implements UserService {
     @Override
     public User updateUser(User user) {
         return userDao.save(user);
+    }
+
+    @Override
+    public User activeUser(Long id, UserStatus status) {
+        User user = userDao.findUserById(id);
+        if (user == null)
+            return null;
+        user.setStatus(status);
+        userDao.save(user);
+        return user;
     }
 
     @Override

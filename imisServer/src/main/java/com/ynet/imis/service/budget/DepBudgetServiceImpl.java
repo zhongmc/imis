@@ -42,9 +42,21 @@ public class DepBudgetServiceImpl implements DepBudgetService {
     }
 
     @Override
-    public List<CostBudgetInfo> getCostBudgetInfosByDepId(Long depId, Long typeId) {
-        int year = Calendar.getInstance().get(Calendar.YEAR);
+    public List<CostBudgetInfo> getCostBudgetInfosByDepId(Long depId, Long typeId, int year) {
         List<CostBudgetInfo> infos = costBudgetInfoDao.getDepartmentCostBudgetInfo(depId, typeId, year);
+        return infos;
+    }
+
+    @Override
+    public List<CostBudgetInfo> getCostCollectionByDepId(Long depId, int year) {
+        List<CostBudgetInfo> infos = costBudgetInfoDao.getDepartmentCostCollection(depId, year);
+        return infos;
+
+    }
+
+    @Override
+    public List<CostBudgetInfo> getCostCollectionByItemDepId(Long depId, Long itemId, int year) {
+        List<CostBudgetInfo> infos = costBudgetInfoDao.getDepartmentCostCollectionByItem(depId, itemId, year);
         return infos;
     }
 

@@ -1,3 +1,4 @@
+<!-- 部门预算汇总 -->
 <template>
   <div style="margin-top: 10px">
     <div style="padding:10px;">
@@ -14,11 +15,11 @@
     </div>
 
       <el-tabs  type="card" v-model="activeTab">
-        <el-tab-pane label="部门预算表" name="prjBudget" >
-          <dep-budget ref="budgetTable"></dep-budget>
+        <el-tab-pane label="部门预算表" name="depBudget" >
+          <dep-budget ref="depBudget"></dep-budget>
         </el-tab-pane>
-        <el-tab-pane label="经营费用汇总"  name="costCollect">
-          <expense-budget budgetTypeId=-1 v-bind:editable=false ref="costCollect" ></expense-budget>
+        <el-tab-pane label="经营费用汇总"  name="depCost">
+          <dep-cost budgetTypeId=-1 v-bind:editable=false ref="depCost"> </dep-cost>
         </el-tab-pane>
       </el-tabs>
   </div>
@@ -27,54 +28,48 @@
 
 
 <script>
+import DepBudgetTable from "./DepBudgetTable.vue";
+import DepCostCollect from "./DepCostCollect.vue";
 
-  import DepBudgetTable from './DepBudgetTable.vue'
-  import expenseBudget from './ExpenseBudget.vue'
+export default {
+  mounted: function() {
+    this.loadMyDeps();
+  },
 
-  export default{
-    mounted: function () {
-      this.loadMyDeps();``
+  methods: {
+    loadMyDeps() {
+      var _this = this;
+      this.loading = true;
+      this.getRequest("/system/basic/myDeps").then(resp => {
+        _this.loading = false;
+        if (resp && resp.status == 200) {
+          _this.myDeps = resp.data;
+        }
+      });
     },
 
-    methods: {
-
-      loadMyDeps(){
-        var _this = this;
-        this.loading = true;
-       this.getRequest("/system/basic/myDeps").then(resp=> {
-          _this.loading = false;
-          if (resp && resp.status == 200) {
-            _this.myDeps = resp.data;
-          }
-        })
-      },
-
-
-    changeDep: function(depId){
-
+    changeDep: function(depId) {
       console.log(this.depId);
       console.log(this.$refs.cost);
 
-      this.$refs.budgetTable.loadData(depId); 
-      this.$refs.costCollect.loadData(depId); 
-
+      this.$refs.depBudget.changeDep(depId);
+      this.$refs.depCost.changeDep(depId);
     }
-  
   },
 
-    components: {
-      'dep-budget': DepBudgetTable,
-      'expense-budget': expenseBudget,
-    },
+  components: {
+    "dep-budget": DepBudgetTable,
+    "dep-cost": DepCostCollect
+  },
 
-    data(){
-      return {
-        loading: false,
-        
-        myDeps:[],
-        depId:"",
-        activeTab:"prjBudget",
-      }
-    }
+  data() {
+    return {
+      loading: false,
+
+      myDeps: [],
+      depId: "",
+      activeTab: "depBudget"
+    };
   }
+};
 </script>

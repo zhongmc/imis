@@ -1,21 +1,33 @@
-<!-- 部门预算汇总表（损益表） -->
+<!-- 部门费用预算汇总表  -->
 <template>
 <div>
 
           <el-table
-            :data="budgetTable"
+            :data="costBudgets"
             v-loading="tableLoading"
             border
             stripe
+            show-summary            
+            :summary-method="getSummaries"
+        
+            @cell-mouse-enter="handleMouseEnter"
+            @cell-mouse-leave="handleMouseOut"            
             size="mini"
             style="width: 100%">
 
             <el-table-column
-              prop="label"
+              prop="groupName"
+              align="left"
+              fixed
+              label="费用类别"
+              width="90">
+            </el-table-column>
+            <el-table-column
+              prop="itemName"
               fixed
               width="85"
               align="left"
-              label="">
+              label="费用名称">
             </el-table-column>
 
             <el-table-column
@@ -24,19 +36,31 @@
               :prop=tableTitles[index].idx width="100" >
 
                 <template slot-scope="scope">
-                  <span>{{ formatMoney( scope.row.amounts[index].amount,1) }}</span>
+                  <span>
+                    {{ formatMoney( scope.row.amounts[index].amount,1) }}
+                  </span>     
+                  <!-- span>{{formatMoney( scope.row.amounts[index].amount,1) }}</span -->
                 </template>
 
             </el-table-column>
 
             <el-table-column
               label="总计"
-             
+              prop="sum"
+              :formatter="formatAmount"
               align = "right"
               width="120">
             </el-table-column>
 
+            <el-table-column
+              prop="desc"
+              label="备注"
+              width="80">
+            </el-table-column>
+
           </el-table>
+
+ 
   </div>
 </template>
 
@@ -45,18 +69,19 @@
 
 <script>
 export default {
-  mounted: function() {
-    //     this.loadData();
-  },
+  mounted: function() {},
 
   methods: {
     loadData() {
       var _this = this;
       this.loading = true;
 
-      this.getRequest("/budget/budgetTable/" + depId).then(resp => {
+      _this.costBudgetInfos = [];
+      this.getRequest("/budget/dep/costColl/" + this.depId).then(resp => {
         if (resp && resp.status == 200) {
-          _this.budgetTable = resp.data;
+          _this.costBudgets = resp.data;
+          console.log("cost load ok!");
+          console.log(resp.data);
         }
       });
     },
@@ -88,13 +113,12 @@ export default {
   data() {
     return {
       loading: false,
-
-      budgetTable: [],
+      costBudgets: [], //费用预算定义，经前端按 costItem 整理
       tableLoading: false,
-      currentItemLabel: "",
-      amount: 0,
-      editingProp: "",
+
       depId: null,
+
+      amount: 0,
 
       tableTitles: [
         { title: "一月", idx: "1" },

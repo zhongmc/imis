@@ -45,6 +45,11 @@ public class BudgetAdminServiceImpl implements BudgetAdminService {
     }
 
     @Override
+    public List<CostGroup> getCostGroups() {
+        return costGroupDao.findAll();
+    }
+
+    @Override
     public BudgetType addBudgetType(BudgetType bt) {
         return budgetTypeDao.save(bt);
     }

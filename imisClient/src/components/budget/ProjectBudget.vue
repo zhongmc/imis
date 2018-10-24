@@ -1,3 +1,4 @@
+<!-- 部门项目预算表（本年度） -->
 <template>
 <div>
 
@@ -159,8 +160,8 @@ export default {
       var amountSum = 0.0,
         manMonthSum = 0.0;
 
- //     console.log("init project budgets.....");
- //     console.log(budgets);
+      //     console.log("init project budgets.....");
+      //     console.log(budgets);
 
       var sortedPrjBudgets = new Array(budgets.length);
 
@@ -183,7 +184,7 @@ export default {
 
         var amounts = sortedPrjBudgets[idx].amounts;
 
- //       console.log(amounts);
+        //       console.log(amounts);
 
         for (var k = 0; k < 12; k++) amounts[k] = null; //this.emptyMonthBudget;
 
@@ -191,7 +192,7 @@ export default {
           var ii = prjBudget.monthBudgets[k].month;
           amounts[ii] = prjBudget.monthBudgets[k];
         }
- //       console.log(amounts);
+        //       console.log(amounts);
 
         var amountSum = 0.0;
         var manMonthSum = 0.0;
@@ -214,7 +215,7 @@ export default {
 
       this.sortedPrjBudgets = sortedPrjBudgets;
 
-//      console.log(sortedPrjBudgets);
+      //      console.log(sortedPrjBudgets);
     },
 
     cellClicked(row, column, cellValue) {

@@ -11,7 +11,11 @@ public interface DepBudgetService {
 
     public int addAllCostBudgetInfos(List<CostBudgetInfo> costBudgetInfos);
 
-    public List<CostBudgetInfo> getCostBudgetInfosByDepId(Long depId, Long typeId);
+    public List<CostBudgetInfo> getCostBudgetInfosByDepId(Long depId, Long typeId, int year);
+
+    public List<CostBudgetInfo> getCostCollectionByDepId(Long depId, int year);
+
+    public List<CostBudgetInfo> getCostCollectionByItemDepId(Long depId, Long itemId, int year);
 
     public List<DepCommBudget> getDepCommBudgets(Long depId);
 

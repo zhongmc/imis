@@ -3,6 +3,7 @@ package com.ynet.imis.controller;
 import java.util.List;
 
 import com.ynet.imis.domain.menu.User;
+import com.ynet.imis.domain.menu.User.UserStatus;
 import com.ynet.imis.service.menu.UserService;
 import com.ynet.imis.utils.ImisUtils;
 
@@ -23,12 +24,12 @@ public class UserController {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    @RequestMapping("/id/{userId}")
+    @RequestMapping(value = "/id/{userId}", method = RequestMethod.GET)
     public User getUserById(@PathVariable Long userId) {
         return userService.getUserById(userId);
     }
 
-    @RequestMapping(value = "/{hrId}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/id/{userId}", method = RequestMethod.DELETE)
     public ResponseBean deleteHr(@PathVariable Long userId) {
         if (userService.deleteUser(userId) == 1) {
             return new ResponseBean("success", "删除成功!");
@@ -36,12 +37,12 @@ public class UserController {
         return new ResponseBean("error", "删除失败!");
     }
 
-    @RequestMapping(value = "/", method = RequestMethod.PUT)
-    public ResponseBean updateUser(User user) {
+    @RequestMapping(value = "/active", method = RequestMethod.PUT)
+    public ResponseBean updateUser(Long id, UserStatus status) {
 
-        logger.info("update User:" + ImisUtils.objectJsonStr(user));
+        logger.info("active/deactive User:" + id + " to " + status);
 
-        User aUser = userService.updateUser(user);
+        User aUser = userService.activeUser(id, status);
         if (aUser != null) {
             return new ResponseBean("success", "更新成功!");
         }
@@ -50,7 +51,7 @@ public class UserController {
 
     @RequestMapping(value = "/roles", method = RequestMethod.PUT)
     public ResponseBean updateUserRoles(Long userId, Long[] rids) {
-        logger.info("update user " + userId + " 's roles: '" + rids);
+        logger.info("update user " + userId + " 's roles: '" + ImisUtils.objectJsonStr(rids));
         if (userService.updateUserRoles(userId, rids) == 1) {
             return new ResponseBean("success", "更新成功!");
         }
