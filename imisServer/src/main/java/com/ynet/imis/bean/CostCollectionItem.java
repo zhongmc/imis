@@ -7,10 +7,12 @@ public class CostCollectionItem implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private Long costItemId;
-    private String costItemName;
-    private Long costGroupId;
-    private String costGroupName;
+    // private Long costGroupId;
+    // private Long costItemId;
+
+    private String name;
+    private String groupName;
+
     private BigDecimal amounts[];
     private BigDecimal sum;
 
@@ -23,6 +25,8 @@ public class CostCollectionItem implements Serializable {
     }
 
     public CostCollectionItem(String groupName, String itemName) {
+        this.groupName = groupName;
+        this.name = itemName;
         amounts = new BigDecimal[12];
         sum = BigDecimal.valueOf(0);
         for (int i = 0; i < 12; i++)
@@ -30,36 +34,36 @@ public class CostCollectionItem implements Serializable {
 
     }
 
-    public Long getCostItemId() {
-        return this.costItemId;
+    // public Long getCostItemId() {
+    // return this.costItemId;
+    // }
+
+    // public void setCostItemId(Long costItemId) {
+    // this.costItemId = costItemId;
+    // }
+
+    public String getName() {
+        return this.name;
     }
 
-    public void setCostItemId(Long costItemId) {
-        this.costItemId = costItemId;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getCostItemName() {
-        return this.costItemName;
+    // public Long getCostGroupId() {
+    // return this.costGroupId;
+    // }
+
+    // public void setCostGroupId(Long costGroupId) {
+    // this.costGroupId = costGroupId;
+    // }
+
+    public String getGroupName() {
+        return this.groupName;
     }
 
-    public void setCostItemName(String costItemName) {
-        this.costItemName = costItemName;
-    }
-
-    public Long getCostGroupId() {
-        return this.costGroupId;
-    }
-
-    public void setCostGroupId(Long costGroupId) {
-        this.costGroupId = costGroupId;
-    }
-
-    public String getCostGroupName() {
-        return this.costGroupName;
-    }
-
-    public void setCostGroupName(String costGroupName) {
-        this.costGroupName = costGroupName;
+    public void setGroupName(String groupName) {
+        this.groupName = groupName;
     }
 
     public BigDecimal[] getAmounts() {
@@ -80,6 +84,8 @@ public class CostCollectionItem implements Serializable {
 
     public void addAmount(int month, BigDecimal amount) {
         if (month < 0 || month > 11)
+            return;
+        if (amount == null)
             return;
 
         amounts[month] = amounts[month].add(amount);

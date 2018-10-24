@@ -66,15 +66,6 @@
               width="80">
             </el-table-column>
 
-            <el-table-column
-              label="操作"
-              width="195" v-if="editable">
-              <template slot-scope="scope">
-                <el-button @click="showEditPrjView(scope.row)" style="padding: 3px 4px 3px 4px;margin: 2px"
-                           size="mini">编辑
-                </el-button>
-              </template>
-            </el-table-column>
           </el-table>
 
           <div  class="el-dialog__footer" style="margin: 2px">
@@ -195,6 +186,7 @@ export default {
         if (budgets[i].costItemId == info.costItemId) {
           // info.editFlag = false;
           budgets[i].amounts[info.month] = info;
+          budgets[i].sum = budgets[i].sum + info.amount;
           this.$set(info, "editFlag", false);
         }
       }

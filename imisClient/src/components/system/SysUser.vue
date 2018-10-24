@@ -37,7 +37,7 @@
                 active-text="启用"
                 active-value="ACTIVE"
                 inactive-value="FREEZE"
-                :key="item.id"
+                
                 @change="switchChange(item.status,item.id,index)"
                 inactive-text="禁用">
               </el-switch>
@@ -58,7 +58,7 @@
                 title="角色列表"
                 width="200"
                 @hide="updateUserRoles(item.id,index)"
-                :key="item.id"
+               
                 trigger="click">
                 <el-select v-model="selRoles" multiple placeholder="请选择角色">
                   <el-option
@@ -80,7 +80,7 @@
       </el-card>
 
       <div style="display:flex;align-items:center;">           
-        <el-button type="primary" circle=true icon="el-icon-plus" @click="showAddUserView">
+        <el-button type="primary" circle icon="el-icon-plus" @click="showAddUserView">
            
           </el-button>
        </div>
@@ -159,7 +159,7 @@ export default {
       user: {
         id: -1,
         userName: "",
-        depId: -1,
+        depId: null,
         nickName: "",
         password: "123",
         status: "ACTIVE"
@@ -194,7 +194,7 @@ export default {
         id: -1,
         userName: "",
         nickName: "",
-        depId: -1,
+        depId: null,
         password: "123",
         status: "ACTIVE"
       };

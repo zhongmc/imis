@@ -15,6 +15,6 @@ public interface CostBudgetInfoRepository extends JpaRepository<CostBudgetInfo, 
     @Query("select a from CostBudgetInfo a where a.depId=?1 and a.year=?2")
     List<CostBudgetInfo> getDepartmentCostCollection(Long depId, int year);
 
-    @Query("select a from CostBudgetInfo a where a.depId=?1 and a.costItemId=?2 and a.year=?3")
-    List<CostBudgetInfo> getDepartmentCostCollectionByItem(Long depId, Long itemId, int year);
+    @Query("select a from CostBudgetInfo a where a.depId in ?1 and a.costItemId=?2 and a.year=?3")
+    List<CostBudgetInfo> getDepartmentCostCollectionByItem(List<Long> depId, Long itemId, int year);
 }

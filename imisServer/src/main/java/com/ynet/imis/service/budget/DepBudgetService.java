@@ -15,7 +15,7 @@ public interface DepBudgetService {
 
     public List<CostBudgetInfo> getCostCollectionByDepId(Long depId, int year);
 
-    public List<CostBudgetInfo> getCostCollectionByItemDepId(Long depId, Long itemId, int year);
+    public List<CostBudgetInfo> getCostCollectionByItemDepId(List<Long> depId, Long itemId, int year);
 
     public List<DepCommBudget> getDepCommBudgets(Long depId);
 

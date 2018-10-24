@@ -55,7 +55,7 @@ public class DepBudgetServiceImpl implements DepBudgetService {
     }
 
     @Override
-    public List<CostBudgetInfo> getCostCollectionByItemDepId(Long depId, Long itemId, int year) {
+    public List<CostBudgetInfo> getCostCollectionByItemDepId(List<Long> depId, Long itemId, int year) {
         List<CostBudgetInfo> infos = costBudgetInfoDao.getDepartmentCostCollectionByItem(depId, itemId, year);
         return infos;
     }

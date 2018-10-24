@@ -7,11 +7,6 @@
             v-loading="tableLoading"
             border
             stripe
-            show-summary            
-            :summary-method="getSummaries"
-        
-            @cell-mouse-enter="handleMouseEnter"
-            @cell-mouse-leave="handleMouseOut"            
             size="mini"
             style="width: 100%">
 
@@ -23,7 +18,7 @@
               width="90">
             </el-table-column>
             <el-table-column
-              prop="itemName"
+              prop= "name"
               fixed
               width="85"
               align="left"
@@ -37,7 +32,7 @@
 
                 <template slot-scope="scope">
                   <span>
-                    {{ formatMoney( scope.row.amounts[index].amount,1) }}
+                    {{ formatMoney( scope.row.amounts[index], 1) }}
                   </span>     
                   <!-- span>{{formatMoney( scope.row.amounts[index].amount,1) }}</span -->
                 </template>

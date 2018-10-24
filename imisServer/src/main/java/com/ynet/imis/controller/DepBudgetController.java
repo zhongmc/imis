@@ -14,6 +14,7 @@ import com.ynet.imis.domain.budget.PrjMonthBudget;
 import com.ynet.imis.service.budget.BudgetAdminService;
 import com.ynet.imis.service.budget.DepBudgetService;
 import com.ynet.imis.service.budget.PrjBudgetService;
+import com.ynet.imis.service.org.DepartmentService;
 import com.ynet.imis.utils.ImisUtils;
 
 import org.slf4j.Logger;
@@ -37,6 +38,9 @@ public class DepBudgetController {
 
     @Autowired
     private PrjBudgetService prjBudgetService;
+
+    @Autowired
+    private DepartmentService departmentService;
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -159,26 +163,37 @@ public class DepBudgetController {
 
         List<CostCollectionItem> items = new ArrayList<CostCollectionItem>();
 
-        List<CostBudgetInfo> costBudgetInfos = depBudgetService.getCostCollectionByDepId(depId, year);
+        // List<CostBudgetInfo> costBudgetInfos =
+        // depBudgetService.getCostCollectionByDepId(depId, year);
 
-        if (costBudgetInfos == null || costBudgetInfos.size() == 0)
-            return items;
+        // if (costBudgetInfos == null || costBudgetInfos.size() == 0)
+        // return items;
 
         List<CostItem> costItems = budgetAdminService.getCostItems();
         // List<CostGroup> costGroups = budgetAdminService.getCostGroups();
 
+        CostCollectionItem sumItem = new CostCollectionItem("", "汇总");
+
+        List<Long> depIds = departmentService.listAppDepartmentsIdByPid(depId);
+
+        logger.info("Dep ids: " + ImisUtils.objectJsonStr(depIds));
         for (int i = 0; i < costItems.size(); i++) {
             CostItem costItem = costItems.get(i);
             CostGroup costGroup = costItem.getGroup();
             CostCollectionItem item = new CostCollectionItem(costGroup.getName(), costItem.getName());
             items.add(item);
-            List<CostBudgetInfo> costs = depBudgetService.getCostCollectionByItemDepId(depId, costItem.getId(), year);
+            List<CostBudgetInfo> costs = depBudgetService.getCostCollectionByItemDepId(depIds, costItem.getId(), year);
 
             for (int k = 0; k < costs.size(); k++) {
                 CostBudgetInfo cost = costs.get(k);
                 item.addAmount(cost.getMonth(), cost.getAmount());
+                if (costItem.getBeAmount()) {
+                    sumItem.addAmount(cost.getMonth(), cost.getAmount()); // 统计
+                }
             }
         }
+
+        items.add(sumItem);
 
         logger.info(" dep cost collection: " + ImisUtils.objectJsonStr(items));
         return items;

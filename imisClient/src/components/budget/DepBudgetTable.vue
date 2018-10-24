@@ -54,7 +54,7 @@ export default {
       var _this = this;
       this.loading = true;
 
-      this.getRequest("/budget/budgetTable/" + depId).then(resp => {
+      this.getRequest("/budget/budgetTable/" + this.depId).then(resp => {
         if (resp && resp.status == 200) {
           _this.budgetTable = resp.data;
         }
