@@ -4,7 +4,7 @@
 * @description 项目公共预算条目
 * @created Tue Sep 18 2018 17:37:23 GMT+0800 (中国标准时间)
 * @copyright YNET
-* @last-modified Thu Oct 18 2018 14:53:03 GMT+0800 (中国标准时间)
+* @last-modified Thu Oct 25 2018 15:54:14 GMT+0800 (中国标准时间)
 */
 
 package com.ynet.imis.domain.budget;
@@ -28,6 +28,17 @@ import com.ynet.imis.domain.project.Project;
 public class PrjCommBudget extends CommBudget {
 
     private static final long serialVersionUID = 9003596827131602523L;
+
+    @Column(name = "DEP_ID")
+    private Long depId;
+
+    public Long getDepId() {
+        return this.depId;
+    }
+
+    public void setDepId(Long depId) {
+        this.depId = depId;
+    }
 
     // private Project project;
 

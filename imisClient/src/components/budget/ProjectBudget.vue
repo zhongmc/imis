@@ -17,12 +17,12 @@
               align="left"
               fixed
               label="项目编号"
-              width="80">
+              width="150">
             </el-table-column>
             <el-table-column
               prop="prjName"
               fixed
-              width="150"
+              width="220"
               align="left"
               label="项目名称">
             </el-table-column>
@@ -106,6 +106,18 @@
             </el-table-column>
           </el-table>
 
+          <div style="display: flex;justify-content: space-between;margin: 2px">
+            <el-pagination
+              background
+              :page-size="pageSize"
+              :current-page="currentPage"
+              @current-change="currentChange"
+              layout="prev, pager, next"
+              :total="totalCount">
+            </el-pagination>
+          </div>
+      
+ 
 
   </div>
 </template>
@@ -124,10 +136,22 @@ export default {
       var _this = this;
       this.loading = true;
 
-      this.getRequest("/budget/dep/prj/" + this.depId).then(resp => {
+      var url =
+        "/budget/dep/prj/paged?depId=" +
+        this.depId +
+        "&size=" +
+        this.pageSize +
+        "&page=" +
+        this.currentPage;
+      // var url = "/budget/dep/prj/" + this.depId;
+
+      this.getRequest(url).then(resp => {
         if (resp && resp.status == 200) {
-          _this.initData(resp.data);
-          _this.prjBudgets = resp.data;
+          //     console.log(resp.data);
+
+          this.totalCount = resp.data.totalElements;
+          _this.initData(resp.data.content);
+          _this.prjBudgets = resp.data.content;
         }
       });
     },
@@ -153,6 +177,11 @@ export default {
 
       //     console.log("format amount:" + cellValue + "col prop:" + column.property);
       return this.formatMoney(tmp, 1);
+    },
+
+    currentChange(currentChange) {
+      this.currentPage = currentChange;
+      this.loadData();
     },
 
     initData(budgets) {
@@ -366,6 +395,11 @@ export default {
       amount: 0,
       editingRow: null,
       editingProp: "",
+
+      totalCount: -1,
+      currentPage: 0,
+      pageSize: 10,
+
       tableTitles: [
         { title: "一月", idx: "1" },
         { title: "二月", idx: "2" },

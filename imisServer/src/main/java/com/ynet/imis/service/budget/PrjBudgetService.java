@@ -4,11 +4,13 @@
 * @description 
 * @created Wed Oct 10 2018 11:11:50 GMT+0800 (中国标准时间)
 * @copyright YNET
-* @last-modified Mon Oct 22 2018 10:27:47 GMT+0800 (中国标准时间)
+* @last-modified Fri Oct 26 2018 09:47:28 GMT+0800 (中国标准时间)
 */
 
 package com.ynet.imis.service.budget;
 
+import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 import com.ynet.imis.domain.budget.PrjBudget;
@@ -47,4 +49,21 @@ public interface PrjBudgetService {
     public PrjRightsConfirm savePrjRightsConfirm(PrjRightsConfirm prjRightsConfirm);
 
     public int deletePrjRightsConfirm(Long id);
+
+    // 根据部门id 取所有的项目预算
+    public List<PrjMonthBudget> getPrjMonthBudgetsByDepId(List<Long> depIds, int year);
+
+    // 根据部门id 取所有的项目确权
+    public List<PrjRightsConfirm> getPrjRightsConfirmByDepId(List<Long> depIds, int year);
+
+    // 根据部门id 取所有的项目现金收入
+    public List<PrjIncomeForecast> getPrjIncomesByDepId(List<Long> depIds, int year);
+
+    // 根据prjId 取所有的预算
+    public List<PrjMonthBudget> getPrjMonthBudgetsByPrjId(List<Long> prjIds, int year);
+
+    public PrjIncomeForecast confirmPrjIncome(Long incomeId, Date date, BigDecimal amount);
+
+    public PrjRightsConfirm confirmPrjRight(Long rightId, Date date, BigDecimal amount);
+
 }

@@ -4,16 +4,25 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
+
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 
 import com.ynet.imis.domain.budget.CostBudgetInfo;
 import com.ynet.imis.domain.budget.DepCommBudget;
 import com.ynet.imis.domain.budget.PrjBudget;
-
+import com.ynet.imis.domain.budget.PrjMonthBudget;
 import com.ynet.imis.repository.budget.CostBudgetInfoRepository;
 import com.ynet.imis.repository.budget.DepCommBudgetRepository;
 import com.ynet.imis.repository.budget.PrjBudgetRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -94,6 +103,43 @@ public class DepBudgetServiceImpl implements DepBudgetService {
         }
 
         return cprjBudgets;
+    }
+
+    @Override
+    public Page<Map<String, Object>> getDepPrjBudgetByPage(int page, int size, Long depId, int year) {
+
+        Specification<PrjBudget> spec = new Specification<PrjBudget>() {
+            private static final long serialVersionUID = 3933287087564315019L;
+
+            @Override
+            public Predicate toPredicate(Root<PrjBudget> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+
+                Predicate predicate = null;
+
+                if (depId != null && depId.longValue() != -1) {
+                    predicate = cb.equal(root.<Long>get("depId"), depId);
+                    // if (predicate == null)
+                    // predicate = pred;
+                    // else
+                    // predicate = cb.and(predicate, pred);
+                }
+
+                return predicate;
+            }
+
+        };
+        PageRequest pageReq = PageRequest.of(page, size);
+        Page<PrjBudget> prjBudgets = prjBudgetDao.findAll(spec, pageReq);
+
+        return prjBudgets.map(new Function<PrjBudget, Map<String, Object>>() {
+
+            @Override
+            public Map<String, Object> apply(PrjBudget prjBudget) {
+                return prjBudget.getMapedObject(year);
+
+            }
+        });
+
     }
 
 }

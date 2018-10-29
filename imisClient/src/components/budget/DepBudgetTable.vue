@@ -11,7 +11,7 @@
             style="width: 100%">
 
             <el-table-column
-              prop="label"
+              prop="name"
               fixed
               width="85"
               align="left"
@@ -19,22 +19,31 @@
             </el-table-column>
 
             <el-table-column
-              v-for="(item, index ) in tableTitles" :key="index"
-              :label="tableTitles[index].title" 
-              :prop=tableTitles[index].idx width="100" >
+              label="总计"
+              prop="sum"
+               :formatter="formatAmount"
+              align = "right"
+              width="120">
 
                 <template slot-scope="scope">
-                  <span>{{ formatMoney( scope.row.amounts[index].amount,1) }}</span>
+                  <span>{{ formatMoney( scope.row.sum,1) }}</span>
                 </template>
 
             </el-table-column>
 
             <el-table-column
-              label="总计"
-             
+              v-for="(item, index ) in tableTitles" :key="index"
+              :label="tableTitles[index].title" 
+              :prop=tableTitles[index].idx width="100" 
               align = "right"
-              width="120">
+              >
+
+                <template slot-scope="scope">
+                  <span>{{ formatMoney( scope.row.amounts[index],1) }}</span>
+                </template>
+
             </el-table-column>
+
 
           </el-table>
   </div>
@@ -54,7 +63,7 @@ export default {
       var _this = this;
       this.loading = true;
 
-      this.getRequest("/budget/budgetTable/" + this.depId).then(resp => {
+      this.getRequest("/budget/dep/budgetTable/" + this.depId).then(resp => {
         if (resp && resp.status == 200) {
           _this.budgetTable = resp.data;
         }

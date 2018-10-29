@@ -17,6 +17,17 @@ public class PrjRightsConfirm extends CommBudget {
 
     private static final long serialVersionUID = -5724326134628837609L;
 
+    @Column(name = "DEP_ID")
+    private Long depId;
+
+    public Long getDepId() {
+        return this.depId;
+    }
+
+    public void setDepId(Long depId) {
+        this.depId = depId;
+    }
+
     @Column(name = "PRJ_ID")
     private Long prjId;
 

@@ -21,12 +21,12 @@
               fixed
               label="费用类别"
               :formatter="formatExpenseGroup"
-              width="90">
+              width="150">
             </el-table-column>
             <el-table-column
               prop="name"
               fixed
-              width="85"
+              width="200"
               align="left"
               label="费用名称">
             </el-table-column>

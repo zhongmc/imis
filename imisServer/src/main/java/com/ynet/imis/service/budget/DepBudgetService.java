@@ -1,9 +1,14 @@
 package com.ynet.imis.service.budget;
 
 import java.util.List;
+import java.util.Map;
 
 import com.ynet.imis.domain.budget.CostBudgetInfo;
 import com.ynet.imis.domain.budget.DepCommBudget;
+import com.ynet.imis.domain.budget.PrjBudget;
+import com.ynet.imis.domain.budget.PrjMonthBudget;
+
+import org.springframework.data.domain.Page;
 
 public interface DepBudgetService {
 
@@ -24,5 +29,7 @@ public interface DepBudgetService {
     public int deleteDepCommBudget(Long id);
 
     public List<Object> getDepPrjBudgets(Long depId);
+
+    Page<Map<String, Object>> getDepPrjBudgetByPage(int page, int size, Long depId, int year);
 
 }

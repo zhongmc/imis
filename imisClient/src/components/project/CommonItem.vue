@@ -2,6 +2,7 @@
 
 <div> 
 
+
 <el-form :model="commonItem" :rules="rules" ref="addCommItemForm" style="margin: 0px;padding: 0px;">
 
         <el-row>
@@ -12,7 +13,7 @@
                 </el-form-item>
             </el-col>
 
-            <el-col :span="6"  v-if="(type=='cost' | type=='income')">
+            <el-col :span="6">
                 <el-form-item label="金额:" prop="amount">
                   <el-input v-model="commonItem.amount" size="mini" style="width: 150px"
                             placeholder="金额"></el-input>
@@ -45,6 +46,51 @@
         </el-row>
     </el-form>
 
+<!-- confir mdialog -->
+    <el-form :rules="confirmRules" :model="confirmInfo" ref="doConfirm" style="margin: 0px;padding: 0px;">
+      <div style="text-align: left">
+        <el-dialog
+          :title="dialogTitle"
+          style="padding: 0px;"
+          :close-on-click-modal="false"
+          :visible.sync="dialogVisible"
+          width="50%">
+          <el-row>
+
+            <el-col :span="20">
+                <el-form-item label="金额:" prop="realAmount">
+                  <el-input v-model="confirmInfo.realAmount" size="mini" style="width: 150px"
+                            placeholder="金额"></el-input>
+                </el-form-item>
+           </el-col>
+
+          </el-row>
+          <el-row>
+
+          <el-col   :span="20">
+            <el-form-item prop="endDate" label="确认日期:">
+                 <el-date-picker
+                    v-model="confirmInfo.endDate"
+                    size="mini"
+                    style="width: 130px"
+                    type="date"
+                    value-format="yyyy-MM-dd"
+                    placeholder="确认日期">
+                  </el-date-picker>
+
+            </el-form-item>
+          </el-col>          
+          </el-row>
+
+
+          <span slot="footer" class="dialog-footer">
+    <el-button size="mini" @click="cancelEidt">取 消</el-button>
+    <el-button size="mini" type="primary" @click="doConfirm('doConfirm')">确 定</el-button>
+  </span>
+        </el-dialog>
+      </div>
+    </el-form> <!-- end confirm dialog -->
+
           <el-table
             :data="commonItemes"
             v-loading="tableLoading"
@@ -69,12 +115,32 @@
 
             </el-table-column>
 
-            <el-table-column  v-if="(type =='cost' || type == 'income')"
+
+            <el-table-column 
               prop="amount"
               width="100"
               align="right"
               :formatter="formatAmount"
               label="金额">
+            </el-table-column>
+
+  
+            <el-table-column v-if="(type =='confirm' || type == 'income')"
+              prop="endDate"
+              width="100"
+              align="left"
+              label="确认日期">
+              <template slot-scope="scope">{{ scope.row.endDate | formatDate}}</template>
+
+            </el-table-column>
+
+            
+            <el-table-column  v-if="(type =='confirm' || type == 'income')"
+              prop="realAmount"
+              width="100"
+              align="right"
+              :formatter="formatAmount"
+              label="确认金额">
             </el-table-column>
 
             <el-table-column
@@ -91,6 +157,10 @@
                 <el-button @click="editCommonItem(scope.row)"
                       style="padding: 3px 4px 3px 4px;margin: 2px"
                            size="mini">编辑
+                </el-button>
+
+               <el-button   v-if="(type =='confirm' || type == 'income')" style="padding: 3px 4px 3px 4px;margin: 2px" size="mini"
+                           @click="confirmCommonItem(scope.row)">完成
                 </el-button>
 
                <el-button type="danger" style="padding: 3px 4px 3px 4px;margin: 2px" size="mini"
@@ -113,10 +183,12 @@ export default {
   beforeMount: function() {},
 
   mounted: function() {
-    console.log(this.name + " prjId:" + this.prjid);
+    console.log(this.name + " prjId:" + this.prjid + " depId: " + this.depid);
     this.placeHolder = "请输入新的" + this.name + "名称...";
     (this.label = this.name + "项名称："), this.loadData();
     this.commonItem.prjId = this.prjid;
+    this.commonItem.depId = this.depid;
+    this.dialogTitle = "确认" + this.name;
   },
 
   methods: {
@@ -137,6 +209,7 @@ export default {
     emptyCommonItemData() {
       this.commonItem.id = -1;
       this.commonItem.prjId = this.prjid;
+      this.commonItem.depId = this.depid;
       this.commonItem.name = "";
       this.commonItem.bgDate = "";
       this.commonItem.amount = 0;
@@ -161,6 +234,42 @@ export default {
           });
         }
       });
+    },
+
+    confirmCommonItem(row) {
+      this.dialogVisible = true;
+      this.confirmInfo.id = row.id;
+      this.confirmInfo.realAmount = row.amount;
+      this.confirmInfo.endDate = row.bgDate;
+      this.confirmItem = row;
+    },
+
+    doConfirm(formName) {
+      var _this = this;
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+          this.tableLoading = true;
+          var url = "/budget/project/" + this.type + "/done";
+          this.postRequest(url, {
+            id: _this.confirmInfo.id,
+            endDate: _this.confirmInfo.endDate,
+            amount: _this.confirmInfo.realAmount
+          }).then(resp => {
+            _this.tableLoading = false;
+            if (resp && resp.status == 200) {
+              var data = resp.data;
+              _this.$message({ type: data.status, message: data.message });
+              _this.dialogVisible = false;
+              _this.confirmItem.realAmount = _this.confirmInfo.realAmount;
+              _this.confirmItem.endDate = _this.confirmInfo.endDate;
+            }
+          });
+        }
+      });
+    },
+
+    cancelEidt() {
+      this.dialogVisible = false;
     },
 
     deleteCommonItem(row) {
@@ -193,6 +302,7 @@ export default {
       this.editing = true;
 
       this.commonItem.id = row.id;
+      this.commonItem.depId = row.depId;
       this.commonItem.prjId = row.prjId;
       this.commonItem.name = row.name;
       this.commonItem.amount = row.amount;
@@ -232,11 +342,22 @@ export default {
       buttonLabel: "确定新增",
       editing: false,
 
+      dialogVisible: false,
+      dialogTitle: "",
+      confirmItem: {},
+
+      confirmInfo: {
+        id: 0,
+        endDate: null,
+        realAmount: 0
+      },
+
       faangledoubleup: "fa-angle-double-up",
       faangledoubledown: "fa-angle-double-down",
 
       commonItem: {
         id: -1,
+        depId: null,
         prjId: null,
         name: "",
         amount: 0,
@@ -248,11 +369,17 @@ export default {
         name: [{ required: true, message: "名称不能为空", trigger: "blur" }],
         amount: [{ required: true, message: "必填:金额", trigger: "blur" }],
         bgDate: [{ required: true, message: "必填:发生日期", trigger: "blur" }]
+      },
+      confirmRules: {
+        endDate: [
+          { required: true, message: "必填:发生日期", trigger: "blur" }
+        ],
+        realAmount: [{ required: true, message: "必填:金额", trigger: "blur" }]
       }
     };
   },
 
-  props: ["prjid", "type", "name"]
+  props: ["prjid", "type", "depid", "name"]
 };
 </script>
 

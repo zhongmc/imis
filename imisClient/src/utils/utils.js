@@ -95,7 +95,7 @@ export const removeFormatMoney = s => {
 * 返回：返回格式化后的数值字符串. 
 */
 
-export const formatMoney = (s, type) => {
+export const formatMoney1 = (s, type) => {
   if (/[^0-9\.]/.test(s)) return "0.00";
   if (s == null || s == "null" || s == "") return "0.00";
   s = s.toString().replace(/^(\d*)$/, "$1.");
@@ -111,4 +111,40 @@ export const formatMoney = (s, type) => {
     }
   }
   return s;
+};
+
+//格式化金额的小数点
+
+export const formatMoney = (value, type) => {
+  var b = false;
+
+  if (value == null || value == "") return "0";
+
+  value = value.toString();
+
+  if (value.indexOf("-") != -1) {
+    b = true;
+
+    value = value.substring(1, value.length);
+  }
+
+  if (/^\-?[0-9]+(.[0-9]+)?$/.test(value)) {
+    value = value.toString().replace(/^(\d*)$/, "$1.");
+
+    value = (value + "00").replace(/(\d*\.\d\d)\d*/, "$1");
+
+    value = value.replace(".", ",");
+
+    var re = /(\d)(\d{3},)/;
+
+    while (re.test(value)) value = value.replace(re, "$1,$2");
+
+    value = value.replace(/,(\d\d)$/, ".$1");
+  }
+
+  if (b) {
+    value = "-" + value;
+  }
+
+  return value;
 };

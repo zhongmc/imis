@@ -120,4 +120,9 @@ public class BudgetAdminServiceImpl implements BudgetAdminService {
         return 1;
     }
 
+    @Override
+    public List<BudgetType> getBudgetTypes() {
+        return budgetTypeDao.findAll();
+    }
+
 }

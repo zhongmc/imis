@@ -4,7 +4,7 @@
 * @description 项目月预算条目
 * @created Tue Sep 18 2018 16:53:38 GMT+0800 (中国标准时间)
 * @copyright YNET
-* @last-modified Thu Oct 18 2018 14:31:23 GMT+0800 (中国标准时间)
+* @last-modified Thu Oct 25 2018 17:13:56 GMT+0800 (中国标准时间)
 */
 
 package com.ynet.imis.domain.budget;
@@ -52,6 +52,17 @@ public class PrjMonthBudget extends AbstractEntity {
     @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     @JoinColumn(name = "PRJ_BUDGET_ID", nullable = false, updatable = false, insertable = false)
     private PrjBudget prjBudget;
+
+    @Column(name = "PRJ_ID")
+    private Long prjId;
+
+    public Long getPrjId() {
+        return this.prjId;
+    }
+
+    public void setPrjId(Long prjId) {
+        this.prjId = prjId;
+    }
 
     public PrjMonthBudget() {
 

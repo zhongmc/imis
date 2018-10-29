@@ -4,11 +4,12 @@
 * @description 
 * @created Wed Oct 10 2018 10:38:38 GMT+0800 (中国标准时间)
 * @copyright YNET
-* @last-modified Tue Oct 23 2018 19:01:18 GMT+0800 (中国标准时间)
+* @last-modified Fri Oct 26 2018 10:17:55 GMT+0800 (中国标准时间)
 */
 
 package com.ynet.imis.controller;
 
+import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -90,6 +91,7 @@ public class PrjBudgetController {
             pMB.setMonth((short) month);
             pMB.setPrjBudget(prjBudget);
             pMB.setDepId(depId);
+            pMB.setPrjId(prjId);
 
             prjBudget.addPrjMonthBudget(pMB);
 
@@ -164,14 +166,38 @@ public class PrjBudgetController {
         return new ResponseBean("error", "添加失败!");
     }
 
+    // 确认确权
+    @RequestMapping(value = "/project/confirm/done", method = RequestMethod.POST)
+    public ResponseBean doPrjRightsConfirm(Long id, Date endDate, BigDecimal amount) {
+        logger.info("do project rights confirm: " + id + " ed:" + endDate + " amount: " + amount);
+        PrjRightsConfirm pcb = prjBudgetService.confirmPrjRight(id, endDate, amount); // savePrjRightsConfirm(prjRightsConfirm);
+        logger.info(ImisUtils.objectJsonStr(pcb));
+        if (pcb != null) {
+            return new ResponseBean("success", "确认成功!", pcb);
+        }
+        return new ResponseBean("error", "确认失败!");
+    }
+
+    // 确认收入
+    @RequestMapping(value = "/project/income/done", method = RequestMethod.POST)
+    public ResponseBean doPrjIncome(Long id, Date endDate, BigDecimal amount) {
+        logger.info("do project income confirm: " + id + " ed:" + endDate + " amount: " + amount);
+        PrjIncomeForecast pcb = prjBudgetService.confirmPrjIncome(id, endDate, amount); // savePrjRightsConfirm(prjRightsConfirm);
+        logger.info(ImisUtils.objectJsonStr(pcb));
+        if (pcb != null) {
+            return new ResponseBean("success", "确认成功!", pcb);
+        }
+        return new ResponseBean("error", "确认失败!");
+    }
+
     @RequestMapping(value = "/project/confirm", method = RequestMethod.PUT)
     public ResponseBean updatePrjRightsConfirm(PrjRightsConfirm prjRightsConfirm) {
         logger.info("update project PrjRightsConfirm : " + ImisUtils.objectJsonStr(prjRightsConfirm));
         PrjRightsConfirm pcb = prjBudgetService.savePrjRightsConfirm(prjRightsConfirm);
         if (pcb != null) {
-            return new ResponseBean("success", "添加成功!", pcb);
+            return new ResponseBean("success", "修改成功!", pcb);
         }
-        return new ResponseBean("error", "添加失败!");
+        return new ResponseBean("error", "修改失败!");
     }
 
     @RequestMapping(value = "/project/confirm/{id}", method = RequestMethod.DELETE)

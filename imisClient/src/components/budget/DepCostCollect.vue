@@ -7,6 +7,12 @@
             v-loading="tableLoading"
             border
             stripe
+
+:header-row-style="{
+    'background-color': '#efefef',
+    'color': 'rgb(103, 194, 58)',
+    'border-bottom': '1px rgb(103, 194, 58) solid'
+}"            
             size="mini"
             style="width: 100%">
 
@@ -26,8 +32,17 @@
             </el-table-column>
 
             <el-table-column
+              label="总计"
+              prop="sum"
+              :formatter="formatAmount"
+              align = "right"
+              width="120">
+            </el-table-column>
+
+            <el-table-column
               v-for="(item, index ) in tableTitles" :key="index"
               :label="tableTitles[index].title" 
+              align = "right"
               :prop=tableTitles[index].idx width="100" >
 
                 <template slot-scope="scope">
@@ -39,13 +54,6 @@
 
             </el-table-column>
 
-            <el-table-column
-              label="总计"
-              prop="sum"
-              :formatter="formatAmount"
-              align = "right"
-              width="120">
-            </el-table-column>
 
             <el-table-column
               prop="desc"

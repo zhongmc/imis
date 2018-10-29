@@ -39,4 +39,6 @@ public interface BudgetAdminService {
 
     public List<CostGroup> getCostGroups();
 
+    public List<BudgetType> getBudgetTypes();
+
 }

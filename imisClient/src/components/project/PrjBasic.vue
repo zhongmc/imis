@@ -170,12 +170,13 @@
             <el-table-column
               prop="prjNo"
               label="项目编号"
-              width="80">
+              width="150">
             </el-table-column>
 
             <el-table-column
               prop="name"
               label="项目名称"
+               fixed
               width="250">
             </el-table-column>
 
@@ -192,9 +193,8 @@
               prop="customName"
               :formatter="formatCustomName"              
               align="left"
-              fixed
               label="客户名称"
-              width="90">
+              width="200">
             </el-table-column>
 
             <el-table-column
@@ -800,7 +800,12 @@ export default {
     showEditPrjBudgetView(row) {
       this.$router.push({
         name: "项目预算",
-        params: { id: row.id, prjNo: row.prjNo, prjName: row.name }
+        params: {
+          id: row.id,
+          depId: row.depId,
+          prjNo: row.prjNo,
+          prjName: row.name
+        }
       });
     },
 

@@ -4,7 +4,7 @@
 * @description 公共预算条目
 * @created Tue Sep 18 2018 16:48:34 GMT+0800 (中国标准时间)
 * @copyright YNET
-* @last-modified Wed Oct 17 2018 10:02:14 GMT+0800 (中国标准时间)
+* @last-modified Fri Oct 26 2018 09:41:20 GMT+0800 (中国标准时间)
 */
 
 package com.ynet.imis.domain.budget;
@@ -31,7 +31,12 @@ public class CommBudget extends AbstractEntity {
     @Column(name = "BG_DATE")
     protected Date bgDate;
 
+    @Column(name = "END_DATE")
+    protected Date endDate;
+
     protected BigDecimal amount;
+
+    protected BigDecimal realAmount;
 
     public CommBudget() {
 
@@ -45,12 +50,28 @@ public class CommBudget extends AbstractEntity {
         this.amount = amount;
     }
 
+    public BigDecimal getRealAmount() {
+        return realAmount;
+    }
+
+    public void setRealAmount(BigDecimal amount) {
+        this.realAmount = amount;
+    }
+
     public Date getBgDate() {
         return bgDate;
     }
 
     public void setBgDate(Date value) {
         this.bgDate = value;
+    }
+
+    public Date getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(Date value) {
+        this.endDate = value;
     }
 
     // //类别

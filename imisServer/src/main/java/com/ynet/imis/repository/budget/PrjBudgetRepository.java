@@ -4,7 +4,7 @@
 * @description 
 * @created Wed Oct 10 2018 10:52:05 GMT+0800 (中国标准时间)
 * @copyright YNET
-* @last-modified Mon Oct 22 2018 11:18:42 GMT+0800 (中国标准时间)
+* @last-modified Mon Oct 29 2018 15:14:46 GMT+0800 (中国标准时间)
 */
 
 package com.ynet.imis.repository.budget;
@@ -16,10 +16,11 @@ import com.ynet.imis.domain.budget.PrjBudget;
 
 import org.apache.ibatis.annotations.Param;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
-public interface PrjBudgetRepository extends JpaRepository<PrjBudget, Long> {
+public interface PrjBudgetRepository extends JpaRepository<PrjBudget, Long>, JpaSpecificationExecutor<PrjBudget> {
 
     @Query("select a from PrjBudget a where a.prjId=?1")
     public PrjBudget getProjectBudgetByPrjId(Long prjId);
