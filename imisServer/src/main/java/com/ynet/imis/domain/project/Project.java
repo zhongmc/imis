@@ -4,11 +4,12 @@
 * @description 
 * @created Tue Sep 18 2018 18:01:36 GMT+0800 (中国标准时间)
 * @copyright YNET
-* @last-modified Tue Oct 16 2018 10:14:30 GMT+0800 (中国标准时间)
+* @last-modified Tue Oct 30 2018 15:37:18 GMT+0800 (中国标准时间)
 */
 
 package com.ynet.imis.domain.project;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -54,6 +55,36 @@ public class Project extends AbstractEntity {
 
     @Transient
     private String customName;
+
+    private String contractNo;
+
+    private Date contractDate;
+
+    public BigDecimal getContractAmount() {
+        return this.contractAmount;
+    }
+
+    public void setContractAmount(BigDecimal contractAmount) {
+        this.contractAmount = contractAmount;
+    }
+
+    private BigDecimal contractAmount;
+
+    public Date getContractDate() {
+        return this.contractDate;
+    }
+
+    public void setContractDate(Date contractDate) {
+        this.contractDate = contractDate;
+    }
+
+    public String getContractNo() {
+        return this.contractNo;
+    }
+
+    public void setContractNo(String contractNo) {
+        this.contractNo = contractNo;
+    }
 
     @Column(name = "DEP_ID")
     private Long depId;

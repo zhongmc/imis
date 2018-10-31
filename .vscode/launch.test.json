@@ -1,0 +1,30 @@
+{
+    "run": {
+        "default": "",
+        "items": [
+            {
+                "name": "imis-server",
+                "projectName": "imis-server",
+                "workingDirectory": "c:\\xuexi\\imis\\imisServer",
+                "args": [],
+                "vmargs": [],
+                "env": {},
+                "preLaunchTask": ""
+            }
+        ]
+    },
+    "debug": {
+        "default": "",
+        "items": [
+            {
+                "name": "imis-server",
+                "projectName": "imis-server",
+                "workingDirectory": "c:\\xuexi\\imis\\imisServer",
+                "args": [],
+                "vmargs": [],
+                "env": {},
+                "preLaunchTask": ""
+            }
+        ]
+    }
+}

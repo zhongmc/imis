@@ -1,20 +1,14 @@
-package com.ynet.imis.service.project;
+package com.ynet.imis.utils;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Path;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
-import javax.transaction.Transactional;
 
 import com.ynet.imis.domain.budget.PrjBudget;
 import com.ynet.imis.domain.budget.PrjIncomeForecast;
@@ -24,147 +18,102 @@ import com.ynet.imis.domain.org.Custom;
 import com.ynet.imis.domain.project.Project;
 import com.ynet.imis.domain.project.Project.PrjClass;
 import com.ynet.imis.domain.project.Project.PrjType;
-import com.ynet.imis.repository.budget.PrjBudgetRepository;
-import com.ynet.imis.repository.budget.PrjIncomeForecastRepository;
-import com.ynet.imis.repository.budget.PrjRightsConfirmRepository;
-import com.ynet.imis.repository.org.CustomRepository;
-import com.ynet.imis.repository.project.ProjectRepository;
-import com.ynet.imis.utils.ImisUtils;
 
-import org.apache.poi.hssf.usermodel.HSSFCell;
-import org.apache.poi.hssf.usermodel.HSSFRow;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
-import org.hibernate.sql.HSQLCaseFragment;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.jpa.domain.Specification;
-import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-@Service
-@Transactional
-public class ProjectServiceImpl implements ProjectService {
-
+public class Test {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    @Autowired
-    private ProjectRepository projectDao;
+    public static void main(String[] args) {
+        Test t = new Test();
+        try {
+            t.whenImportSuccess();
 
-    @Autowired
-    private CustomRepository customDao;
+            t.importFile(null, Long.valueOf(1122));
 
-    @Autowired
-    private PrjBudgetRepository prjBudgetDao;
-
-    @Autowired
-    private PrjIncomeForecastRepository prjIncomeDao;
-    @Autowired
-    private PrjRightsConfirmRepository prjConfirmDao;
-
-    // private PrjI prjIncomeDao
-    @Override
-    public Project addProject(Project project) {
-
-        return projectDao.save(project);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
-    @Override
-    public Project getProjectById(Long id) {
-        return projectDao.findById(id).get();
-    }
+    public void whenImportSuccess() throws Exception {
 
-    @Override
-    public int deleteProjectById(Long id) {
-        projectDao.deleteById(id);
-        return 1;
-    }
+        File file = new File("D:/公司预算/预算_北1部 2018年.xlsx");
+        FileInputStream instream = new FileInputStream(file);
 
-    @Override
-    public int updateProject(Project project) {
-        projectDao.save(project);
-        return 1;
-    }
+        // XSSFWorkbook workbook;
+        Workbook workbook = WorkbookFactory.create(instream);
 
-    @Override
-    public Page<Project> getProjectByPage(int page, int size, String keywords, Long customId, Long departmentId,
-            Long prjType, Long prjClass, String beginDateScope, List<Long> depIds) {
+        SimpleDateFormat fmt = new SimpleDateFormat("yyyy/mm");
+        Date begDate = null, endDate = null;
+        // XSSFSheet
+        Project prevProject = null;
+        PrjRightsConfirm confirm = null;
+        PrjBudget prevPrjBudget = null;
+        List<PrjIncomeForecast> incomes = new ArrayList<PrjIncomeForecast>();
+        List<PrjRightsConfirm> confirms = new ArrayList<PrjRightsConfirm>();
+        boolean isSamePrj = false;
+        Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
 
-        Specification<Project> spec = new Specification<Project>() {
-            private static final long serialVersionUID = 3933287087564315019L;
-
-            @Override
-            public Predicate toPredicate(Root<Project> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
-
-                Predicate predicate = null;
-                if (keywords != null && keywords.length() > 0) {
-                    predicate = cb.like(root.<String>get("name"), "%" + keywords + "%");
+        Sheet sheet = workbook.getSheet("延续性项目");
+        if (sheet != null) {
+            System.out.println();
+            System.out.println(sheet.getSheetName());
+            // logger.info("read the sheet of " + sheet.getSheetName());
+            Row row = sheet.getRow(0);
+            int cs = row.getPhysicalNumberOfCells();
+            for (int i = 0; i < cs; i++) {
+                Cell cell = row.getCell(i);
+                if (cell != null) {
+                    // logger.info("{}: {}", i, cell.getStringCellValue());
+                    if (i % 8 == 0)
+                        System.out.println();
+                    System.out.print(String.format("%s:%s  ", i, cell.getStringCellValue()));
                 }
-
-                if (customId != null && customId.longValue() != -1) {
-                    Predicate pred = cb.equal(root.<Long>get("customId"), customId);
-                    if (predicate == null)
-                        predicate = pred;
-                    else
-                        predicate = cb.and(predicate, pred);
-                }
-
-                if (customId != null && customId.longValue() != -1) {
-                    Predicate pred = cb.equal(root.<Long>get("customId"), customId);
-                    if (predicate == null)
-                        predicate = pred;
-                    else
-                        predicate = cb.and(predicate, pred);
-                }
-                if (departmentId != null && departmentId.longValue() != -1) {
-
-                    Predicate pred = cb.equal(root.<Long>get("depId"), departmentId);
-                    if (predicate == null)
-                        predicate = pred;
-                    else
-                        predicate = cb.and(predicate, pred);
-                } else if (depIds != null) {
-                    Path<Long> path = root.get("depId");
-                    CriteriaBuilder.In<Object> in = cb.in(path);
-                    for (Long id : depIds)
-                        in.value(id);
-
-                    Predicate pred = cb.and(in);
-
-                    if (predicate == null)
-                        predicate = pred;
-                    else
-                        predicate = cb.and(predicate, pred);
-                }
-
-                return predicate;
             }
-        };
-        PageRequest pageReq = PageRequest.of(page, size);
-        Page<Project> pageOfPrj = projectDao.findAll(spec, pageReq);
+        }
 
-        return pageOfPrj;
+        sheet = workbook.getSheet("新项目");
+        if (sheet != null) {
+            // logger.info("read the sheet of " + sheet.getSheetName());
+            System.out.println();
+            System.out.println();
+            System.out.println(sheet.getSheetName());
+            Row row = sheet.getRow(0);
+            int cs = row.getPhysicalNumberOfCells();
+            for (int i = 0; i < cs; i++) {
+                Cell cell = row.getCell(i);
+                if (cell != null) {
+                    if (i % 8 == 0)
+                        System.out.println();
+                    System.out.print(String.format("%s:%s  ", i, cell.getStringCellValue()));
+                    // logger.info("{}:{}", i, cell.getStringCellValue());
+                }
+            }
+        }
+
+        instream.close();
+        workbook.close();
+
     }
 
     // 从文件中导入 //depId 所属部门
     public void importFile(MultipartFile file, Long depId) throws Exception {
+        // logger.info("import project file: " + file.getName());
 
-        logger.info("import project file: " + file.getName());
-
-        // File afile = new File("D:/公司预算/预算_北1部 2018年.xlsx");
-        // FileInputStream instream = new FileInputStream(afile);
+        File afile = new File("D:/公司预算/预算_北1部 2018年.xlsx");
+        FileInputStream instream = new FileInputStream(afile);
 
         // XSSFWorkbook workbook;
-        Workbook workbook = WorkbookFactory.create(file.getInputStream());
+        Workbook workbook = WorkbookFactory.create(instream);
 
         SimpleDateFormat fmt = new SimpleDateFormat("yyyy/mm");
         Date begDate = null, endDate = null;
@@ -199,9 +148,8 @@ public class ProjectServiceImpl implements ProjectService {
                     continue;
 
                 PrjBudget prjBudget = new PrjBudget();
-                prjBudget.setDepId(depId);
+
                 Project project = new Project();
-                project.setDepId(depId);
 
                 project.setName(prjName);
                 project.setPrjClass(PrjClass.LAST_PRJ);
@@ -236,7 +184,7 @@ public class ProjectServiceImpl implements ProjectService {
                         project.setPrjType(PrjType.PROJECT);
                     else
                         logger.info("Unknow project type of " + prjType + " in excell file " + file.getName()
-                                + " 's line " + (i + 1));
+                                + " 's line " + i + 1);
                 }
 
                 cell = row.getCell(6); // 合同日期
@@ -301,7 +249,6 @@ public class ProjectServiceImpl implements ProjectService {
                     confirm.setBegDate(begDate);
                     confirm.setEndDate(endDate);
                     confirm.setName(confirmName);
-                    confirm.setDepId(depId);
 
                     Calendar cal = Calendar.getInstance();
                     cal.set(Calendar.MONTH, 11);
@@ -329,7 +276,6 @@ public class ProjectServiceImpl implements ProjectService {
                     prjMonth.setManMonth((float) manMonth);
                     prjMonth.setMonth((short) k);
                     prjMonth.setYear(year);
-                    prjMonth.setDepId(depId);
 
                     if (isSamePrj) {
                         prevPrjBudget.addPrjMonthBudget(prjMonth);
@@ -351,17 +297,15 @@ public class ProjectServiceImpl implements ProjectService {
                     PrjIncomeForecast income = new PrjIncomeForecast();
                     income.setAmount(BigDecimal.valueOf(amount));
                     income.setBgDate(calendar.getTime());
-                    income.setDepId(depId);
-
                     incomes.add(income);
 
                 }
 
                 if (isSamePrj) {
 
-                    prevProject = this.projectDao.save(prevProject);
+                    // prevProject = this.projectDao.save(prevProject);
                     prevPrjBudget.setProject(prevProject);
-                    prevPrjBudget = this.prjBudgetDao.save(prevPrjBudget);
+                    // prevPrjBudget = this.prjBudgetDao.save(prevPrjBudget);
 
                     logger.info("Save the same project!");
                     logger.info(ImisUtils.objectJsonStr(prevProject));
@@ -374,7 +318,7 @@ public class ProjectServiceImpl implements ProjectService {
                         income.setDepId(depId);
                         logger.info(ImisUtils.objectJsonStr(income));
                     }
-                    this.prjIncomeDao.saveAll(incomes);
+                    // this.prjIncomeDao.saveAll(incomes);
 
                     logger.info("prj confirms ");
 
@@ -383,7 +327,7 @@ public class ProjectServiceImpl implements ProjectService {
                         aconfirm.setDepId(depId);
                         logger.info(ImisUtils.objectJsonStr(aconfirm));
                     }
-                    this.prjConfirmDao.saveAll(confirms);
+                    // this.prjConfirmDao.saveAll(confirms);
 
                 } else {
 
@@ -394,9 +338,9 @@ public class ProjectServiceImpl implements ProjectService {
 
                     newPrjCount++;
                     project.setDepId(depId);
-                    project = this.projectDao.save(project);
+                    // project = this.projectDao.save(project);
                     prjBudget.setProject(project);
-                    prjBudget = this.prjBudgetDao.save(prjBudget);
+                    // prjBudget = this.prjBudgetDao.save(prjBudget);
                     logger.info(" New  project! " + newPrjCount);
                     logger.info(ImisUtils.objectJsonStr(project));
 
@@ -719,18 +663,24 @@ public class ProjectServiceImpl implements ProjectService {
             // 56:11月回款 57:12月回款
 
         }
+        instream.close();
         workbook.close();
     }
 
     private Custom getOrAddCustomByName(String customName) {
-        Custom custom = this.customDao.findByName(customName);
-        if (custom == null) {
-            logger.info("add custom : " + customName);
-            custom = new Custom();
-            custom.setName(customName);
-            custom = customDao.save(custom);
-        }
+
+        logger.info("New custom:" + customName);
+        Custom custom = new Custom();
+        custom.setName(customName);
         return custom;
+        // Custom custom = this.customDao.findByName(customName);
+        // if (custom == null) {
+        // logger.info("add custom : " + customName);
+        // custom = new Custom();
+        // custom.setName(customName);
+        // custom = customDao.save(custom);
+        // }
+        // return custom;
     }
 
 }

@@ -4,7 +4,7 @@
 * @description 项目月预算条目
 * @created Tue Sep 18 2018 16:53:38 GMT+0800 (中国标准时间)
 * @copyright YNET
-* @last-modified Thu Oct 25 2018 17:13:56 GMT+0800 (中国标准时间)
+* @last-modified Tue Oct 30 2018 17:47:20 GMT+0800 (中国标准时间)
 */
 
 package com.ynet.imis.domain.budget;
@@ -34,8 +34,8 @@ public class PrjMonthBudget extends AbstractEntity {
     private BigDecimal amount;
     private BigDecimal realAmount;
 
-    private int manMonth;
-    private int realManMonth;
+    private float manMonth;
+    private float realManMonth;
 
     @Column(name = "DEP_ID")
     private Long depId;
@@ -68,7 +68,7 @@ public class PrjMonthBudget extends AbstractEntity {
 
     }
 
-    public PrjMonthBudget(Long id, int year, short month, BigDecimal amount, int manMonth) {
+    public PrjMonthBudget(Long id, int year, short month, BigDecimal amount, float manMonth) {
         this.id = id;
         this.year = year;
         this.month = month;
@@ -125,19 +125,19 @@ public class PrjMonthBudget extends AbstractEntity {
         this.depId = dep.getId();
     }
 
-    public int getManMonth() {
+    public float getManMonth() {
         return manMonth;
     }
 
-    public void setManMonth(int value) {
+    public void setManMonth(float value) {
         manMonth = value;
     }
 
-    public int getRealManMonth() {
+    public float getRealManMonth() {
         return realManMonth;
     }
 
-    public void setRealManMonth(int value) {
+    public void setRealManMonth(float value) {
         realManMonth = value;
     }
 
