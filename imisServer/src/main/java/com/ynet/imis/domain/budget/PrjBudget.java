@@ -4,7 +4,7 @@
 * @description 
 * @created Tue Sep 18 2018 16:53:17 GMT+0800 (中国标准时间)
 * @copyright YNET
-* @last-modified Sun Oct 21 2018 17:20:34 GMT+0800 (中国标准时间)
+* @last-modified Fri Nov 02 2018 10:34:32 GMT+0800 (中国标准时间)
 */
 
 package com.ynet.imis.domain.budget;
@@ -36,6 +36,26 @@ public class PrjBudget extends AbstractEntity {
     private static final long serialVersionUID = -5971215572107380355L;
 
     private BigDecimal avgManMonthCost;
+
+    // 递延到今年的人月与费用
+    private double defferedManMonth;
+    private BigDecimal defferedAmount;
+
+    public double getDefferedManMonth() {
+        return this.defferedManMonth;
+    }
+
+    public void setDefferedManMonth(double defferedManMonth) {
+        this.defferedManMonth = defferedManMonth;
+    }
+
+    public BigDecimal getDefferedAmount() {
+        return this.defferedAmount;
+    }
+
+    public void setDefferedAmount(BigDecimal defferedAmount) {
+        this.defferedAmount = defferedAmount;
+    }
 
     @Column(name = "DEP_ID")
     private Long depId;
@@ -157,6 +177,8 @@ public class PrjBudget extends AbstractEntity {
         prjBudget.prjId = prjId;
         prjBudget.prjName = prjName;
         prjBudget.prjNo = prjNo;
+        prjBudget.defferedAmount = defferedAmount;
+        prjBudget.defferedManMonth = defferedManMonth;
         prjBudget.avgManMonthCost = avgManMonthCost;
 
         return prjBudget;

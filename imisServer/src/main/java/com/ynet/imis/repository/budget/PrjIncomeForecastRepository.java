@@ -4,7 +4,7 @@
 * @description 
 * @created Thu Oct 18 2018 15:01:49 GMT+0800 (中国标准时间)
 * @copyright YNET
-* @last-modified Thu Oct 25 2018 17:06:26 GMT+0800 (中国标准时间)
+* @last-modified Thu Nov 01 2018 11:10:22 GMT+0800 (中国标准时间)
 */
 
 package com.ynet.imis.repository.budget;
@@ -21,6 +21,6 @@ public interface PrjIncomeForecastRepository extends JpaRepository<PrjIncomeFore
     @Query("select a from PrjIncomeForecast a where a.prjId=?1")
     public List<PrjIncomeForecast> getAllPrjIncomeForecastsByPrjId(Long prjId);
 
-    @Query("select a from PrjIncomeForecast a where a.depId in ?1 and year(a.bgDate) = ?2")
+    @Query("select a from PrjIncomeForecast a where a.depId in ?1 and year(a.expectDate) = ?2")
     public List<PrjIncomeForecast> getPrjIncomesByDepId(List<Long> depIds, int year);
 }

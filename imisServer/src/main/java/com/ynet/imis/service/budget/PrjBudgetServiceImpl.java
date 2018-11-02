@@ -4,7 +4,7 @@
 * @description 
 * @created Wed Oct 10 2018 11:12:21 GMT+0800 (中国标准时间)
 * @copyright YNET
-* @last-modified Fri Oct 26 2018 09:50:50 GMT+0800 (中国标准时间)
+* @last-modified Thu Nov 01 2018 11:07:45 GMT+0800 (中国标准时间)
 */
 
 package com.ynet.imis.service.budget;
@@ -143,7 +143,7 @@ public class PrjBudgetServiceImpl implements PrjBudgetService {
         PrjIncomeForecast income = this.prjIncomeForecastDao.getOne(incomeId);
         if (income == null)
             return null;
-        income.setEndDate(date);
+        income.setRealDate(date);
         income.setRealAmount(amount);
         prjIncomeForecastDao.save(income);
         return income;
@@ -157,7 +157,7 @@ public class PrjBudgetServiceImpl implements PrjBudgetService {
         if (confirm == null)
             return null;
 
-        confirm.setEndDate(date);
+        confirm.setRealDate(date);
         confirm.setRealAmount(amount);
         prjRIghtsConfirmDao.save(confirm);
         return confirm;

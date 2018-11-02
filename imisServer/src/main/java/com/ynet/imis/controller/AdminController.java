@@ -4,7 +4,7 @@
 * @description 
 * @created Mon Oct 08 2018 10:51:34 GMT+0800 (中国标准时间)
 * @copyright YNET
-* @last-modified Sun Oct 21 2018 11:02:03 GMT+0800 (中国标准时间)
+* @last-modified Fri Nov 02 2018 17:26:46 GMT+0800 (中国标准时间)
 */
 
 package com.ynet.imis.controller;
@@ -28,6 +28,7 @@ import com.ynet.imis.service.menu.MenuService;
 import com.ynet.imis.service.menu.RoleService;
 import com.ynet.imis.service.org.CustomService;
 import com.ynet.imis.service.org.DepartmentService;
+import com.ynet.imis.service.project.ProjectService;
 import com.ynet.imis.utils.ImisUtils;
 
 import org.slf4j.Logger;
@@ -38,6 +39,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping(value = "/system")
@@ -57,6 +59,9 @@ public class AdminController {
 
     @Autowired
     BudgetAdminService budgetAdminService;
+
+    @Autowired
+    private ProjectService projectService;
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -353,6 +358,17 @@ public class AdminController {
             return new ResponseBean("success", "", cit);
 
         return new ResponseBean("error", "CostItem with id: " + pid + " not found!");
+    }
+
+    @RequestMapping(value = "project/importPrj", method = RequestMethod.POST)
+    public ResponseBean importProjectData(Long depId, MultipartFile file) {
+
+        logger.info("import project data for dep:" + depId + " file: " + file.getOriginalFilename());
+
+        // projectService.importFile(file, depId);
+
+        return new ResponseBean("success", "项目数据导入成功!");
+
     }
 
 }

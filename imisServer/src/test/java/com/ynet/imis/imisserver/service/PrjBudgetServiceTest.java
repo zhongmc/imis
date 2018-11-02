@@ -41,11 +41,11 @@ public class PrjBudgetServiceTest extends ImisApplicationTests {
         Project project = pgProjects.getContent().get(0);
         Long depId = project.getDepId();
 
-        Date bgDate = project.getBeginDate();
+        Date begDate = project.getBeginDate();
         Date endDate = project.getEndDate();
 
         Calendar calendar = Calendar.getInstance();
-        calendar.setTime(bgDate);
+        calendar.setTime(begDate);
 
         Calendar endCal = Calendar.getInstance();
         endCal.setTime(endDate);

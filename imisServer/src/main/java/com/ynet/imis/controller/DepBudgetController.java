@@ -367,7 +367,7 @@ public class DepBudgetController {
 
         for (int i = 0; i < confirms.size(); i++) {
             PrjRightsConfirm confirm = confirms.get(i);
-            Date date = confirm.getBgDate();
+            Date date = confirm.getExpectDate();
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(date);
             int month = calendar.get(Calendar.MONTH);
@@ -393,7 +393,7 @@ public class DepBudgetController {
 
         for (int i = 0; i < incomes.size(); i++) {
             PrjIncomeForecast income = incomes.get(i);
-            Date date = income.getBgDate();
+            Date date = income.getExpectDate();
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(date);
             int month = calendar.get(Calendar.MONTH);

@@ -1,5 +1,6 @@
 package com.ynet.imis.service.project;
 
+import java.io.File;
 import java.util.List;
 
 import com.ynet.imis.domain.project.Project;
@@ -21,6 +22,6 @@ public interface ProjectService {
             Long prjType, Long prjClass, String beginDateScope, List<Long> depIds);
 
     // 从文件中导入 //depId 所属部门
-    public void importFile(MultipartFile file, Long depId) throws Exception;
+    public void importFile(File file, Long depId) throws Exception;
 
 }

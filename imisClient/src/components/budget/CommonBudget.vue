@@ -17,9 +17,9 @@
                 </el-form-item>
            </el-col>
           <el-col   :span="6">
-            <el-form-item prop="bgDate" label="预计发生时间:">
+            <el-form-item prop="expectDate" label="预计发生时间:">
                  <el-date-picker
-                    v-model="commonBudgetItem.bgDate"
+                    v-model="commonBudgetItem.expectDate"
                     size="mini"
                     style="width: 130px"
                     type="date"
@@ -60,11 +60,11 @@
               width="160">
             </el-table-column>
             <el-table-column
-              prop="bgDate"
+              prop="expectDate"
               width="100"
               align="left"
               label="预计发生时间">
-              <template slot-scope="scope">{{ scope.row.bgDate | formatDate}}</template>
+              <template slot-scope="scope">{{ scope.row.expectDate | formatDate}}</template>
 
             </el-table-column>
 
@@ -140,7 +140,7 @@ export default {
     emptyBudgetItemData() {
       this.commonBudgetItem.id = -1;
       this.commonBudgetItem.name = "";
-      this.commonBudgetItem.bgDate = "";
+      this.commonBudgetItem.expectDate = "";
       this.commonBudgetItem.amount = 0;
       this.commonBudgetItem.desc = "";
       this.commonBudgetItem.depId = this.depId;
@@ -207,7 +207,7 @@ export default {
       this.commonBudgetItem.name = row.name;
       this.commonBudgetItem.amount = row.amount;
       this.commonBudgetItem.desc = row.desc;
-      this.commonBudgetItem.bgDate = row.bgDate;
+      this.commonBudgetItem.expectDate = row.expectDate;
       this.commonBudgetItem.depId = row.depId;
     },
 
@@ -248,13 +248,15 @@ export default {
         id: -1,
         name: "",
         amount: 0,
-        bgDate: "",
+        expectDate: "",
         desc: ""
       },
       rules: {
         name: [{ required: true, message: "名称不能为空", trigger: "blur" }],
         amount: [{ required: true, message: "必填:金额", trigger: "blur" }],
-        bgDate: [{ required: true, message: "必填:发生日期", trigger: "blur" }]
+        expectDate: [
+          { required: true, message: "必填:发生日期", trigger: "blur" }
+        ]
       }
     };
   }

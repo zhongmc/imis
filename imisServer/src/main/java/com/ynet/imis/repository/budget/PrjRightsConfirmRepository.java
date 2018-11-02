@@ -4,7 +4,7 @@
 * @description 
 * @created Thu Oct 18 2018 15:02:23 GMT+0800 (中国标准时间)
 * @copyright YNET
-* @last-modified Thu Oct 25 2018 17:06:22 GMT+0800 (中国标准时间)
+* @last-modified Thu Nov 01 2018 11:11:02 GMT+0800 (中国标准时间)
 */
 
 package com.ynet.imis.repository.budget;
@@ -21,6 +21,6 @@ public interface PrjRightsConfirmRepository extends JpaRepository<PrjRightsConfi
     @Query("select a from PrjRightsConfirm a where a.prjId=?1")
     public List<PrjRightsConfirm> getAllPrjRightsConfirmsByPrjId(Long prjId);
 
-    @Query("select a from PrjRightsConfirm a where a.depId in ?1 and year(a.bgDate) = ?2")
+    @Query("select a from PrjRightsConfirm a where a.depId in ?1 and year(a.expectDate) = ?2")
     public List<PrjRightsConfirm> getPrjRightsConfirmByDepId(List<Long> depIds, int year);
 }

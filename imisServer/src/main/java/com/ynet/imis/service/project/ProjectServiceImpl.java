@@ -1,9 +1,10 @@
 package com.ynet.imis.service.project;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -31,17 +32,11 @@ import com.ynet.imis.repository.org.CustomRepository;
 import com.ynet.imis.repository.project.ProjectRepository;
 import com.ynet.imis.utils.ImisUtils;
 
-import org.apache.poi.hssf.usermodel.HSSFCell;
-import org.apache.poi.hssf.usermodel.HSSFRow;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
-import org.hibernate.sql.HSQLCaseFragment;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -156,15 +151,16 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     // 从文件中导入 //depId 所属部门
-    public void importFile(MultipartFile file, Long depId) throws Exception {
+    public void importFile(File file, Long depId) throws Exception {
 
         logger.info("import project file: " + file.getName());
 
         // File afile = new File("D:/公司预算/预算_北1部 2018年.xlsx");
-        // FileInputStream instream = new FileInputStream(afile);
+
+        FileInputStream instream = new FileInputStream(file);
 
         // XSSFWorkbook workbook;
-        Workbook workbook = WorkbookFactory.create(file.getInputStream());
+        Workbook workbook = WorkbookFactory.create(instream);
 
         SimpleDateFormat fmt = new SimpleDateFormat("yyyy/mm");
         Date begDate = null, endDate = null;
@@ -309,12 +305,27 @@ public class ProjectServiceImpl implements ProjectService {
                     confirms.add(confirm);
                 }
 
+                // 15 上年递延成本
+                cell = row.getCell(15);
+                if (cell != null) {
+                    BigDecimal defferedAmount = BigDecimal.valueOf(cell.getNumericCellValue());
+                    prjBudget.setDefferedAmount(defferedAmount);
+                    // prjBudget.setProject( project );
+                }
+
+                // 17 递延成本对应人月数
+                cell = row.getCell(17);
+                if (cell != null) {
+                    double defferedManMonth = cell.getNumericCellValue();
+                    prjBudget.setDefferedManMonth(defferedManMonth);
+                    // prjBudget.setProject( project );
+                }
+
                 // 25 人均成本
                 cell = row.getCell(25);
                 if (cell != null) {
                     BigDecimal avgManMonthCost = BigDecimal.valueOf(cell.getNumericCellValue());
                     prjBudget.setAvgManMonthCost(avgManMonthCost);
-                    // prjBudget.setProject( project );
                 }
 
                 for (int k = 0; k < 12; k++) // 1-12月 人月数
@@ -350,7 +361,7 @@ public class ProjectServiceImpl implements ProjectService {
                         continue;
                     PrjIncomeForecast income = new PrjIncomeForecast();
                     income.setAmount(BigDecimal.valueOf(amount));
-                    income.setBgDate(calendar.getTime());
+                    income.setExpectDate(calendar.getTime());
                     income.setDepId(depId);
 
                     incomes.add(income);
@@ -624,7 +635,7 @@ public class ProjectServiceImpl implements ProjectService {
                     continue;
                 PrjIncomeForecast income = new PrjIncomeForecast();
                 income.setAmount(BigDecimal.valueOf(amount));
-                income.setBgDate(calendar.getTime());
+                income.setExpectDate(calendar.getTime());
                 incomes.add(income);
 
             }
@@ -719,6 +730,7 @@ public class ProjectServiceImpl implements ProjectService {
             // 56:11月回款 57:12月回款
 
         }
+        instream.close();
         workbook.close();
     }
 

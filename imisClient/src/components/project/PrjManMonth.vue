@@ -23,16 +23,16 @@
                 <el-input size="mini" style="width: 130px"  v-model = "prjBudget.avgManMonthCost"  @blur="handleAvgManMonthChange()"  @keyup.enter.native="handleAvgManMonthChange()" />
               </el-form-item>
             </el-col>
-            <!-- el-col :span="8">
-              <el-form-item label="项目合同收入:" prop="contractAmount">
-                <el-input size="mini" style="width: 130px"  v-model = "prjBudget.contractAmount" />
+            <el-col :span="8">
+              <el-form-item label="项目递延成本:" prop="defferedAmount">
+                <el-input size="mini" style="width: 130px"  v-model = "prjBudget.defferedAmount" />
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="当年收入:" prop="curYearAmount">
-                <el-input size="mini"  style="width: 130px" v-model = "prjBudget.curYearAmount" />
+              <el-form-item label="项目递延人月数:" prop="defferedManMonth">
+                <el-input size="mini"  style="width: 130px" v-model = "prjBudget.defferedManMonth" />
               </el-form-item>
-            </el-col -->
+            </el-col>
 
 
           </el-row>

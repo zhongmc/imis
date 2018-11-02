@@ -12,7 +12,7 @@ public interface CustomRepository extends JpaRepository<Custom, Long> {
     @Query("select a from Custom a where a.parentId is null")
     public List<Custom> getCustomTree();
 
-    @Query("select a from Custom a where a.name == ?1")
+    @Query("select a from Custom a where a.name=?1")
     public Custom findByName(String name);
 
 }

@@ -4,7 +4,7 @@
 * @description 
 * @created Tue Sep 18 2018 18:01:36 GMT+0800 (中国标准时间)
 * @copyright YNET
-* @last-modified Tue Oct 30 2018 15:37:18 GMT+0800 (中国标准时间)
+* @last-modified Thu Nov 01 2018 11:12:52 GMT+0800 (中国标准时间)
 */
 
 package com.ynet.imis.domain.project;
@@ -168,8 +168,8 @@ public class Project extends AbstractEntity {
         return this.beginDate;
     }
 
-    public void setBeginDate(Date bgDate) {
-        this.beginDate = bgDate;
+    public void setBeginDate(Date begDate) {
+        this.beginDate = begDate;
     }
 
     public Date getEndDate() {

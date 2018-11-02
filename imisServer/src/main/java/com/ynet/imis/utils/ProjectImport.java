@@ -15,9 +15,13 @@ import com.ynet.imis.domain.budget.PrjIncomeForecast;
 import com.ynet.imis.domain.budget.PrjMonthBudget;
 import com.ynet.imis.domain.budget.PrjRightsConfirm;
 import com.ynet.imis.domain.org.Custom;
+import com.ynet.imis.domain.org.Department;
 import com.ynet.imis.domain.project.Project;
 import com.ynet.imis.domain.project.Project.PrjClass;
 import com.ynet.imis.domain.project.Project.PrjType;
+import com.ynet.imis.repository.org.DepartmentRepository;
+import com.ynet.imis.service.org.DepartmentService;
+import com.ynet.imis.service.project.ProjectService;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -26,17 +30,79 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.multipart.MultipartFile;
 
-public class Test {
+public class ProjectImport {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    public static void main(String[] args) {
-        Test t = new Test();
-        try {
-            t.whenImportSuccess();
+    @Autowired
+    ProjectService prjService;
 
-            t.importFile(null, Long.valueOf(1122));
+    @Autowired
+    DepartmentService depService;
+
+    @Autowired
+    DepartmentRepository depDao;
+
+    public void doImport() throws Exception {
+        String depName, fileName;
+
+        depName = "北一部";
+        Department dep = depDao.findByName(depName);
+        fileName = "D:/公司预算/预算_北1部 2018年.xlsx";
+        prjService.importFile(new File(fileName), dep.getId());
+
+        depName = "北二部";
+        dep = depDao.findByName(depName);
+        fileName = "D:/公司预算/预算_北2部 2018年.xlsx";
+        prjService.importFile(new File(fileName), dep.getId());
+
+        depName = "北三部";
+        dep = depDao.findByName(depName);
+        fileName = "D:/公司预算/预算_北3部 2018年.xlsx";
+        prjService.importFile(new File(fileName), dep.getId());
+
+        depName = "东一部";
+        dep = depDao.findByName(depName);
+        fileName = "D:/公司预算/预算_东1部 2018年.xlsx";
+        prjService.importFile(new File(fileName), dep.getId());
+
+        depName = "东二部";
+        dep = depDao.findByName(depName);
+        fileName = "D:/公司预算/预算_东2部 2018年.xlsx";
+        prjService.importFile(new File(fileName), dep.getId());
+
+        depName = "东三部";
+        dep = depDao.findByName(depName);
+        fileName = "D:/公司预算/预算_东3部 2018年.xlsx";
+        prjService.importFile(new File(fileName), dep.getId());
+
+        depName = "南一部";
+        dep = depDao.findByName(depName);
+        fileName = "D:/公司预算/预算_南1部 2018年.xlsx";
+        prjService.importFile(new File(fileName), dep.getId());
+
+        depName = "南二部";
+        dep = depDao.findByName(depName);
+        fileName = "D:/公司预算/预算_南2部 2018年.xlsx";
+        prjService.importFile(new File(fileName), dep.getId());
+
+        depName = "南三部";
+        dep = depDao.findByName(depName);
+        fileName = "D:/公司预算/预算_南3部 2018年.xlsx";
+        prjService.importFile(new File(fileName), dep.getId());
+
+    }
+
+    public static void main(String[] args) {
+
+        ProjectImport t = new ProjectImport();
+        try {
+            // t.whenImportSuccess();
+            // t.importFile(null, Long.valueOf(1122));
+
+            t.doImport();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -51,17 +117,17 @@ public class Test {
         // XSSFWorkbook workbook;
         Workbook workbook = WorkbookFactory.create(instream);
 
-        SimpleDateFormat fmt = new SimpleDateFormat("yyyy/mm");
-        Date begDate = null, endDate = null;
-        // XSSFSheet
-        Project prevProject = null;
-        PrjRightsConfirm confirm = null;
-        PrjBudget prevPrjBudget = null;
-        List<PrjIncomeForecast> incomes = new ArrayList<PrjIncomeForecast>();
-        List<PrjRightsConfirm> confirms = new ArrayList<PrjRightsConfirm>();
-        boolean isSamePrj = false;
-        Calendar calendar = Calendar.getInstance();
-        int year = calendar.get(Calendar.YEAR);
+        // SimpleDateFormat fmt = new SimpleDateFormat("yyyy/mm");
+        // Date begDate = null, endDate = null;
+        // // XSSFSheet
+        // Project prevProject = null;
+        // PrjRightsConfirm confirm = null;
+        // PrjBudget prevPrjBudget = null;
+        // List<PrjIncomeForecast> incomes = new ArrayList<PrjIncomeForecast>();
+        // List<PrjRightsConfirm> confirms = new ArrayList<PrjRightsConfirm>();
+        // boolean isSamePrj = false;
+        // Calendar calendar = Calendar.getInstance();
+        // int year = calendar.get(Calendar.YEAR);
 
         Sheet sheet = workbook.getSheet("延续性项目");
         if (sheet != null) {
@@ -296,7 +362,7 @@ public class Test {
                         continue;
                     PrjIncomeForecast income = new PrjIncomeForecast();
                     income.setAmount(BigDecimal.valueOf(amount));
-                    income.setBgDate(calendar.getTime());
+                    income.setExpectDate(calendar.getTime());
                     incomes.add(income);
 
                 }
@@ -568,7 +634,7 @@ public class Test {
                     continue;
                 PrjIncomeForecast income = new PrjIncomeForecast();
                 income.setAmount(BigDecimal.valueOf(amount));
-                income.setBgDate(calendar.getTime());
+                income.setExpectDate(calendar.getTime());
                 incomes.add(income);
 
             }

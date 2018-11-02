@@ -6,6 +6,17 @@
   "configurations": [
     {
       "type": "java",
+      "name": "CodeLens (Launch) - ProjectImport",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "console": "internalConsole",
+      "stopOnEntry": false,
+      "mainClass": "com.ynet.imis.utils.ProjectImport",
+      "args": "",
+      "projectName": "imis-server"
+    },
+    {
+      "type": "java",
       "name": "CodeLens (Launch) - Test",
       "request": "launch",
       "cwd": "${workspaceFolder}",

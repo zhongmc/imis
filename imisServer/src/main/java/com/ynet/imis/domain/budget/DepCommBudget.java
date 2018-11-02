@@ -4,7 +4,7 @@
 * @description 部门公共预算条目
 * @created Tue Sep 18 2018 17:37:09 GMT+0800 (中国标准时间)
 * @copyright YNET
-* @last-modified Fri Oct 19 2018 15:10:18 GMT+0800 (中国标准时间)
+* @last-modified Thu Nov 01 2018 11:16:22 GMT+0800 (中国标准时间)
 */
 
 package com.ynet.imis.domain.budget;
@@ -41,12 +41,12 @@ public class DepCommBudget extends CommBudget {
 
     }
 
-    public DepCommBudget(Long id, Long depId, String name, BigDecimal amount, Date bgDate, String desc) {
+    public DepCommBudget(Long id, Long depId, String name, BigDecimal amount, Date expectDate, String desc) {
         super.id = id;
         this.depId = depId;
         super.setName(name);
         super.setAmount(amount);
-        super.setBgDate(bgDate);
+        super.setExpectDate(expectDate);
         super.setDesc(desc);
 
     }

@@ -4,7 +4,7 @@
 * @description 公共预算条目
 * @created Tue Sep 18 2018 16:48:34 GMT+0800 (中国标准时间)
 * @copyright YNET
-* @last-modified Fri Oct 26 2018 09:41:20 GMT+0800 (中国标准时间)
+* @last-modified Thu Nov 01 2018 11:15:18 GMT+0800 (中国标准时间)
 */
 
 package com.ynet.imis.domain.budget;
@@ -28,11 +28,9 @@ public class CommBudget extends AbstractEntity {
     @Column(length = 128, name = "YC_DESC")
     protected String desc;
 
-    @Column(name = "BG_DATE")
-    protected Date bgDate;
+    protected Date expectDate;
 
-    @Column(name = "END_DATE")
-    protected Date endDate;
+    protected Date realDate;
 
     protected BigDecimal amount;
 
@@ -40,6 +38,22 @@ public class CommBudget extends AbstractEntity {
 
     public CommBudget() {
 
+    }
+
+    public Date getExpectDate() {
+        return this.expectDate;
+    }
+
+    public void setExpectDate(Date expectDate) {
+        this.expectDate = expectDate;
+    }
+
+    public Date getRealDate() {
+        return this.realDate;
+    }
+
+    public void setRealDate(Date realDate) {
+        this.realDate = realDate;
     }
 
     public BigDecimal getAmount() {
@@ -57,40 +71,6 @@ public class CommBudget extends AbstractEntity {
     public void setRealAmount(BigDecimal amount) {
         this.realAmount = amount;
     }
-
-    public Date getBgDate() {
-        return bgDate;
-    }
-
-    public void setBgDate(Date value) {
-        this.bgDate = value;
-    }
-
-    public Date getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(Date value) {
-        this.endDate = value;
-    }
-
-    // //类别
-    // public enum CostType{
-    // DEPARTMENT,
-    // PROJECT,
-    // OTHER
-    // }
-    // private CostType costType;
-
-    // public CostType getCostType()
-    // {
-    // return costType;
-    // }
-
-    // public void setCostType(CostType costType)
-    // {
-    // this.costType = costType;
-    // }
 
     public String getName() {
         return name;

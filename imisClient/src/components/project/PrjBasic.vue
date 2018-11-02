@@ -206,7 +206,7 @@
 
 
             <el-table-column
-              prop="amount"
+              prop="contractAmount"
               width="80"
               align="left"
               label="合同金额">

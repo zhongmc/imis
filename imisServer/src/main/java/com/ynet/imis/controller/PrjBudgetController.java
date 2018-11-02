@@ -4,7 +4,7 @@
 * @description 
 * @created Wed Oct 10 2018 10:38:38 GMT+0800 (中国标准时间)
 * @copyright YNET
-* @last-modified Fri Oct 26 2018 10:17:55 GMT+0800 (中国标准时间)
+* @last-modified Thu Nov 01 2018 11:12:39 GMT+0800 (中国标准时间)
 */
 
 package com.ynet.imis.controller;
@@ -65,11 +65,11 @@ public class PrjBudgetController {
         Project project = projectService.getProjectById(prjId);
         Long depId = project.getDepId();
 
-        Date bgDate = project.getBeginDate();
+        Date begDate = project.getBeginDate();
         Date endDate = project.getEndDate();
 
         Calendar calendar = Calendar.getInstance();
-        calendar.setTime(bgDate);
+        calendar.setTime(begDate);
 
         Calendar endCal = Calendar.getInstance();
         endCal.setTime(endDate);

@@ -14,7 +14,6 @@ import javax.persistence.criteria.Root;
 import com.ynet.imis.domain.budget.CostBudgetInfo;
 import com.ynet.imis.domain.budget.DepCommBudget;
 import com.ynet.imis.domain.budget.PrjBudget;
-import com.ynet.imis.domain.budget.PrjMonthBudget;
 import com.ynet.imis.repository.budget.CostBudgetInfoRepository;
 import com.ynet.imis.repository.budget.DepCommBudgetRepository;
 import com.ynet.imis.repository.budget.PrjBudgetRepository;

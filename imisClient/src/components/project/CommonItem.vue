@@ -20,9 +20,9 @@
                 </el-form-item>
            </el-col>
           <el-col   :span="6">
-            <el-form-item prop="bgDate" label="预计发生时间:">
+            <el-form-item prop="expectDate" label="预计发生时间:">
                  <el-date-picker
-                    v-model="commonItem.bgDate"
+                    v-model="commonItem.expectDate"
                     size="mini"
                     style="width: 130px"
                     type="date"
@@ -33,6 +33,37 @@
             </el-form-item>
           </el-col>
         </el-row>
+        <el-row v-if="(type =='confirm')">
+          <el-col   :span="6">
+            <el-form-item prop="begDate" label="确权起始:">
+                 <el-date-picker
+                    v-model="commonItem.begDate"
+                    size="mini"
+                    style="width: 130px"
+                    type="date"
+                    value-format="yyyy-MM-dd"
+                    placeholder="起始日期">
+                  </el-date-picker>
+
+            </el-form-item>
+          </el-col>
+        
+          <el-col   :span="6">
+            <el-form-item prop="endDate" label="确权结束:">
+                 <el-date-picker
+                    v-model="commonItem.endDate"
+                    size="mini"
+                    style="width: 130px"
+                    type="date"
+                    value-format="yyyy-MM-dd"
+                    placeholder="结束日期">
+                  </el-date-picker>
+
+            </el-form-item>
+          </el-col>
+
+        </el-row>
+
           <el-row>
           <el-col  :span="12">
             <el-form-item label="备注:" prop="desc">
@@ -106,12 +137,22 @@
               label="名称"
               width="250">
             </el-table-column>
+
             <el-table-column
-              prop="bgDate"
+              prop="expectDate"
               width="100"
               align="left"
               label="预计发生时间">
-              <template slot-scope="scope">{{ scope.row.bgDate | formatDate}}</template>
+              <template slot-scope="scope">{{ scope.row.expectDate | formatDate}}</template>
+
+            </el-table-column>
+
+            <el-table-column
+              v-if="(type =='confirm')"
+              width="150"
+              align="left"
+              label="确权周期">
+                <template slot-scope="scope">{{ scope.row | formatPeriod}}</template>
 
             </el-table-column>
 
@@ -127,12 +168,11 @@
   
             <el-table-column v-if="(type =='confirm' || type == 'income')"
               prop="endDate"
+              :formatter="formatPeriod"
               width="100"
               align="left"
               label="确认日期">
-              <template slot-scope="scope">{{ scope.row.endDate | formatDate}}</template>
-
-            </el-table-column>
+             </el-table-column>
 
             
             <el-table-column  v-if="(type =='confirm' || type == 'income')"
@@ -211,7 +251,7 @@ export default {
       this.commonItem.prjId = this.prjid;
       this.commonItem.depId = this.depid;
       this.commonItem.name = "";
-      this.commonItem.bgDate = "";
+      this.commonItem.expectDate = "";
       this.commonItem.amount = 0;
       this.commonItem.desc = "";
     },
@@ -240,7 +280,7 @@ export default {
       this.dialogVisible = true;
       this.confirmInfo.id = row.id;
       this.confirmInfo.realAmount = row.amount;
-      this.confirmInfo.endDate = row.bgDate;
+      this.confirmInfo.realDate = row.expectDate; //today??
       this.confirmItem = row;
     },
 
@@ -261,7 +301,7 @@ export default {
               _this.$message({ type: data.status, message: data.message });
               _this.dialogVisible = false;
               _this.confirmItem.realAmount = _this.confirmInfo.realAmount;
-              _this.confirmItem.endDate = _this.confirmInfo.endDate;
+              _this.confirmItem.realDate = _this.confirmInfo.realDate;
             }
           });
         }
@@ -307,7 +347,7 @@ export default {
       this.commonItem.name = row.name;
       this.commonItem.amount = row.amount;
       this.commonItem.desc = row.desc;
-      this.commonItem.bgDate = row.bgDate;
+      this.commonItem.expectDate = row.expectDate;
       this.buttonLabel = "提交修改";
     },
 
@@ -315,6 +355,33 @@ export default {
       this.editing = false;
       this.buttonLabel = "确定新增";
       this.emptyCommonItemData();
+    },
+
+    formatPeriod(row) {
+      var beg = row.begDate;
+      var end = row.endDate;
+
+      var begStr, endStr;
+      if (beg == null) begStr = " - ";
+      else {
+        var year = beg.getFullYear();
+        var month = beg.getMonth() + 1;
+        if (month < 10) {
+          month = "0" + month;
+        }
+        begStr = year + "年" + month + "月";
+      }
+      if (endStr == null) endStr = " - ";
+      else {
+        var year = end.getFullYear();
+        var month = end.getMonth() + 1;
+        if (month < 10) {
+          month = "0" + month;
+        }
+        endStr = year + "年" + month + "月";
+      }
+
+      return begStr + " 至 " + endStr;
     },
 
     formatAmount(row, column, cellValue) {
@@ -361,17 +428,19 @@ export default {
         prjId: null,
         name: "",
         amount: 0,
-        bgDate: "",
+        expectDate: "",
         desc: ""
       },
 
       rules: {
         name: [{ required: true, message: "名称不能为空", trigger: "blur" }],
         amount: [{ required: true, message: "必填:金额", trigger: "blur" }],
-        bgDate: [{ required: true, message: "必填:发生日期", trigger: "blur" }]
+        expectDate: [
+          { required: true, message: "必填:发生日期", trigger: "blur" }
+        ]
       },
       confirmRules: {
-        endDate: [
+        realDate: [
           { required: true, message: "必填:发生日期", trigger: "blur" }
         ],
         realAmount: [{ required: true, message: "必填:金额", trigger: "blur" }]
