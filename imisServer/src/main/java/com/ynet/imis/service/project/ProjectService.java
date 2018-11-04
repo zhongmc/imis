@@ -24,4 +24,6 @@ public interface ProjectService {
     // 从文件中导入 //depId 所属部门
     public void importFile(File file, Long depId) throws Exception;
 
+    public void importFile(MultipartFile file, Long depId ) throws Exception;
+
 }

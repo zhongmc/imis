@@ -31,7 +31,7 @@ public class PrjRightsConfirm extends CommBudget {
     private Long prjId;
 
     @JsonIgnore
-    @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)  //cascade = CascadeType.PERSIST, 
     @JoinColumn(name = "PRJ_ID", nullable = false, updatable = false, insertable = false)
     private Project project;
 

@@ -4,7 +4,7 @@
 * @description 
 * @created Thu Oct 18 2018 14:40:43 GMT+0800 (中国标准时间)
 * @copyright YNET
-* @last-modified Thu Oct 25 2018 15:38:28 GMT+0800 (中国标准时间)
+* @last-modified Sat Nov 03 2018 13:50:13 GMT+0800 (中国标准时间)
 */
 
 package com.ynet.imis.domain.budget;
@@ -41,7 +41,7 @@ public class PrjIncomeForecast extends CommBudget {
     private Long prjId;
 
     @JsonIgnore
-    @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    @ManyToOne( fetch = FetchType.LAZY)
     @JoinColumn(name = "PRJ_ID", nullable = false, updatable = false, insertable = false)
     private Project project;
 

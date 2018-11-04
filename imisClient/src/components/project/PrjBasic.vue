@@ -209,6 +209,7 @@
               prop="contractAmount"
               width="80"
               align="left"
+              :formatter="formatAmount"
               label="合同金额">
             </el-table-column>
 
@@ -461,7 +462,8 @@ export default {
       multipleSelection: [],
       depTextColor: "#c0c4cc",
       totalCount: -1,
-      currentPage: 0,
+      currentPage: 1,
+      page:0,
 
       prjTypes: [
         { id: "TASKS", name: "派单类" },
@@ -573,6 +575,20 @@ export default {
     beforeFileUpload(file) {
       this.fileUploadBtnText = "正在导入";
     },
+
+    formatAmount(row, column, cellValue) {
+      var props = column.property.split(".");
+
+      var tmp = row;
+      for (var i = 0; i < props.length; i++) {
+        tmp = tmp[props[i]];
+      }
+
+      //     console.log("format amount:" + cellValue + "col prop:" + column.property);
+      return this.formatMoney(tmp, 1);
+    },
+
+
     exportEmps() {
       //        var iframe = document.createElement("iframe");
       //        iframe.style.display = 'none';
@@ -653,7 +669,9 @@ export default {
       this.loadPrjs();
     },
     currentChange(currentChange) {
+      console.log("curPage: " + currentChange);
       this.currentPage = currentChange;
+      this.page = currentChange-1;
       this.loadPrjs();
     },
 
@@ -697,7 +715,7 @@ export default {
 
       var url =
         "/project/basic/prjs?page=" +
-        this.currentPage +
+        this.page +
         "&size=10&keyword=" +
         this.keywords;
       url = url + "&customId=" + this.advSearchData.customId;

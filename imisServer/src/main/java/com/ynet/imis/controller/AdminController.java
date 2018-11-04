@@ -4,7 +4,7 @@
 * @description 
 * @created Mon Oct 08 2018 10:51:34 GMT+0800 (中国标准时间)
 * @copyright YNET
-* @last-modified Fri Nov 02 2018 17:26:46 GMT+0800 (中国标准时间)
+* @last-modified Sun Nov 04 2018 11:36:26 GMT+0800 (中国标准时间)
 */
 
 package com.ynet.imis.controller;
@@ -365,9 +365,15 @@ public class AdminController {
 
         logger.info("import project data for dep:" + depId + " file: " + file.getOriginalFilename());
 
-        // projectService.importFile(file, depId);
+        try{
+            projectService.importFile(file, depId);
+            return new ResponseBean("success", "项目数据导入成功!");
+        }catch(Exception e )
+        {
+            logger.error( "项目数据导入失败!", e);
+            return new ResponseBean("error", "项目数据导入失败!" + e.getMessage());
 
-        return new ResponseBean("success", "项目数据导入成功!");
+        }
 
     }
 

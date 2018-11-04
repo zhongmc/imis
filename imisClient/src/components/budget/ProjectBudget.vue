@@ -142,7 +142,7 @@ export default {
         "&size=" +
         this.pageSize +
         "&page=" +
-        this.currentPage;
+        this.page;
       // var url = "/budget/dep/prj/" + this.depId;
 
       this.getRequest(url).then(resp => {
@@ -181,6 +181,7 @@ export default {
 
     currentChange(currentChange) {
       this.currentPage = currentChange;
+      this.page = currentChange-1;
       this.loadData();
     },
 
@@ -397,7 +398,8 @@ export default {
       editingProp: "",
 
       totalCount: -1,
-      currentPage: 0,
+      currentPage: 1,
+      page:0,
       pageSize: 10,
 
       tableTitles: [

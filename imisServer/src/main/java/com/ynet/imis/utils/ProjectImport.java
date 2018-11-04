@@ -99,19 +99,23 @@ public class ProjectImport {
 
         ProjectImport t = new ProjectImport();
         try {
-            // t.whenImportSuccess();
+             t.whenImportSuccess("E:/公司预算/预算_北1部 2018年.xlsx");
+             t.whenImportSuccess("E:/公司预算/预算_北2部 2018年.xlsx");
+             t.whenImportSuccess("E:/公司预算/预算_东1部 2018年.xlsx");
+             t.whenImportSuccess("E:/公司预算/预算_南2部 2018年.xlsx");
             // t.importFile(null, Long.valueOf(1122));
 
-            t.doImport();
+            //t.doImport();
 
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void whenImportSuccess() throws Exception {
-
-        File file = new File("D:/公司预算/预算_北1部 2018年.xlsx");
+    public void whenImportSuccess(String fileName) throws Exception {
+        System.out.println();
+        System.out.println(fileName);
+        File file = new File(fileName);
         FileInputStream instream = new FileInputStream(file);
 
         // XSSFWorkbook workbook;

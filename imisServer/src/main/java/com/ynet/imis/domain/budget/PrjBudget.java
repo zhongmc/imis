@@ -4,7 +4,7 @@
 * @description 
 * @created Tue Sep 18 2018 16:53:17 GMT+0800 (中国标准时间)
 * @copyright YNET
-* @last-modified Fri Nov 02 2018 10:34:32 GMT+0800 (中国标准时间)
+* @last-modified Sun Nov 04 2018 19:09:02 GMT+0800 (中国标准时间)
 */
 
 package com.ynet.imis.domain.budget;
@@ -23,6 +23,7 @@ import javax.persistence.JoinColumn;
 
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -82,6 +83,7 @@ public class PrjBudget extends AbstractEntity {
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "PRJ_BUDGET_ID")
+    @OrderBy("month ASC")
     List<PrjMonthBudget> monthBudgets = new ArrayList<PrjMonthBudget>();
 
     public PrjBudget() {
@@ -110,7 +112,12 @@ public class PrjBudget extends AbstractEntity {
 
     public void setProject(Project project) {
         this.project = project;
-        this.prjId = project.getId();
+        if( project != null )
+        {
+            this.prjId = project.getId();
+            this.prjName = project.getName();
+        }
+        
     }
 
     public String getPrjNo() {

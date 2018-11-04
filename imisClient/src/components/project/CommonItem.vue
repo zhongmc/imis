@@ -77,7 +77,7 @@
         </el-row>
     </el-form>
 
-<!-- confir mdialog -->
+<!-- confirm dialog -->
     <el-form :rules="confirmRules" :model="confirmInfo" ref="doConfirm" style="margin: 0px;padding: 0px;">
       <div style="text-align: left">
         <el-dialog
@@ -151,8 +151,8 @@
               v-if="(type =='confirm')"
               width="150"
               align="left"
+              :formatter="formatPeriod"
               label="确权周期">
-                <template slot-scope="scope">{{ scope.row | formatPeriod}}</template>
 
             </el-table-column>
 
@@ -167,11 +167,11 @@
 
   
             <el-table-column v-if="(type =='confirm' || type == 'income')"
-              prop="endDate"
-              :formatter="formatPeriod"
+              prop="realDate"
               width="100"
               align="left"
               label="确认日期">
+              <template slot-scope="scope">{{ scope.row.realDate | formatDate}}</template>
              </el-table-column>
 
             
@@ -348,6 +348,9 @@ export default {
       this.commonItem.amount = row.amount;
       this.commonItem.desc = row.desc;
       this.commonItem.expectDate = row.expectDate;
+      this.commonItem.begDate = row.begDate;
+      this.commonItem.endDate = row.endDate;
+
       this.buttonLabel = "提交修改";
     },
 
@@ -357,31 +360,35 @@ export default {
       this.emptyCommonItemData();
     },
 
-    formatPeriod(row) {
+    formatPeriod(row, column, cellValue) {
+      console.log("common item of confirm: ")
+      console.log( row );
       var beg = row.begDate;
       var end = row.endDate;
 
       var begStr, endStr;
       if (beg == null) begStr = " - ";
       else {
-        var year = beg.getFullYear();
-        var month = beg.getMonth() + 1;
-        if (month < 10) {
-          month = "0" + month;
-        }
-        begStr = year + "年" + month + "月";
+        begStr = this.getYearMonthStr(beg);
       }
-      if (endStr == null) endStr = " - ";
+      if (end == null) endStr = " - ";
       else {
-        var year = end.getFullYear();
-        var month = end.getMonth() + 1;
-        if (month < 10) {
-          month = "0" + month;
-        }
-        endStr = year + "年" + month + "月";
+        endStr = this.getYearMonthStr(end);
       }
 
       return begStr + " 至 " + endStr;
+    },
+
+    getYearMonthStr( value )
+    {
+      var date = new Date(value);
+        var year = date.getFullYear();
+        var month = date.getMonth() + 1;
+        if (month < 10) {
+          month = "0" + month;
+        }
+        return (year + "/" + month );
+
     },
 
     formatAmount(row, column, cellValue) {
@@ -429,6 +436,8 @@ export default {
         name: "",
         amount: 0,
         expectDate: "",
+        begDate:"",
+        endDate:"",
         desc: ""
       },
 
@@ -437,8 +446,11 @@ export default {
         amount: [{ required: true, message: "必填:金额", trigger: "blur" }],
         expectDate: [
           { required: true, message: "必填:发生日期", trigger: "blur" }
-        ]
+        ],
+        begDate:[],
+        endDate:[],
       },
+      
       confirmRules: {
         realDate: [
           { required: true, message: "必填:发生日期", trigger: "blur" }

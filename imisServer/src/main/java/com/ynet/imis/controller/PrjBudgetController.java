@@ -4,7 +4,7 @@
 * @description 
 * @created Wed Oct 10 2018 10:38:38 GMT+0800 (中国标准时间)
 * @copyright YNET
-* @last-modified Thu Nov 01 2018 11:12:39 GMT+0800 (中国标准时间)
+* @last-modified Sun Nov 04 2018 10:27:24 GMT+0800 (中国标准时间)
 */
 
 package com.ynet.imis.controller;
@@ -152,8 +152,9 @@ public class PrjBudgetController {
     //////// confirm rights confirm
     @RequestMapping(value = "/project/confirm/{prjId}")
     public List<PrjRightsConfirm> getPrjRightsConfirms(@PathVariable Long prjId) {
-
-        return prjBudgetService.getPrjRightsConfirms(prjId);
+        List<PrjRightsConfirm> confirms =  prjBudgetService.getPrjRightsConfirms(prjId);
+        logger.info("confirms: " + ImisUtils.objectJsonStr(confirms));
+        return confirms;
     }
 
     @RequestMapping(value = "/project/confirm", method = RequestMethod.POST)
