@@ -155,26 +155,21 @@ public class ProjectServiceImpl implements ProjectService {
         return pageOfPrj;
     }
 
-    public void importFile(MultipartFile file, Long depId ) throws Exception
-    {
+    public void importFile(MultipartFile file, Long depId) throws Exception {
         logger.info("import project from multipart file file: " + file.getName());
-        importPrjBudgetInfo( file.getInputStream(), depId );
+        importPrjBudgetInfo(file.getInputStream(), depId);
 
     }
-
-
 
     // 从文件中导入 //depId 所属部门
     public void importFile(File file, Long depId) throws Exception {
         logger.info("import project file: " + file.getName());
-        FileInputStream fi = new FileInputStream( file );
-        importPrjBudgetInfo( fi, depId);
+        FileInputStream fi = new FileInputStream(file);
+        importPrjBudgetInfo(fi, depId);
         fi.close();
     }
 
-
-    private void importPrjBudgetInfo(InputStream in, Long depId )throws Exception
-    {
+    private void importPrjBudgetInfo(InputStream in, Long depId) throws Exception {
 
         Workbook workbook = WorkbookFactory.create(in);
 
@@ -271,66 +266,63 @@ public class ProjectServiceImpl implements ProjectService {
 
                 // 对应期间
                 cell = row.getCell(9); // 9 对应期间 2017/4-2017/12 2018年1月-2018年3月 2017/4-2017/12 2018年1月-2018年3月
-                                       // 2017年12月至2018年12月 2017/2~2018/4 2018.1-2018.12  2018年1-6月 2018年1月～3月 已结项  2018(南一)
-
-
-
+                                       // 2017年12月至2018年12月 2017/2~2018/4 2018.1-2018.12 2018年1-6月 2018年1月～3月 已结项
+                                       // 2018(南一)
 
                 String confirmName = "";
                 Date begDate = null, endDate = null;
-                if (cell != null && cell.getCellType() == CellType.STRING ) {
+                if (cell != null && cell.getCellType() == CellType.STRING) {
                     String strVal = cell.getStringCellValue();
                     if (strVal == null || strVal.length() < 5) {
                         logger.info("Unknow info of 对应期间 " + strVal + " in excell file s line " + (i + 1));
 
-                    } 
-                    else 
-                    
-                    {
-                        
-                            String rStrVal = strVal.replace('年', '/');
-                            rStrVal = rStrVal.replace('月', '/');
-                            rStrVal = rStrVal.replace('至', '-');
-                            rStrVal = rStrVal.replace('.', '/');
-                            rStrVal = rStrVal.replace('~', '-');
-                            int idx = rStrVal.indexOf('-');
-                            confirmName = rStrVal;
-                            String begDateStr, endDateStr;
-                            if( idx != -1)
-                            {
-                                begDateStr = rStrVal.substring(0, idx);
-                                endDateStr = rStrVal.substring(idx + 1);
-                                try {
-                                    begDate = fmt.parse(begDateStr);
-                                    if( endDateStr.length() < 4)
-                                    {
-                                        //只有月
-                                        idx = endDateStr.indexOf('/');
-                                        if( idx != -1)
-                                            endDateStr = endDateStr.substring(0, idx);
-                                        int month = Integer.parseInt( endDateStr );
+                    } else
 
-                                        Calendar cal = Calendar.getInstance();
-                                        cal.setTime( begDate);
-                                        cal.set(Calendar.MONTH, month-1);
-                                        endDate = cal.getTime();
-                                    }
-                                    else
-                                        endDate = fmt.parse(endDateStr);
-                                } catch (ParseException e) {
-                                    logger.info("Failed to parse the date: " + strVal);
-                                }
+                    {
+
+                        String rStrVal = strVal.replace('年', '/');
+                        rStrVal = rStrVal.replace('月', '/');
+                        rStrVal = rStrVal.replace('至', '-');
+                        rStrVal = rStrVal.replace('.', '/');
+                        rStrVal = rStrVal.replace('~', '-');
+                        int idx = rStrVal.indexOf('-');
+                        confirmName = rStrVal;
+                        String begDateStr, endDateStr;
+                        if (idx != -1) {
+                            begDateStr = rStrVal.substring(0, idx);
+                            endDateStr = rStrVal.substring(idx + 1);
+                            try {
+                                begDate = fmt.parse(begDateStr);
+                                if (endDateStr.length() < 4) {
+                                    // 只有月
+                                    idx = endDateStr.indexOf('/');
+                                    if (idx != -1)
+                                        endDateStr = endDateStr.substring(0, idx);
+                                    int month = Integer.parseInt(endDateStr);
+
+                                    Calendar cal = Calendar.getInstance();
+                                    cal.setTime(begDate);
+                                    cal.set(Calendar.MONTH, month - 1);
+                                    endDate = cal.getTime();
+                                } else
+                                    endDate = fmt.parse(endDateStr);
+                            } catch (ParseException e) {
+                                logger.info("Failed to parse the date: " + strVal);
                             }
+                        }
                         // SimpleDateFormat ofmt = new SimpleDateFormat("yyyy/MM/dd");
-                        // logger.info("对应期间：" + strVal + ", cfName:" + confirmName + ", begStr: " + begDateStr + ", endStr:"+ endDateStr + ",bd:" + ofmt.format(begDate) + " ed:"+ ofmt.format(endDate));
+                        // logger.info("对应期间：" + strVal + ", cfName:" + confirmName + ", begStr: " +
+                        // begDateStr + ", endStr:"+ endDateStr + ",bd:" + ofmt.format(begDate) + "
+                        // ed:"+ ofmt.format(endDate));
 
                         project.setBeginDate(begDate);
                         project.setEndDate(endDate);
 
                         if (isSamePrj) {
-                            if( prevProject.getBeginDate() == null )
+                            if (prevProject.getBeginDate() == null)
                                 prevProject.setBeginDate(begDate);
-                            if( prevProject.getEndDate() == null || (endDate != null && prevProject.getEndDate().getTime() < endDate.getTime()) )    
+                            if (prevProject.getEndDate() == null
+                                    || (endDate != null && prevProject.getEndDate().getTime() < endDate.getTime()))
                                 prevProject.setEndDate(endDate); /////
                         }
                     }
@@ -342,8 +334,7 @@ public class ProjectServiceImpl implements ProjectService {
                     BigDecimal confirmAmount = BigDecimal.valueOf(cell.getNumericCellValue());
                     PrjRightsConfirm confirm = new PrjRightsConfirm();
                     confirm.setAmount(confirmAmount);
-                    if( begDate != null )
-                    {
+                    if (begDate != null) {
                         confirm.setBegDate(begDate);
                         confirm.setEndDate(endDate);
                         confirm.setName(confirmName);
@@ -356,9 +347,10 @@ public class ProjectServiceImpl implements ProjectService {
                 }
 
                 // 25 人均成本
+                BigDecimal avgManMonthCost = null;
                 cell = row.getCell(25);
                 if (cell != null) {
-                    BigDecimal avgManMonthCost = BigDecimal.valueOf(cell.getNumericCellValue());
+                    avgManMonthCost = BigDecimal.valueOf(cell.getNumericCellValue());
                     prjBudget.setAvgManMonthCost(avgManMonthCost);
                 }
 
@@ -378,7 +370,6 @@ public class ProjectServiceImpl implements ProjectService {
                     // prjBudget.setProject( project );
                 }
 
-
                 for (int k = 0; k < 12; k++) // 34 1-12月 人月数
                 {
                     cell = row.getCell(34 + k);
@@ -392,6 +383,9 @@ public class ProjectServiceImpl implements ProjectService {
                     prjMonth.setMonth((short) k);
                     prjMonth.setYear(year);
                     prjMonth.setDepId(depId);
+                    if (avgManMonthCost != null) {
+                        prjMonth.setAmount(avgManMonthCost.multiply(BigDecimal.valueOf(manMonth)));
+                    }
 
                     if (isSamePrj) {
                         prevPrjBudget.addPrjMonthBudget(prjMonth);
@@ -421,13 +415,15 @@ public class ProjectServiceImpl implements ProjectService {
 
                 if (isSamePrj) {
 
-                    logger.info("Save the same project: " + prevProject.getId() + " " + prevProject.getName() + " budgetId: " + prevPrjBudget.getId());
+                    logger.info("Save the same project: " + prevProject.getId() + " " + prevProject.getName()
+                            + " budgetId: " + prevPrjBudget.getId());
 
                     prevProject = this.projectDao.save(prevProject);
                     prevPrjBudget.setProject(prevProject);
                     prevPrjBudget = this.prjBudgetDao.save(prevPrjBudget);
 
-                    // logger.info("Saved  project: " + prevProject.getId() + " " + prevProject.getName() + " budgetId: " + prevPrjBudget.getId());
+                    // logger.info("Saved project: " + prevProject.getId() + " " +
+                    // prevProject.getName() + " budgetId: " + prevPrjBudget.getId());
 
                     // logger.info("Save the same project!");
                     // logger.info(ImisUtils.objectJsonStr(prevProject));
@@ -463,12 +459,13 @@ public class ProjectServiceImpl implements ProjectService {
                     project = this.projectDao.save(project);
                     prjBudget.setProject(project);
                     prjBudget = this.prjBudgetDao.save(prjBudget);
-                    logger.info(" New  project: " + project.getId() + ": " + project.getName() + " budget id: " + prjBudget.getId() + " prj count:" + newPrjCount);
+                    logger.info(" New  project: " + project.getId() + ": " + project.getName() + " budget id: "
+                            + prjBudget.getId() + " prj count:" + newPrjCount);
 
                     // logger.info(ImisUtils.objectJsonStr(project));
                     // logger.info(ImisUtils.objectJsonStr(prjBudget));
 
-                    // logger.info("income forecast  " + incomes.size() );
+                    // logger.info("income forecast " + incomes.size() );
                     for (PrjIncomeForecast income : incomes) {
                         income.setProject(project);
                         income.setDepId(depId);
@@ -491,7 +488,7 @@ public class ProjectServiceImpl implements ProjectService {
 
                 incomes.clear();
                 confirms.clear();
-                 // 0:大区名称 1:部门名称 2:客户名称 3:合同编号 4:合同名称 5:核算类型 6:预计签订日期 7:预计合同金额
+                // 0:大区名称 1:部门名称 2:客户名称 3:合同编号 4:合同名称 5:核算类型 6:预计签订日期 7:预计合同金额
                 // 8:截至18年底是否能拿回验收报告/确认单 9:对应期间 10:本年应确认含税收入（合同金额） 11:本年应确认收入 12:本年应确认成本
                 // 13:本年应确认人月数 14:累计已确认收入 15:累计已确认成本
                 // 16:累计已确认人月数 17:累计人均收入 18:累计人均成本 19:本年账面收入 20:本年账面成本 21:项目津贴金额 22:预计开票收入
@@ -549,7 +546,7 @@ public class ProjectServiceImpl implements ProjectService {
                 project.setContractNo(constractNo);
             }
 
-            cell = row.getCell(5); // 5 核算类型  (北一的多两列)
+            cell = row.getCell(5); // 5 核算类型 (北一的多两列)
             if (cell != null) {
                 String prjType = cell.getStringCellValue();
                 if ("实施类".equals(prjType))
@@ -578,18 +575,16 @@ public class ProjectServiceImpl implements ProjectService {
             }
 
             // 对应期间
-            cell = row.getCell(9); //9 对应期间 2017/4-2017/12 2018年1月-2018年3月 2017/4-2017/12 2018年1月-2018年3月
-                                    // 2017年12月至2018年12月 2018年1-12月 2017.5-2018.4
+            cell = row.getCell(9); // 9 对应期间 2017/4-2017/12 2018年1月-2018年3月 2017/4-2017/12 2018年1月-2018年3月
+                                   // 2017年12月至2018年12月 2018年1-12月 2017.5-2018.4
             String confirmName = "";
             Date begDate = null, endDate = null;
-            if (cell != null  && cell.getCellType() == CellType.STRING ) {
+            if (cell != null && cell.getCellType() == CellType.STRING) {
                 String strVal = cell.getStringCellValue();
                 if (strVal == null || strVal.length() < 5) {
                     logger.info("Unknow info of 对应期间 " + strVal + " in excell file 's line " + (i + 1));
 
-                } 
-                else 
-                {
+                } else {
 
                     String rStrVal = strVal.replace('年', '/');
                     rStrVal = rStrVal.replace('月', '/');
@@ -599,26 +594,23 @@ public class ProjectServiceImpl implements ProjectService {
                     int idx = rStrVal.indexOf('-');
                     confirmName = rStrVal;
                     String begDateStr, endDateStr;
-                    if( idx != -1)
-                    {
+                    if (idx != -1) {
                         begDateStr = rStrVal.substring(0, idx);
                         endDateStr = rStrVal.substring(idx + 1);
                         try {
                             begDate = fmt.parse(begDateStr);
-                            if( endDateStr.length() < 4)
-                            {
-                                //只有月
+                            if (endDateStr.length() < 4) {
+                                // 只有月
                                 idx = endDateStr.indexOf('/');
-                                if( idx != -1)
+                                if (idx != -1)
                                     endDateStr = endDateStr.substring(0, idx);
-                                int month = Integer.parseInt( endDateStr );
+                                int month = Integer.parseInt(endDateStr);
 
                                 Calendar cal = Calendar.getInstance();
-                                cal.setTime( begDate);
-                                cal.set(Calendar.MONTH, month-1);
+                                cal.setTime(begDate);
+                                cal.set(Calendar.MONTH, month - 1);
                                 endDate = cal.getTime();
-                            }
-                            else
+                            } else
                                 endDate = fmt.parse(endDateStr);
                         } catch (ParseException e) {
                             logger.info("Failed to parse the date: " + strVal);
@@ -648,9 +640,10 @@ public class ProjectServiceImpl implements ProjectService {
             }
 
             // 25 人均成本
+            BigDecimal avgManMonthCost = null;
             cell = row.getCell(25);
             if (cell != null) {
-                BigDecimal avgManMonthCost = BigDecimal.valueOf(cell.getNumericCellValue());
+                avgManMonthCost = BigDecimal.valueOf(cell.getNumericCellValue());
                 prjBudget.setAvgManMonthCost(avgManMonthCost);
                 // prjBudget.setProject( project );
             }
@@ -668,6 +661,9 @@ public class ProjectServiceImpl implements ProjectService {
                 prjMonth.setMonth((short) k);
                 prjMonth.setYear(year);
 
+                if (avgManMonthCost != null) {
+                    prjMonth.setAmount(avgManMonthCost.multiply(BigDecimal.valueOf(manMonth)));
+                }
                 if (isSamePrj) {
                     prevPrjBudget.addPrjMonthBudget(prjMonth);
                 } else
@@ -692,67 +688,68 @@ public class ProjectServiceImpl implements ProjectService {
 
             }
 
- 
-
-                if (project.getContractAmount() == null && (confirms.size() == 0 || incomes.size() == 0)) {
-                    logger.info(" null project: " + project.getName());
-                    continue;
-                }
-
-                newPrjCount++;
-
-                project.setDepId(depId);
-                project = this.projectDao.save(project);
-                prjBudget.setProject(project);
-                prjBudget = this.prjBudgetDao.save(prjBudget);
-                logger.info(" New  project! " + project.getId() + ":" + project.getName() + " budgetId: " + prjBudget.getId() );
-                // logger.info(ImisUtils.objectJsonStr(project));
-                // logger.info(ImisUtils.objectJsonStr(prjBudget));
-
-                // logger.info("income forecast  " + incomes.size());
-                for (PrjIncomeForecast income : incomes) {
-                    income.setProject(project);
-                    income.setDepId(depId);
-                    // logger.info(ImisUtils.objectJsonStr(income));
-                }
-                this.prjIncomeDao.saveAll(incomes);
-
-                // logger.info("project confirms " + confirms.size());
-                for (PrjRightsConfirm aconfirm : confirms) {
-                    aconfirm.setProject(project);
-                    aconfirm.setDepId(depId);
-                    // logger.info(ImisUtils.objectJsonStr(aconfirm));
-                }
-                this.prjConfirmDao.saveAll(confirms);
-
-                prevProject = project;
-                prevPrjBudget = prjBudget;
-
+            if (project.getContractAmount() == null && (confirms.size() == 0 || incomes.size() == 0)) {
+                logger.info(" null project: " + project.getName());
+                continue;
             }
 
-            incomes.clear();
-            confirms.clear();
+            newPrjCount++;
 
-            // 0:大区名称  1:部门名称  2:客户名称  3:合同编号  4:合同名称  5:核算类型  6:预计签订日期  7:预计合同金额  
-            // 8:截至18年底是否能拿回验收报告/确认单  9:对应期间  10:本年应确认含税收入（合同金额）  11:本年应确认收入  12:本年应确认成本  13:本年应确认人月数  14:累计已确认收入  15:累计已确认成本
-    
-            // 16:累计已确认人月数  17:累计人均收入  18:累计人均成本  19:本年账面收入  20:本年账面成本  21:项目津贴金额  22:预计开票收入  23:预计截至18年底发生成本  
-            
-            // 24:预计截至18年底投入人月数  25:预计人均成本  26:递延成本  27:预计回款金额  28:是否为外包  29:外包部分预计成本  31:1月人月数  
-            
-            // 32:2月人月数  33:3月人月数  34:4月人月数  35:5月人月数  36:6月人月数  37:7月人月数  38:8月人月数  39:9月人月数  
-            
-            // 40:10月人月数  41:11月人月数  42:12月人月数  44:1月回款  45:2月回款  46:3月回款  47:4月回款  
-            
-            // 48:5月回款  49:6月回款  50:7月回款  51:8月回款  52:9月回款  53:10月回款  54:11月回款  55:12月回款  
-            
-            // E:/公司预算/预算_北2部 2018年.xlsx            
-        
+            project.setDepId(depId);
+            project = this.projectDao.save(project);
+            prjBudget.setProject(project);
+            prjBudget = this.prjBudgetDao.save(prjBudget);
+            logger.info(
+                    " New  project! " + project.getId() + ":" + project.getName() + " budgetId: " + prjBudget.getId());
+            // logger.info(ImisUtils.objectJsonStr(project));
+            // logger.info(ImisUtils.objectJsonStr(prjBudget));
+
+            // logger.info("income forecast " + incomes.size());
+            for (PrjIncomeForecast income : incomes) {
+                income.setProject(project);
+                income.setDepId(depId);
+                // logger.info(ImisUtils.objectJsonStr(income));
+            }
+            this.prjIncomeDao.saveAll(incomes);
+
+            // logger.info("project confirms " + confirms.size());
+            for (PrjRightsConfirm aconfirm : confirms) {
+                aconfirm.setProject(project);
+                aconfirm.setDepId(depId);
+                // logger.info(ImisUtils.objectJsonStr(aconfirm));
+            }
+            this.prjConfirmDao.saveAll(confirms);
+
+            prevProject = project;
+            prevPrjBudget = prjBudget;
+
+        }
+
+        incomes.clear();
+        confirms.clear();
+
+        // 0:大区名称 1:部门名称 2:客户名称 3:合同编号 4:合同名称 5:核算类型 6:预计签订日期 7:预计合同金额
+        // 8:截至18年底是否能拿回验收报告/确认单 9:对应期间 10:本年应确认含税收入（合同金额） 11:本年应确认收入 12:本年应确认成本
+        // 13:本年应确认人月数 14:累计已确认收入 15:累计已确认成本
+
+        // 16:累计已确认人月数 17:累计人均收入 18:累计人均成本 19:本年账面收入 20:本年账面成本 21:项目津贴金额 22:预计开票收入
+        // 23:预计截至18年底发生成本
+
+        // 24:预计截至18年底投入人月数 25:预计人均成本 26:递延成本 27:预计回款金额 28:是否为外包 29:外包部分预计成本 31:1月人月数
+
+        // 32:2月人月数 33:3月人月数 34:4月人月数 35:5月人月数 36:6月人月数 37:7月人月数 38:8月人月数 39:9月人月数
+
+        // 40:10月人月数 41:11月人月数 42:12月人月数 44:1月回款 45:2月回款 46:3月回款 47:4月回款
+
+        // 48:5月回款 49:6月回款 50:7月回款 51:8月回款 52:9月回款 53:10月回款 54:11月回款 55:12月回款
+
+        // E:/公司预算/预算_北2部 2018年.xlsx
+
         workbook.close();
     }
 
     private Custom getOrAddCustomByName(String customName) {
-        if( customName == null || customName.length() < 2)
+        if (customName == null || customName.length() < 2)
             return null;
 
         Custom custom = this.customDao.findByName(customName);

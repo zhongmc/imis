@@ -1,39 +1,139 @@
 package com.ynet.imis.utils;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class Test{
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.ynet.imis.service.utils.InitData;
+
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
+
+public class Test {
 
     public static void main(String[] args) {
 
-        try{
+        try {
 
             SimpleDateFormat fmt = new SimpleDateFormat("yyyy/MM");
             SimpleDateFormat outFmt = new SimpleDateFormat("yyyy/MM/dd");
             String strVal = "2017/4";
             Date aDate = fmt.parse(strVal);
-            System.out.println(String.format("unformate %s to: %s LongValue: %s", strVal, outFmt.format(aDate), aDate.getTime()));
+            System.out.println(
+                    String.format("unformate %s to: %s LongValue: %s", strVal, outFmt.format(aDate), aDate.getTime()));
 
             strVal = "2017/12";
             aDate = fmt.parse(strVal);
-            System.out.println(String.format("unformate %s to: %s LongValue: %s", strVal, outFmt.format(aDate), aDate.getTime()));
+            System.out.println(
+                    String.format("unformate %s to: %s LongValue: %s", strVal, outFmt.format(aDate), aDate.getTime()));
 
             strVal = "2018/11";
             aDate = fmt.parse(strVal);
-            System.out.println(String.format("unformate %s to: %s LongValue: %s", strVal, outFmt.format(aDate), aDate.getTime()));
+            System.out.println(
+                    String.format("unformate %s to: %s LongValue: %s", strVal, outFmt.format(aDate), aDate.getTime()));
 
             Date today = new Date();
-            System.out.println(outFmt.format( today) + " " + today.getTime());
+            System.out.println(outFmt.format(today) + " " + today.getTime());
 
-            
+            Test t = new Test();
+            // t.importCostItemInfo("D:/公司预算/预算_北1部 2018年.xlsx");
 
+            String fileName = "C:\\xuexi\\imis\\imisServer\\src\\main\\resources\\initData.json";
 
-        }catch(Exception e)
-        {
+            t.importJsonInitData(fileName);
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    
+    public void importJsonInitData(String fileName) throws Exception {
+
+        ObjectMapper mapper = new ObjectMapper();
+        // 转换为格式化的json
+        mapper.enable(SerializationFeature.INDENT_OUTPUT);
+
+        // 如果json中有新增的字段并且是实体类类中不存在的，不报错
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
+        InitData initData = mapper.readValue(new File(fileName), InitData.class);
+
+        System.out.println(ImisUtils.objectJsonStr(initData));
+    }
+
+    public void importCostItemInfo(String fileName) throws Exception {
+        System.out.println();
+        System.out.println(fileName);
+        File file = new File(fileName);
+        FileInputStream instream = new FileInputStream(file);
+
+        // XSSFWorkbook workbook;
+        Workbook workbook = WorkbookFactory.create(instream);
+
+        // SimpleDateFormat fmt = new SimpleDateFormat("yyyy/mm");
+        // Date begDate = null, endDate = null;
+        // // XSSFSheet
+        // Project prevProject = null;
+        // PrjRightsConfirm confirm = null;
+        // PrjBudget prevPrjBudget = null;
+        // List<PrjIncomeForecast> incomes = new ArrayList<PrjIncomeForecast>();
+        // List<PrjRightsConfirm> confirms = new ArrayList<PrjRightsConfirm>();
+        // boolean isSamePrj = false;
+        // Calendar calendar = Calendar.getInstance();
+        // int year = calendar.get(Calendar.YEAR);
+
+        Sheet sheet = workbook.getSheet("部门管理费用");
+        if (sheet != null) {
+            System.out.println();
+            System.out.println(sheet.getSheetName());
+            System.out.println();
+            // logger.info("read the sheet of " + sheet.getSheetName());
+            int rc = sheet.getPhysicalNumberOfRows();
+            for (int i = 3; i < rc; i++) {
+                Row row = sheet.getRow(i);
+                if (row == null)
+                    continue;
+                Cell cell = row.getCell(1);
+                if (cell == null)
+                    break;
+                String title = cell.getStringCellValue();
+
+                if (title.trim().length() == 0)
+                    break;
+
+                // System.out.println(title);
+                int idx = title.indexOf('-');
+                int idx1 = -1;
+
+                String groupName = "";
+                if (idx != -1)
+                    idx1 = title.indexOf('-', idx + 1);
+
+                if (idx != -1 && idx1 != -1) {
+                    groupName = title.substring(0, idx1);
+                } else if (idx != -1) {
+                    groupName = title.substring(0, idx);
+                }
+
+                String desc = "";
+                cell = row.getCell(16);
+                if (cell != null)
+                    desc = cell.getStringCellValue();
+
+                System.out.println(String.format("\"%s\" \"%s\" \"%s\"", groupName, title, desc));
+            }
+
+        }
+
+        instream.close();
+        workbook.close();
+
+    }
+
 }

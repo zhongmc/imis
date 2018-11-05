@@ -1,0 +1,1728 @@
+{
+  "users": [
+    {
+      "id": null,
+
+      "userName": "admin",
+
+      "number": null,
+
+      "nickName": "系统管理员",
+
+      "desc": null,
+
+      "avadaImage": null,
+
+      "password": "123456",
+
+      "email": null,
+
+      "telNumber": null,
+
+      "docNumber": null,
+
+      "isPasswordChange": 0,
+
+      "supervisor": true,
+
+      "status": "ACTIVE",
+
+      "roleName": null,
+
+      "depId": null,
+
+      "firstPassword": null,
+
+      "roles": [],
+
+      "username": "admin"
+    }
+  ],
+
+  "departments": [
+    {
+      "id": null,
+
+      "childs": [
+        {
+          "id": null,
+
+          "childs": [
+            {
+              "id": null,
+
+              "childs": [],
+
+              "fullId": null,
+
+              "parentId": null,
+
+              "depStatu": "FREEZE",
+
+              "depNumber": null,
+
+              "name": "财务部",
+
+              "desc": null,
+
+              "root": true
+            },
+            {
+              "id": null,
+
+              "childs": [],
+
+              "fullId": null,
+
+              "parentId": null,
+
+              "depStatu": "FREEZE",
+
+              "depNumber": null,
+
+              "name": "项目管理部",
+
+              "desc": null,
+
+              "root": true
+            },
+            {
+              "id": null,
+
+              "childs": [],
+
+              "fullId": null,
+
+              "parentId": null,
+
+              "depStatu": "FREEZE",
+
+              "depNumber": null,
+
+              "name": "人力资源部",
+
+              "desc": null,
+
+              "root": true
+            }
+          ],
+
+          "fullId": null,
+
+          "parentId": null,
+
+          "depStatu": "FREEZE",
+
+          "depNumber": null,
+
+          "name": "运营管理部",
+
+          "desc": null,
+
+          "root": true
+        },
+        {
+          "id": null,
+
+          "childs": [
+            {
+              "id": null,
+
+              "childs": [],
+
+              "fullId": null,
+
+              "parentId": null,
+
+              "depStatu": "FREEZE",
+
+              "depNumber": null,
+
+              "name": "北一部",
+
+              "desc": null,
+
+              "root": true
+            },
+            {
+              "id": null,
+
+              "childs": [],
+
+              "fullId": null,
+
+              "parentId": null,
+
+              "depStatu": "FREEZE",
+
+              "depNumber": null,
+
+              "name": "北二部",
+
+              "desc": null,
+
+              "root": true
+            },
+            {
+              "id": null,
+
+              "childs": [],
+
+              "fullId": null,
+
+              "parentId": null,
+
+              "depStatu": "FREEZE",
+
+              "depNumber": null,
+
+              "name": "北三部",
+
+              "desc": null,
+
+              "root": true
+            }
+          ],
+
+          "fullId": null,
+
+          "parentId": null,
+
+          "depStatu": "FREEZE",
+
+          "depNumber": null,
+
+          "name": "北部大区",
+
+          "desc": null,
+
+          "root": true
+        },
+        {
+          "id": null,
+
+          "childs": [
+            {
+              "id": null,
+
+              "childs": [],
+
+              "fullId": null,
+
+              "parentId": null,
+
+              "depStatu": "FREEZE",
+
+              "depNumber": null,
+
+              "name": "东一部",
+
+              "desc": null,
+
+              "root": true
+            },
+            {
+              "id": null,
+
+              "childs": [],
+
+              "fullId": null,
+
+              "parentId": null,
+
+              "depStatu": "FREEZE",
+
+              "depNumber": null,
+
+              "name": "东二部",
+
+              "desc": null,
+
+              "root": true
+            },
+            {
+              "id": null,
+
+              "childs": [],
+
+              "fullId": null,
+
+              "parentId": null,
+
+              "depStatu": "FREEZE",
+
+              "depNumber": null,
+
+              "name": "东三部",
+
+              "desc": null,
+
+              "root": true
+            }
+          ],
+
+          "fullId": null,
+
+          "parentId": null,
+
+          "depStatu": "FREEZE",
+
+          "depNumber": null,
+
+          "name": "东部大区",
+
+          "desc": null,
+
+          "root": true
+        },
+        {
+          "id": null,
+
+          "childs": [
+            {
+              "id": null,
+
+              "childs": [],
+
+              "fullId": null,
+
+              "parentId": null,
+
+              "depStatu": "FREEZE",
+
+              "depNumber": null,
+
+              "name": "南一部",
+
+              "desc": null,
+
+              "root": true
+            },
+            {
+              "id": null,
+
+              "childs": [],
+
+              "fullId": null,
+
+              "parentId": null,
+
+              "depStatu": "FREEZE",
+
+              "depNumber": null,
+
+              "name": "南二部",
+
+              "desc": null,
+
+              "root": true
+            },
+            {
+              "id": null,
+
+              "childs": [],
+
+              "fullId": null,
+
+              "parentId": null,
+
+              "depStatu": "FREEZE",
+
+              "depNumber": null,
+
+              "name": "南三部",
+
+              "desc": null,
+
+              "root": true
+            }
+          ],
+
+          "fullId": null,
+
+          "parentId": null,
+
+          "depStatu": "FREEZE",
+
+          "depNumber": null,
+
+          "name": "南部大区",
+
+          "desc": null,
+
+          "root": true
+        }
+      ],
+
+      "fullId": null,
+
+      "parentId": null,
+
+      "depStatu": "FREEZE",
+
+      "depNumber": null,
+
+      "name": "易诚互动",
+
+      "desc": null,
+
+      "root": true
+    }
+  ],
+
+  "menus": [
+    {
+      "id": null,
+
+      "childs": [
+        {
+          "id": null,
+
+          "childs": [],
+
+          "fullId": null,
+
+          "parentId": null,
+
+          "url": "/project/basic/**",
+
+          "path": "/prj/basic",
+
+          "component": "components/project/PrjBasic.vue",
+
+          "name": "项目基础信息",
+
+          "iconCls": null,
+
+          "hidden": false,
+
+          "roles": [],
+
+          "root": true
+        },
+        {
+          "id": null,
+
+          "childs": [],
+
+          "fullId": null,
+
+          "parentId": null,
+
+          "url": "/project/budget/**",
+
+          "path": "/prj/budget/:id",
+
+          "component": "components/project/PrjBudget.vue",
+
+          "name": "项目预算",
+
+          "iconCls": null,
+
+          "hidden": true,
+
+          "roles": [],
+
+          "root": true
+        },
+        {
+          "id": null,
+
+          "childs": [],
+
+          "fullId": null,
+
+          "parentId": null,
+
+          "url": "project/chance/**",
+
+          "path": "/prj/chance",
+
+          "component": "components/project/PrjCHance.vue",
+
+          "name": "项目机会",
+
+          "iconCls": null,
+
+          "hidden": false,
+
+          "roles": [],
+
+          "root": true
+        }
+      ],
+
+      "fullId": null,
+
+      "parentId": null,
+
+      "url": "/",
+
+      "path": "/home",
+
+      "component": "pages/home.vue",
+
+      "name": "项目管理",
+
+      "iconCls": null,
+
+      "hidden": false,
+
+      "roles": [],
+
+      "root": true
+    },
+    {
+      "id": null,
+
+      "childs": [
+        {
+          "id": null,
+
+          "childs": [],
+
+          "fullId": null,
+
+          "parentId": null,
+
+          "url": "/custom/basic/**",
+
+          "path": "/custom/basic",
+
+          "component": "components/custom/CustomMana.vue",
+
+          "name": "客户基础信息",
+
+          "iconCls": null,
+
+          "hidden": false,
+
+          "roles": [],
+
+          "root": true
+        },
+        {
+          "id": null,
+
+          "childs": [],
+
+          "fullId": null,
+
+          "parentId": null,
+
+          "url": "/custom/contactor/**",
+
+          "path": "/custom/contactor",
+
+          "component": "components/custom/CustomContactor.vue",
+
+          "name": "客户干系人",
+
+          "iconCls": null,
+
+          "hidden": false,
+
+          "roles": [],
+
+          "root": true
+        },
+        {
+          "id": null,
+
+          "childs": [],
+
+          "fullId": null,
+
+          "parentId": null,
+
+          "url": "/custom/trace/**",
+
+          "path": "/custom/trace",
+
+          "component": "components/custom/CustomTrace.vue",
+
+          "name": "客户跟踪",
+
+          "iconCls": null,
+
+          "hidden": false,
+
+          "roles": [],
+
+          "root": true
+        }
+      ],
+
+      "fullId": null,
+
+      "parentId": null,
+
+      "url": "/",
+
+      "path": "/home",
+
+      "component": "pages/home.vue",
+
+      "name": "客户管理",
+
+      "iconCls": null,
+
+      "hidden": false,
+
+      "roles": [],
+
+      "root": true
+    },
+    {
+      "id": null,
+
+      "childs": [
+        {
+          "id": null,
+
+          "childs": [],
+
+          "fullId": null,
+
+          "parentId": null,
+
+          "url": "/budget/basic/**",
+
+          "path": "/budget/basic",
+
+          "component": "components/budget/BudgetBasic.vue",
+
+          "name": "部门预算",
+
+          "iconCls": null,
+
+          "hidden": false,
+
+          "roles": [],
+
+          "root": true
+        },
+        {
+          "id": null,
+
+          "childs": [],
+
+          "fullId": null,
+
+          "parentId": null,
+
+          "url": "/budget/collect/**",
+
+          "path": "/budget/collect",
+
+          "component": "components/budget/BudgetCollect.vue",
+
+          "name": "部门预算汇总",
+
+          "iconCls": null,
+
+          "hidden": false,
+
+          "roles": [],
+
+          "root": true
+        }
+      ],
+
+      "fullId": null,
+
+      "parentId": null,
+
+      "url": "/",
+
+      "path": "/home",
+
+      "component": "pages/home.vue",
+
+      "name": "部门预算",
+
+      "iconCls": null,
+
+      "hidden": false,
+
+      "roles": [],
+
+      "root": true
+    },
+    {
+      "id": null,
+
+      "childs": [
+        {
+          "id": null,
+
+          "childs": [],
+
+          "fullId": null,
+
+          "parentId": null,
+
+          "url": "/system/basic/**",
+
+          "path": "/sys/basic",
+
+          "component": "components/system/SysBasic.vue",
+
+          "name": "基础信息设置",
+
+          "iconCls": null,
+
+          "hidden": false,
+
+          "roles": [],
+
+          "root": true
+        },
+        {
+          "id": null,
+
+          "childs": [],
+
+          "fullId": null,
+
+          "parentId": null,
+
+          "url": "/system/budget/**",
+
+          "path": "/sys/budget",
+
+          "component": "components/system/SysBudget.vue",
+
+          "name": "预算设置",
+
+          "iconCls": null,
+
+          "hidden": false,
+
+          "roles": [],
+
+          "root": true
+        },
+        {
+          "id": null,
+
+          "childs": [],
+
+          "fullId": null,
+
+          "parentId": null,
+
+          "url": "/system/user/**",
+
+          "path": "/sys/user",
+
+          "component": "components/system/SysUser.vue",
+
+          "name": "操作员管理",
+
+          "iconCls": null,
+
+          "hidden": false,
+
+          "roles": [],
+
+          "root": true
+        },
+        {
+          "id": null,
+
+          "childs": [],
+
+          "fullId": null,
+
+          "parentId": null,
+
+          "url": "/system/project/**",
+
+          "path": "/sys/prjimport",
+
+          "component": "components/system/SysPrjImport.vue",
+
+          "name": "项目数据导入",
+
+          "iconCls": null,
+
+          "hidden": false,
+
+          "roles": [],
+
+          "root": true
+        }
+      ],
+
+      "fullId": null,
+
+      "parentId": null,
+
+      "url": "/",
+
+      "path": "/home",
+
+      "component": "pages/home.vue",
+
+      "name": "系统设置",
+
+      "iconCls": null,
+
+      "hidden": false,
+
+      "roles": [],
+
+      "root": true
+    }
+  ],
+
+  "roles": [
+    {
+      "id": null,
+
+      "name": "ROLE_admin",
+
+      "nameZh": "系统管理员",
+
+      "desc": null
+    }
+  ],
+
+  "costDefs": [
+    {
+      "id": null,
+
+      "name": "人月情况",
+
+      "costItems": [
+        {
+          "id": null,
+
+          "groupId": null,
+
+          "name": "内部人月数",
+
+          "beAmount": false,
+
+          "amountFormula": null,
+
+          "desc": null,
+
+          "group": null
+        },
+        {
+          "id": null,
+
+          "groupId": null,
+
+          "name": "外部人月数",
+
+          "beAmount": false,
+
+          "amountFormula": null,
+
+          "desc": null,
+
+          "group": null
+        }
+      ]
+    },
+    {
+      "id": null,
+
+      "name": "收支项",
+
+      "costItems": [
+        {
+          "id": null,
+
+          "groupId": null,
+
+          "name": "收入",
+
+          "beAmount": false,
+
+          "amountFormula": null,
+
+          "desc": null,
+
+          "group": null
+        },
+        {
+          "id": null,
+
+          "groupId": null,
+
+          "name": "内部交易收入",
+
+          "beAmount": false,
+
+          "amountFormula": null,
+
+          "desc": null,
+
+          "group": null
+        },
+        {
+          "id": null,
+
+          "groupId": null,
+
+          "name": "税金及附加",
+
+          "beAmount": false,
+
+          "amountFormula": null,
+
+          "desc": null,
+
+          "group": null
+        },
+        {
+          "id": null,
+
+          "groupId": null,
+
+          "name": "外包成本",
+
+          "beAmount": false,
+
+          "amountFormula": null,
+
+          "desc": null,
+
+          "group": null
+        },
+        {
+          "id": null,
+
+          "groupId": null,
+
+          "name": "内部交易成本",
+
+          "beAmount": false,
+
+          "amountFormula": null,
+
+          "desc": null,
+
+          "group": null
+        }
+      ]
+    },
+    {
+      "id": null,
+
+      "name": "人工成本",
+
+      "costItems": [
+        {
+          "id": null,
+
+          "groupId": null,
+
+          "name": "人工成本-计提工资",
+
+          "beAmount": false,
+
+          "amountFormula": null,
+
+          "desc": null,
+
+          "group": null
+        },
+        {
+          "id": null,
+
+          "groupId": null,
+
+          "name": "人工成本-计提公司负担社保及公积金",
+
+          "beAmount": false,
+
+          "amountFormula": null,
+
+          "desc": null,
+
+          "group": null
+        },
+        {
+          "id": null,
+
+          "groupId": null,
+
+          "name": "人工成本-午餐费",
+
+          "beAmount": false,
+
+          "amountFormula": null,
+
+          "desc": null,
+
+          "group": null
+        },
+        {
+          "id": null,
+
+          "groupId": null,
+
+          "name": "人工成本-通讯费",
+
+          "beAmount": false,
+
+          "amountFormula": null,
+
+          "desc": null,
+
+          "group": null
+        },
+        {
+          "id": null,
+
+          "groupId": null,
+
+          "name": "人工成本-电脑补助",
+
+          "beAmount": false,
+
+          "amountFormula": null,
+
+          "desc": null,
+
+          "group": null
+        },
+        {
+          "id": null,
+
+          "groupId": null,
+
+          "name": "人工成本-奖金及奖励",
+
+          "beAmount": false,
+
+          "amountFormula": null,
+
+          "desc": null,
+
+          "group": null
+        },
+        {
+          "id": null,
+
+          "groupId": null,
+
+          "name": "人工成本-实习生工资",
+
+          "beAmount": false,
+
+          "amountFormula": null,
+
+          "desc": null,
+
+          "group": null
+        },
+        {
+          "id": null,
+
+          "groupId": null,
+
+          "name": "差旅补助/项目补贴",
+
+          "beAmount": false,
+
+          "amountFormula": null,
+
+          "desc": null,
+
+          "group": null
+        },
+        {
+          "id": null,
+
+          "groupId": null,
+
+          "name": "专项补助",
+
+          "beAmount": false,
+
+          "amountFormula": null,
+
+          "desc": null,
+
+          "group": null
+        }
+      ]
+    },
+    {
+      "id": null,
+
+      "name": "四项费用-差旅费",
+
+      "costItems": [
+        {
+          "id": null,
+
+          "groupId": null,
+
+          "name": "四项费用-差旅费-交通工具费",
+
+          "beAmount": false,
+
+          "amountFormula": null,
+
+          "desc": null,
+
+          "group": null
+        },
+        {
+          "id": null,
+
+          "groupId": null,
+
+          "name": "四项费用-差旅费-宾馆住宿费",
+
+          "beAmount": false,
+
+          "amountFormula": null,
+
+          "desc": null,
+
+          "group": null
+        },
+        {
+          "id": null,
+
+          "groupId": null,
+
+          "name": "四项费用-差旅费-当地交通费",
+
+          "beAmount": false,
+
+          "amountFormula": null,
+
+          "desc": null,
+
+          "group": null
+        },
+        {
+          "id": null,
+
+          "groupId": null,
+
+          "name": "四项费用-差旅费-项目组租房费",
+
+          "beAmount": false,
+
+          "amountFormula": null,
+
+          "desc": null,
+
+          "group": null
+        },
+        {
+          "id": null,
+
+          "groupId": null,
+
+          "name": "四项费用-差旅费-生活用品费",
+
+          "beAmount": false,
+
+          "amountFormula": null,
+
+          "desc": null,
+
+          "group": null
+        },
+        {
+          "id": null,
+
+          "groupId": null,
+
+          "name": "四项费用-差旅费-其他",
+
+          "beAmount": false,
+
+          "amountFormula": null,
+
+          "desc": null,
+
+          "group": null
+        }
+      ]
+    },
+    {
+      "id": null,
+
+      "name": "四项费用",
+
+      "costItems": [
+        {
+          "id": null,
+
+          "groupId": null,
+
+          "name": "四项费用-通讯费",
+
+          "beAmount": false,
+
+          "amountFormula": null,
+
+          "desc": null,
+
+          "group": null
+        },
+        {
+          "id": null,
+
+          "groupId": null,
+
+          "name": "四项费用-交通费",
+
+          "beAmount": false,
+
+          "amountFormula": null,
+
+          "desc": null,
+
+          "group": null
+        },
+        {
+          "id": null,
+
+          "groupId": null,
+
+          "name": "四项费用-业务招待费",
+
+          "beAmount": false,
+
+          "amountFormula": null,
+
+          "desc": null,
+
+          "group": null
+        },
+        {
+          "id": null,
+
+          "groupId": null,
+
+          "name": "",
+
+          "beAmount": false,
+
+          "amountFormula": null,
+
+          "desc": null,
+
+          "group": null
+        },
+        {
+          "id": null,
+
+          "groupId": null,
+
+          "name": "",
+
+          "beAmount": false,
+
+          "amountFormula": null,
+
+          "desc": null,
+
+          "group": null
+        },
+        {
+          "id": null,
+
+          "groupId": null,
+
+          "name": "",
+
+          "beAmount": false,
+
+          "amountFormula": null,
+
+          "desc": null,
+
+          "group": null
+        }
+      ]
+    },
+    {
+      "id": null,
+
+      "name": "福利费",
+
+      "costItems": [
+        {
+          "id": null,
+
+          "groupId": null,
+
+          "name": "福利费-每人月团建费",
+
+          "beAmount": false,
+
+          "amountFormula": null,
+
+          "desc": null,
+
+          "group": null
+        },
+        {
+          "id": null,
+
+          "groupId": null,
+
+          "name": "福利费-慰问员工团建费",
+
+          "beAmount": false,
+
+          "amountFormula": null,
+
+          "desc": null,
+
+          "group": null
+        },
+        {
+          "id": null,
+
+          "groupId": null,
+
+          "name": "福利费-员工活动费",
+
+          "beAmount": false,
+
+          "amountFormula": null,
+
+          "desc": null,
+
+          "group": null
+        },
+        {
+          "id": null,
+
+          "groupId": null,
+
+          "name": "福利费-积分商城",
+
+          "beAmount": false,
+
+          "amountFormula": null,
+
+          "desc": null,
+
+          "group": null
+        },
+        {
+          "id": null,
+
+          "groupId": null,
+
+          "name": "福利费-体检费",
+
+          "beAmount": false,
+
+          "amountFormula": null,
+
+          "desc": null,
+
+          "group": null
+        },
+        {
+          "id": null,
+
+          "groupId": null,
+
+          "name": "福利费-加班餐费",
+
+          "beAmount": false,
+
+          "amountFormula": null,
+
+          "desc": null,
+
+          "group": null
+        },
+        {
+          "id": null,
+
+          "groupId": null,
+
+          "name": "福利费-其他",
+
+          "beAmount": false,
+
+          "amountFormula": null,
+
+          "desc": null,
+
+          "group": null
+        }
+      ]
+    },
+    {
+      "id": null,
+
+      "name": "办公费",
+
+      "costItems": [
+        {
+          "id": null,
+
+          "groupId": null,
+
+          "name": "办公费-办公用品",
+
+          "beAmount": false,
+
+          "amountFormula": null,
+
+          "desc": null,
+
+          "group": null
+        },
+        {
+          "id": null,
+
+          "groupId": null,
+
+          "name": "办公费-快递费",
+
+          "beAmount": false,
+
+          "amountFormula": null,
+
+          "desc": null,
+
+          "group": null
+        },
+        {
+          "id": null,
+
+          "groupId": null,
+
+          "name": "办公费-印刷费",
+
+          "beAmount": false,
+
+          "amountFormula": null,
+
+          "desc": null,
+
+          "group": null
+        },
+        {
+          "id": null,
+
+          "groupId": null,
+
+          "name": "办公费-桶装水",
+
+          "beAmount": false,
+
+          "amountFormula": null,
+
+          "desc": null,
+
+          "group": null
+        },
+        {
+          "id": null,
+
+          "groupId": null,
+
+          "name": "办公费-其他",
+
+          "beAmount": false,
+
+          "amountFormula": null,
+
+          "desc": null,
+
+          "group": null
+        },
+        {
+          "id": null,
+
+          "groupId": null,
+
+          "name": "",
+
+          "beAmount": false,
+
+          "amountFormula": null,
+
+          "desc": null,
+
+          "group": null
+        }
+      ]
+    },
+    {
+      "id": null,
+
+      "name": "其他",
+
+      "costItems": [
+        {
+          "id": null,
+
+          "groupId": null,
+
+          "name": "固定电话及网费",
+
+          "beAmount": false,
+
+          "amountFormula": null,
+
+          "desc": null,
+
+          "group": null
+        },
+        {
+          "id": null,
+
+          "groupId": null,
+
+          "name": "房租费",
+
+          "beAmount": false,
+
+          "amountFormula": null,
+
+          "desc": null,
+
+          "group": null
+        },
+        {
+          "id": null,
+
+          "groupId": null,
+
+          "name": "物业保洁水电费",
+
+          "beAmount": false,
+
+          "amountFormula": null,
+
+          "desc": null,
+
+          "group": null
+        },
+        {
+          "id": null,
+
+          "groupId": null,
+
+          "name": "招聘费",
+
+          "beAmount": false,
+
+          "amountFormula": null,
+
+          "desc": null,
+
+          "group": null
+        },
+        {
+          "id": null,
+
+          "groupId": null,
+
+          "name": "培训费",
+
+          "beAmount": false,
+
+          "amountFormula": null,
+
+          "desc": null,
+
+          "group": null
+        },
+        {
+          "id": null,
+
+          "groupId": null,
+
+          "name": "会议费",
+
+          "beAmount": false,
+
+          "amountFormula": null,
+
+          "desc": null,
+
+          "group": null
+        },
+        {
+          "id": null,
+
+          "groupId": null,
+
+          "name": "中介咨询费",
+
+          "beAmount": false,
+
+          "amountFormula": null,
+
+          "desc": null,
+
+          "group": null
+        },
+        {
+          "id": null,
+
+          "groupId": null,
+
+          "name": "广告费",
+
+          "beAmount": false,
+
+          "amountFormula": null,
+
+          "desc": null,
+
+          "group": null
+        },
+        {
+          "id": null,
+
+          "groupId": null,
+
+          "name": "业务宣传费",
+
+          "beAmount": false,
+
+          "amountFormula": null,
+
+          "desc": null,
+
+          "group": null
+        },
+        {
+          "id": null,
+
+          "groupId": null,
+
+          "name": "折旧费",
+
+          "beAmount": false,
+
+          "amountFormula": null,
+
+          "desc": null,
+
+          "group": null
+        },
+        {
+          "id": null,
+
+          "groupId": null,
+
+          "name": "无形资产摊销",
+
+          "beAmount": false,
+
+          "amountFormula": null,
+
+          "desc": null,
+
+          "group": null
+        },
+        {
+          "id": null,
+
+          "groupId": null,
+
+          "name": "低值易耗品摊销",
+
+          "beAmount": false,
+
+          "amountFormula": null,
+
+          "desc": null,
+
+          "group": null
+        },
+        {
+          "id": null,
+
+          "groupId": null,
+
+          "name": "第三方费用",
+
+          "beAmount": false,
+
+          "amountFormula": null,
+
+          "desc": null,
+
+          "group": null
+        },
+        {
+          "id": null,
+
+          "groupId": null,
+
+          "name": "工会经费",
+
+          "beAmount": false,
+
+          "amountFormula": null,
+
+          "desc": null,
+
+          "group": null
+        },
+        {
+          "id": null,
+
+          "groupId": null,
+
+          "name": "职工教育经费",
+
+          "beAmount": false,
+
+          "amountFormula": null,
+
+          "desc": null,
+
+          "group": null
+        },
+        {
+          "id": null,
+
+          "groupId": null,
+
+          "name": "税费",
+
+          "beAmount": false,
+
+          "amountFormula": null,
+
+          "desc": null,
+
+          "group": null
+        },
+        {
+          "id": null,
+
+          "groupId": null,
+
+          "name": "其他",
+
+          "beAmount": false,
+
+          "amountFormula": null,
+
+          "desc": null,
+
+          "group": null
+        }
+      ]
+    }
+  ]
+}

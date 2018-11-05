@@ -1,0 +1,443 @@
+{
+  "users": [
+    {
+      "userName": "admin",
+      "nickName": "系统管理员",
+      "password": "123456",
+      "supervisor": 1,
+      "status": "ACTIVE",
+      "roles": [
+        {
+          "name": "ROLE_admin",
+          "nameZh": "系统管理员"
+        }
+      ]
+    }
+  ],
+
+  "departments": [
+    {
+      "name": "易诚互动",
+      "childs": [
+        {
+          "name": "运营管理部",
+          "childs": [
+            { "name": "财务部" },
+            { "name": "项目管理部" },
+            { "name": "人力资源部" }
+          ]
+        },
+        {
+          "name": "北部大区",
+          "childs": [
+            { "name": "北一部" },
+            { "name": "北二部" },
+            { "name": "北三部" }
+          ]
+        },
+        {
+          "name": "东部大区",
+          "childs": [
+            {
+              "name": "东一部"
+            },
+            {
+              "name": "东二部"
+            },
+            {
+              "name": "东三部"
+            }
+          ]
+        },
+        {
+          "name": "南部大区",
+          "childs": [
+            {
+              "name": "南一部"
+            },
+            {
+              "name": "南二部"
+            },
+            {
+              "name": "南三部"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "menus": [
+    {
+      "name": "项目管理",
+      "url": "/",
+      "path": "/home",
+      "component": "pages/home.vue",
+      "hidden": 0,
+      "childs": [
+        {
+          "name": "项目基础信息",
+          "url": "/project/basic/**",
+          "path": "/prj/basic",
+          "component": "components/project/PrjBasic.vue",
+          "hidden": 0
+        },
+        {
+          "name": "项目预算",
+          "url": "/project/budget/**",
+          "path": "/prj/budget/:id",
+          "component": "components/project/PrjBudget.vue",
+          "hidden": 1
+        },
+        {
+          "name": "项目机会",
+          "url": "project/chance/**",
+          "path": "/prj/chance",
+          "component": "components/project/PrjCHance.vue",
+          "hidden": 0
+        }
+      ]
+    },
+    {
+      "name": "客户管理",
+      "url": "/",
+      "path": "/home",
+      "component": "pages/home.vue",
+      "hidden": 0,
+      "childs": [
+        {
+          "name": "客户基础信息",
+          "url": "/custom/basic/**",
+          "path": "/custom/basic",
+          "component": "components/custom/CustomMana.vue",
+          "hidden": 0
+        },
+        {
+          "name": "客户干系人",
+          "url": "/custom/contactor/**",
+          "path": "/custom/contactor",
+          "component": "components/custom/CustomContactor.vue",
+          "hidden": 0
+        },
+        {
+          "name": "客户跟踪",
+          "url": "/custom/trace/**",
+          "path": "/custom/trace",
+          "component": "components/custom/CustomTrace.vue",
+          "hidden": 0
+        }
+      ]
+    },
+
+    {
+      "name": "部门预算",
+      "url": "/",
+      "path": "/home",
+      "component": "pages/home.vue",
+      "hidden": 0,
+      "childs": [
+        {
+          "name": "部门预算",
+          "url": "/budget/basic/**",
+          "path": "/budget/basic",
+          "component": "components/budget/BudgetBasic.vue",
+          "hidden": 0
+        },
+        {
+          "name": "部门预算汇总",
+          "url": "/budget/collect/**",
+          "path": "/budget/collect",
+          "component": "components/budget/BudgetCollect.vue",
+          "hidden": 0
+        }
+      ]
+    },
+
+    {
+      "name": "系统设置",
+      "url": "/",
+      "path": "/home",
+      "component": "pages/home.vue",
+      "hidden": 0,
+      "childs": [
+        {
+          "name": "基础信息设置",
+          "url": "/system/basic/**",
+          "path": "/sys/basic",
+          "component": "components/system/SysBasic.vue",
+          "hidden": 0
+        },
+        {
+          "name": "预算设置",
+          "url": "/system/budget/**",
+          "path": "/sys/budget",
+          "component": "components/system/SysBudget.vue",
+          "hidden": 0
+        },
+        {
+          "name": "操作员管理",
+          "url": "/system/user/**",
+          "path": "/sys/user",
+          "component": "components/system/SysUser.vue",
+          "hidden": 0
+        },
+        {
+          "name": "项目数据导入",
+          "url": "/system/project/**",
+          "path": "/sys/prjimport",
+          "component": "components/system/SysPrjImport.vue",
+          "hidden": 0
+        }
+      ]
+    }
+  ],
+
+  "costDefs": [
+    {
+      "name": "人月情况",
+      "costItems": [{ "name": "内部人月数" }, { "name": "外部人月数" }]
+    },
+    {
+      "name": "收支项",
+      "costItems": [
+        { "name": "收入", "beAmount": 1 },
+        {
+          "name": "内部交易收入",
+          "beAmount": 1
+        },
+        {
+          "name": "税金及附加",
+          "beAmount": 1
+        },
+        {
+          "name": "外包成本",
+          "beAmount": 1
+        },
+        {
+          "name": "内部交易成本",
+          "beAmount": 1
+        }
+      ]
+    },
+
+    {
+      "name": "人工成本",
+      "costItems": [
+        {
+          "name": "人工成本-计提工资",
+          "beAmount": 1
+        },
+        {
+          "name": "人工成本-计提公司负担社保及公积金",
+          "beAmount": 1
+        },
+        {
+          "name": "人工成本-午餐费",
+          "beAmount": 1
+        },
+        {
+          "name": "人工成本-通讯费",
+          "beAmount": 1
+        },
+        {
+          "name": "人工成本-电脑补助",
+          "beAmount": 1
+        },
+        {
+          "name": "人工成本-奖金及奖励",
+          "beAmount": 1
+        },
+        {
+          "name": "人工成本-实习生工资",
+          "beAmount": 1
+        },
+
+        {
+          "name": "差旅补助/项目补贴",
+          "beAmount": 1
+        },
+        {
+          "name": "专项补助",
+          "beAmount": 1
+        }
+      ]
+    },
+    {
+      "name": "四项费用-差旅费",
+      "costItems": [
+        {
+          "name": "四项费用-差旅费-交通工具费",
+          "beAmount": 1
+        },
+        {
+          "name": "四项费用-差旅费-宾馆住宿费",
+          "beAmount": 1
+        },
+        {
+          "name": "四项费用-差旅费-当地交通费",
+          "beAmount": 1
+        },
+        {
+          "name": "四项费用-差旅费-项目组租房费",
+          "beAmount": 1
+        },
+        {
+          "name": "四项费用-差旅费-生活用品费",
+          "beAmount": 1
+        },
+        {
+          "name": "四项费用-差旅费-其他",
+          "beAmount": 1
+        }
+      ]
+    },
+    {
+      "name": "四项费用",
+      "costItems": [
+        {
+          "name": "四项费用-通讯费",
+          "beAmount": 1
+        },
+        {
+          "name": "四项费用-交通费",
+          "beAmount": 1
+        },
+        {
+          "name": "四项费用-业务招待费",
+          "beAmount": 1
+        }
+      ]
+    },
+
+    {
+      "name": "福利费",
+      "costItems": [
+        {
+          "name": "福利费-每人月团建费",
+          "beAmount": 1
+        },
+        {
+          "name": "福利费-慰问员工团建费",
+          "beAmount": 1
+        },
+        {
+          "name": "福利费-员工活动费",
+          "beAmount": 1
+        },
+        {
+          "name": "福利费-积分商城",
+          "beAmount": 1
+        },
+        {
+          "name": "福利费-体检费",
+          "beAmount": 1
+        },
+        {
+          "name": "福利费-加班餐费",
+          "beAmount": 1
+        },
+        {
+          "name": "福利费-其他",
+          "beAmount": 1
+        }
+      ]
+    },
+    {
+      "name": "办公费",
+      "costItems": [
+        {
+          "name": "办公费-办公用品",
+          "beAmount": 1
+        },
+        {
+          "name": "办公费-快递费",
+          "beAmount": 1
+        },
+        {
+          "name": "办公费-印刷费",
+          "beAmount": 1
+        },
+        {
+          "name": "办公费-桶装水",
+          "beAmount": 1
+        },
+        {
+          "name": "办公费-其他",
+          "beAmount": 1
+        }
+      ]
+    },
+    {
+      "name": "其他",
+      "costItems": [
+        {
+          "name": "固定电话及网费",
+          "beAmount": 1
+        },
+        {
+          "name": "房租费",
+          "beAmount": 1
+        },
+        {
+          "name": "物业保洁水电费",
+          "beAmount": 1
+        },
+        {
+          "name": "招聘费",
+          "beAmount": 1
+        },
+        {
+          "name": "培训费",
+          "beAmount": 1
+        },
+        {
+          "name": "会议费",
+          "beAmount": 1
+        },
+        {
+          "name": "中介咨询费",
+          "beAmount": 1
+        },
+        {
+          "name": "广告费",
+          "beAmount": 1
+        },
+        {
+          "name": "业务宣传费",
+          "beAmount": 1
+        },
+        {
+          "name": "折旧费",
+          "beAmount": 1
+        },
+        {
+          "name": "无形资产摊销",
+          "beAmount": 1
+        },
+        {
+          "name": "低值易耗品摊销",
+          "beAmount": 1
+        },
+        {
+          "name": "第三方费用",
+          "beAmount": 1
+        },
+        {
+          "name": "工会经费",
+          "beAmount": 1
+        },
+        {
+          "name": "职工教育经费",
+          "beAmount": 1
+        },
+        {
+          "name": "税费",
+          "beAmount": 1
+        },
+        {
+          "name": "其他",
+          "beAmount": 1
+        }
+      ]
+    }
+  ]
+}
