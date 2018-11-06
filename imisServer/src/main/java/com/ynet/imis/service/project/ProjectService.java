@@ -21,9 +21,4 @@ public interface ProjectService {
     public Page<Project> getProjectByPage(int page, int size, String keywords, Long customId, Long departmentId,
             Long prjType, Long prjClass, String beginDateScope, List<Long> depIds);
 
-    // 从文件中导入 //depId 所属部门
-    public void importFile(File file, Long depId) throws Exception;
-
-    public void importFile(MultipartFile file, Long depId ) throws Exception;
-
 }

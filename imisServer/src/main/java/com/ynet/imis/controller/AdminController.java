@@ -4,7 +4,7 @@
 * @description 
 * @created Mon Oct 08 2018 10:51:34 GMT+0800 (中国标准时间)
 * @copyright YNET
-* @last-modified Sun Nov 04 2018 11:36:26 GMT+0800 (中国标准时间)
+* @last-modified Tue Nov 06 2018 17:02:17 GMT+0800 (中国标准时间)
 */
 
 package com.ynet.imis.controller;
@@ -29,6 +29,7 @@ import com.ynet.imis.service.menu.RoleService;
 import com.ynet.imis.service.org.CustomService;
 import com.ynet.imis.service.org.DepartmentService;
 import com.ynet.imis.service.project.ProjectService;
+import com.ynet.imis.service.utils.DataImportService;
 import com.ynet.imis.utils.ImisUtils;
 
 import org.slf4j.Logger;
@@ -62,6 +63,9 @@ public class AdminController {
 
     @Autowired
     private ProjectService projectService;
+
+    @Autowired
+    private DataImportService dataImportService;
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -360,17 +364,22 @@ public class AdminController {
         return new ResponseBean("error", "CostItem with id: " + pid + " not found!");
     }
 
-    @RequestMapping(value = "project/importPrj", method = RequestMethod.POST)
-    public ResponseBean importProjectData(Long depId, MultipartFile file) {
+    @RequestMapping(value = "/budget/import", method = RequestMethod.POST)
+    public ResponseBean importBudgetData(Long depId, MultipartFile file) {
+        logger.info("import budget data for dep:" + depId + " file: " + file.getOriginalFilename());
 
-        logger.info("import project data for dep:" + depId + " file: " + file.getOriginalFilename());
+        if (depId == null)
+            return new ResponseBean("error", "项目数据导入失败! null depId");
 
-        try{
-            projectService.importFile(file, depId);
-            return new ResponseBean("success", "项目数据导入成功!");
-        }catch(Exception e )
-        {
-            logger.error( "项目数据导入失败!", e);
+        try {
+            int ret = dataImportService.importDepartmentBudgetInfo(file, depId);
+            if (ret == 0)
+                return new ResponseBean("success", "项目数据导入成功!");
+            else
+                return new ResponseBean("error", "项目数据导入失败!");
+
+        } catch (Exception e) {
+            logger.error("项目数据导入失败!", e);
             return new ResponseBean("error", "项目数据导入失败!" + e.getMessage());
 
         }

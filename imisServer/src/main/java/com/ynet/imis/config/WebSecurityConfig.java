@@ -52,55 +52,60 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(WebSecurity web) throws Exception {
-        web.ignoring().antMatchers("/", "/index.html", "/static/**","/login_p");
+        web.ignoring().antMatchers("/", "/index.html", "/config/initSystem", "/static/**", "/login_p");
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests()
-                .withObjectPostProcessor(new ObjectPostProcessor<FilterSecurityInterceptor>() {
+        http.authorizeRequests().withObjectPostProcessor(new ObjectPostProcessor<FilterSecurityInterceptor>() {
+            @Override
+            public <O extends FilterSecurityInterceptor> O postProcess(O o) {
+                o.setSecurityMetadataSource(urlFilterInvocationSecurityMetadataSource);
+                o.setAccessDecisionManager(urlAccessDecisionManager);
+                return o;
+            }
+        }).and().formLogin().loginPage("/login_p").loginProcessingUrl("/login").usernameParameter("username")
+                .passwordParameter("password").permitAll().failureHandler(new AuthenticationFailureHandler() {
                     @Override
-                    public <O extends FilterSecurityInterceptor> O postProcess(O o) {
-                        o.setSecurityMetadataSource(urlFilterInvocationSecurityMetadataSource);
-                        o.setAccessDecisionManager(urlAccessDecisionManager);
-                        return o;
+                    public void onAuthenticationFailure(HttpServletRequest httpServletRequest,
+                            HttpServletResponse httpServletResponse, AuthenticationException e)
+                            throws IOException, ServletException {
+                        httpServletResponse.setContentType("application/json;charset=utf-8");
+                        PrintWriter out = httpServletResponse.getWriter();
+                        StringBuffer sb = new StringBuffer();
+                        sb.append("{\"status\":\"error\",\"msg\":\"");
+                        if (e instanceof UsernameNotFoundException || e instanceof BadCredentialsException) {
+                            sb.append("用户名或密码输入错误，登录失败!");
+                        } else if (e instanceof DisabledException) {
+                            sb.append("账户被禁用，登录失败，请联系管理员!");
+                        } else {
+                            sb.append("登录失败!");
+                        }
+                        sb.append("\"}");
+                        out.write(sb.toString());
+                        out.flush();
+                        out.close();
                     }
-                }).and().formLogin().loginPage("/login_p").loginProcessingUrl("/login").usernameParameter("username").passwordParameter("password").permitAll().failureHandler(new AuthenticationFailureHandler() {
-            @Override
-            public void onAuthenticationFailure(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, AuthenticationException e) throws IOException, ServletException {
-                httpServletResponse.setContentType("application/json;charset=utf-8");
-                PrintWriter out = httpServletResponse.getWriter();
-                StringBuffer sb = new StringBuffer();
-                sb.append("{\"status\":\"error\",\"msg\":\"");
-                if (e instanceof UsernameNotFoundException || e instanceof BadCredentialsException) {
-                    sb.append("用户名或密码输入错误，登录失败!");
-                } else if (e instanceof DisabledException) {
-                    sb.append("账户被禁用，登录失败，请联系管理员!");
-                } else {
-                    sb.append("登录失败!");
-                }
-                sb.append("\"}");
-                out.write(sb.toString());
-                out.flush();
-                out.close();
-            }
-        }).successHandler(new AuthenticationSuccessHandler() {
-            @Override
-            public void onAuthenticationSuccess(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Authentication authentication) throws IOException, ServletException {
-                httpServletResponse.setContentType("application/json;charset=utf-8");
+                }).successHandler(new AuthenticationSuccessHandler() {
+                    @Override
+                    public void onAuthenticationSuccess(HttpServletRequest httpServletRequest,
+                            HttpServletResponse httpServletResponse, Authentication authentication)
+                            throws IOException, ServletException {
+                        httpServletResponse.setContentType("application/json;charset=utf-8");
 
-                User user = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+                        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-//                return (Hr) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+                        // return (Hr)
+                        // SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-
-                PrintWriter out = httpServletResponse.getWriter();
-                ObjectMapper objectMapper = new ObjectMapper();
-                String s = "{\"status\":\"success\",\"msg\":" + objectMapper.writeValueAsString( user ) + "}";
-                out.write(s);
-                out.flush();
-                out.close();
-            }
-        }).and().logout().permitAll().and().csrf().disable().exceptionHandling().accessDeniedHandler(authenticationAccessDeniedHandler);
+                        PrintWriter out = httpServletResponse.getWriter();
+                        ObjectMapper objectMapper = new ObjectMapper();
+                        String s = "{\"status\":\"success\",\"msg\":" + objectMapper.writeValueAsString(user) + "}";
+                        out.write(s);
+                        out.flush();
+                        out.close();
+                    }
+                }).and().logout().permitAll().and().csrf().disable().exceptionHandling()
+                .accessDeniedHandler(authenticationAccessDeniedHandler);
     }
 }

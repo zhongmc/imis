@@ -24,7 +24,7 @@
           <el-upload
             :show-file-list="false"
             accept="application/vnd.ms-excel"
-            action="/system/project/importPrj"
+            action="/system/budget/import"
             :data="uploadParam"
             :on-success="fileUploadSuccess"
             :on-error="fileUploadError" :disabled="fileUploadBtnText=='正在导入'"
@@ -65,7 +65,7 @@ export default {
         depId: null
       },
 
-      fileUploadBtnText: "导入项目数据",
+      fileUploadBtnText: "导入预算数据",
       depTextColor: "#c0c4cc",
 
       defaultProps: {
@@ -94,12 +94,12 @@ export default {
           this.depId = null;
         }
       }
-      this.fileUploadBtnText = "导入项目数据";
+      this.fileUploadBtnText = "导入预算数据";
     },
 
     fileUploadError(err, file, fileList) {
       this.$message({ type: "error", message: "导入失败!" });
-      this.fileUploadBtnText = "导入项目数据";
+      this.fileUploadBtnText = "导入预算数据";
     },
 
     beforeFileUpload(file) {

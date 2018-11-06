@@ -24,6 +24,16 @@ public class CostBudgetInfo extends AbstractEntity {
     private short month;
     private BigDecimal amount;
 
+    private BigDecimal realAmount;
+
+    public BigDecimal getRealAmount() {
+        return this.realAmount;
+    }
+
+    public void setRealAmount(BigDecimal realAmount) {
+        this.realAmount = realAmount;
+    }
+
     @Column(name = "DEP_ID")
     private Long depId;
 

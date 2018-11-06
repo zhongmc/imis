@@ -1,5 +1,6 @@
 package com.ynet.imis.service.utils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.ynet.imis.domain.budget.CostGroup;
@@ -10,11 +11,11 @@ import com.ynet.imis.domain.org.Department;
 
 public class InitData {
 
-    private List<User> users;
-    private List<Department> departments;
-    private List<Menu> menus;
-    private List<Role> roles;
-    private List<CostGroup> costDefs;
+    private List<User> users = new ArrayList<User>();
+    private List<Department> departments = new ArrayList<Department>();
+    private List<Menu> menus = new ArrayList<Menu>();
+    private List<Role> roles = new ArrayList<Role>();
+    private List<CostGroup> costDefs = new ArrayList<CostGroup>();
 
     public List<User> getUsers() {
         return this.users;

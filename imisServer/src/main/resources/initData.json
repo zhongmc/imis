@@ -71,7 +71,7 @@
       "name": "项目管理",
       "url": "/",
       "path": "/home",
-      "component": "pages/home.vue",
+      "component": "pages/Home.vue",
       "hidden": 0,
       "childs": [
         {
@@ -101,7 +101,7 @@
       "name": "客户管理",
       "url": "/",
       "path": "/home",
-      "component": "pages/home.vue",
+      "component": "pages/Home.vue",
       "hidden": 0,
       "childs": [
         {
@@ -132,7 +132,7 @@
       "name": "部门预算",
       "url": "/",
       "path": "/home",
-      "component": "pages/home.vue",
+      "component": "pages/Home.vue",
       "hidden": 0,
       "childs": [
         {
@@ -156,7 +156,7 @@
       "name": "系统设置",
       "url": "/",
       "path": "/home",
-      "component": "pages/home.vue",
+      "component": "pages/Home.vue",
       "hidden": 0,
       "childs": [
         {
@@ -181,10 +181,10 @@
           "hidden": 0
         },
         {
-          "name": "项目数据导入",
-          "url": "/system/project/**",
-          "path": "/sys/prjimport",
-          "component": "components/system/SysPrjImport.vue",
+          "name": "数据导入",
+          "url": "/system/budget/**",
+          "path": "/sys/budgetimport",
+          "component": "components/system/SysBudgetImport.vue",
           "hidden": 0
         }
       ]

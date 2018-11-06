@@ -4,7 +4,7 @@
 * @description 
 * @created Wed Sep 26 2018 16:53:24 GMT+0800 (中国标准时间)
 * @copyright YNET
-* @last-modified Wed Oct 17 2018 09:54:25 GMT+0800 (中国标准时间)
+* @last-modified Tue Nov 06 2018 16:30:15 GMT+0800 (中国标准时间)
 */
 
 package com.ynet.imis.controller;
@@ -18,11 +18,14 @@ import javax.servlet.http.HttpServletResponse;
 import com.ynet.imis.domain.menu.Menu;
 import com.ynet.imis.domain.menu.User;
 import com.ynet.imis.service.menu.MenuService;
+import com.ynet.imis.service.utils.InitService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/")
@@ -30,6 +33,9 @@ public class CommonController {
 
     @Autowired
     MenuService menuService;
+
+    @Autowired
+    InitService initService;
 
     @RequestMapping("/")
     public void defaultHomePage(HttpServletResponse response) throws IOException {
@@ -73,6 +79,25 @@ public class CommonController {
     public User userInfo() {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return user;
+    }
+
+    @RequestMapping(value = "/config/initSystem", method = RequestMethod.POST)
+    public ResponseBean initializeSystem(String userName, String password, MultipartFile file) {
+        int ret = initService.doInitialize(userName, password, file);
+        if (ret == 0) {
+            ResponseBean res = new ResponseBean("success", "初始化成功！");
+            return res;
+        }
+
+        String message = "";
+        if (ret == -1)
+            message = "系统已初始！";
+        else if (ret == -2)
+            message = "请提供正确的用户名密码！";
+        else
+            message = "系统内部错误，初始失败！";
+
+        return new ResponseBean("error", message);
     }
 
 }

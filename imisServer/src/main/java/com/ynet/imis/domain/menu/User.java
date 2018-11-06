@@ -40,7 +40,6 @@ import com.ynet.imis.domain.org.Department;
 
 @XmlRootElement(name = "User")
 @Entity
-@Table(name = "YNB_USER")
 public class User extends AbstractEntity implements Serializable, UserDetails {
 	private static final long serialVersionUID = -5384967512982720774L;
 

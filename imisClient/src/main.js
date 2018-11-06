@@ -38,7 +38,11 @@ Vue.prototype.findElementName = findElementName;
 Vue.prototype.postJsonRequest = postJsonRequest;
 
 router.beforeEach((to, from, next) => {
-  if (to.name == "Login") {
+  if (to.name == "login") {
+    next();
+    return;
+  }
+  if (to.name == "init") {
     next();
     return;
   }
