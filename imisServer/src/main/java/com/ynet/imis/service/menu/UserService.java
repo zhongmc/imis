@@ -20,4 +20,6 @@ public interface UserService {
     public int deleteUser(Long userId);
 
     public List<User> getAllUser();
+
+    public boolean verifyUser(String userName, String password);
 }

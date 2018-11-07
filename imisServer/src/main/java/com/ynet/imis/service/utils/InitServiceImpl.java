@@ -72,7 +72,7 @@ public class InitServiceImpl implements InitService {
                 return -2;
             }
 
-            LockEntity lock = saveLock(1, 1); // initializing...
+            saveLock(1, 1); // initializing...
 
             ObjectMapper mapper = new ObjectMapper();
             // 转换为格式化的json

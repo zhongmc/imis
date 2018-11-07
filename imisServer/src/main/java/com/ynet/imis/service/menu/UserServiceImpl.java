@@ -100,4 +100,29 @@ public class UserServiceImpl implements UserService {
         return userDao.findAll();
     }
 
+    @Override
+    public boolean verifyUser(String userName, String password) {
+
+        logger.info("verify user:" + userName + ":" + password);
+        User user = userDao.findByUserName(userName);
+        if (user == null) {
+            logger.info("verify failed: user not exist!");
+            return false;
+        }
+        if (!user.isSupervisor() || user.getStatus() != UserStatus.ACTIVE) {
+            logger.info("verify failed: user state: " + user.isSupervisor() + " " + user.getStatus());
+            return false;
+        }
+
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+
+        if (encoder.matches(password, user.getPassword()))
+            return true;
+
+        logger.info("verify failed: password!");
+        logger.info(user.getPassword());
+
+        return false;
+    }
+
 }

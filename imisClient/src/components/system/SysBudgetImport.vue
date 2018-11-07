@@ -1,5 +1,30 @@
 <template>
   <div style="margin-top:30px;width:600px;">
+
+
+       <el-form :rules="rules" :model="adminForm"  label-position="left" ref="adminForm">
+    <el-row>
+      <el-col :span="8">
+    <el-form-item prop="username">
+      <el-input type="text" size="small" v-model="adminForm.username" auto-complete="off" placeholder="账号"></el-input>
+    </el-form-item>
+      </el-col>
+      <el-col :span="8">
+    <el-form-item prop="password">
+      <el-input type="password"  size="small" v-model="adminForm.password" auto-complete="off" placeholder="密码"></el-input>
+    </el-form-item>
+      </el-col>
+      <el-col :span="6">
+    <el-form-item >
+      <el-button type="danger" size="small"  @click.native.prevent="submitClick"   :loading="clearBtnText=='正在清空数据'">
+         <i class="fa fa-lg fa-level-up" style="margin-right: 5px"></i>{{clearBtnText}}</el-button>
+    </el-form-item>
+      </el-col>
+    </el-row>
+
+  </el-form>
+
+  
       <el-row>
       <el-col :span="4" >
       <span>所属部门:</span>
@@ -32,8 +57,8 @@
 
 
 
-            <el-button size="mini" type="success" :loading="fileUploadBtnText=='正在导入'"><i class="fa fa-lg fa-level-up"
-                                                                                          style="margin-right: 5px"></i>{{fileUploadBtnText}}
+            <el-button size="mini" type="success" :loading="fileUploadBtnText=='正在导入'">
+              <i class="fa fa-lg fa-level-up" style="margin-right: 5px"></i>{{fileUploadBtnText}}
             </el-button>
           </el-upload>
           </el-col>
@@ -64,6 +89,18 @@ export default {
       uploadParam: {
         depId: null
       },
+      clearBtnText: "清空数据",
+      adminForm: {
+        username: "",
+        password: ""
+      },
+
+      rules: {
+        username: [
+          { required: true, message: "请输入管理员账号", trigger: "blur" }
+        ],
+        password: [{ required: true, message: "请输入密码", trigger: "blur" }]
+      },
 
       fileUploadBtnText: "导入预算数据",
       depTextColor: "#c0c4cc",
@@ -80,6 +117,27 @@ export default {
   },
 
   methods: {
+    submitClick: function() {
+      var _this = this;
+
+      this.$refs["adminForm"].validate(valid => {
+        if (valid) {
+          this.clearBtnText = "正在清空数据";
+          this.postRequest("/system/budget/clear", {
+            userName: this.adminForm.username,
+            password: this.adminForm.password
+          }).then(resp => {
+            _this.clearBtnText = "清空数据";
+            if (resp && resp.status == 200) {
+              var data = resp.data;
+              console.log(data);
+              _this.$message({ type: data.status, message: data.message });
+            }
+          });
+        }
+      });
+    },
+
     fileUploadSuccess(response, file, fileList) {
       console.log(response);
       if (response) {

@@ -2,7 +2,6 @@ package com.ynet.imis.domain.budget;
 
 import java.util.Date;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -31,7 +30,7 @@ public class PrjRightsConfirm extends CommBudget {
     private Long prjId;
 
     @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY)  //cascade = CascadeType.PERSIST, 
+    @ManyToOne(fetch = FetchType.LAZY) // cascade = CascadeType.PERSIST,
     @JoinColumn(name = "PRJ_ID", nullable = false, updatable = false, insertable = false)
     private Project project;
 

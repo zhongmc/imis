@@ -4,7 +4,7 @@
 * @description 
 * @created Wed Sep 12 2018 18:07:12 GMT+0800 (中国标准时间)
 * @copyright YNET
-* @last-modified Thu Oct 11 2018 16:24:01 GMT+0800 (中国标准时间)
+* @last-modified Wed Nov 07 2018 10:40:21 GMT+0800 (中国标准时间)
 */
 
 package com.ynet.imis.domain.menu;
@@ -24,19 +24,17 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-
-import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ynet.imis.domain.AbstractEntity;
 import com.ynet.imis.domain.org.Department;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 @XmlRootElement(name = "User")
 @Entity
@@ -87,7 +85,7 @@ public class User extends AbstractEntity implements Serializable, UserDetails {
 	@Transient
 	private String roleName;// 角色名称
 
-	@ManyToOne(fetch=FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JsonIgnore // update shenhc
 	@JoinColumn(name = "DEP_ID", insertable = false, updatable = false)
 	private Department department;
@@ -95,11 +93,8 @@ public class User extends AbstractEntity implements Serializable, UserDetails {
 	@Column(name = "DEP_ID")
 	private Long depId;// 用户所属的机构id
 
-		
-	
-	
-	//初次密码存放处
-	@Column(length = 100,nullable = true)
+	// 初次密码存放处
+	@Column(length = 100, nullable = true)
 	private String firstPassword;
 
 	/**
@@ -108,16 +103,14 @@ public class User extends AbstractEntity implements Serializable, UserDetails {
 	 */
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinTable(name = "USER_ROLE", //
-	joinColumns = { @JoinColumn(name = "USER_ID", referencedColumnName = "ID") }, //
-	inverseJoinColumns = { @JoinColumn(name = "ROLE_ID", referencedColumnName = "ID") })
+			joinColumns = { @JoinColumn(name = "USER_ID", referencedColumnName = "ID") }, //
+			inverseJoinColumns = { @JoinColumn(name = "ROLE_ID", referencedColumnName = "ID") })
 	private List<Role> roles = new java.util.ArrayList<Role>();// 用户的角色列表
 
 	public User() {
 	}
 
-
-	public User(String name, String encodePass)
-	{
+	public User(String name, String encodePass) {
 		this.userName = name;
 		this.password = encodePass;
 	}
@@ -195,41 +188,37 @@ public class User extends AbstractEntity implements Serializable, UserDetails {
 	}
 
 	/**
-	 * Returns the authorities granted to the user. Cannot return
-	 * <code>null</code>.
+	 * Returns the authorities granted to the user. Cannot return <code>null</code>.
 	 *
 	 * @return the authorities, sorted by natural key (never <code>null</code>)
 	 */
 	// public Collection<GrantedAuthority> getAuthorities() {
-	// 	List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
-	// 	// authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));//
-	// 	// GrantedAuthorityImpl("ROLE_ADMIN"));
-	// 	authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
-	// 	// authorities.add(new SimpleGrantedAuthority("ROLE_INCOMER"));
-	// 	// authorities.add(new SimpleGrantedAuthority("ROLE_PRINTER"));
-	// 	return authorities;
+	// List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
+	// // authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));//
+	// // GrantedAuthorityImpl("ROLE_ADMIN"));
+	// authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+	// // authorities.add(new SimpleGrantedAuthority("ROLE_INCOMER"));
+	// // authorities.add(new SimpleGrantedAuthority("ROLE_PRINTER"));
+	// return authorities;
 
-    // }
-	
-	
+	// }
 
-    @JsonIgnore
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        List<GrantedAuthority> authorities = new ArrayList<>();
-        for (Role role : roles) {
-            authorities.add(new SimpleGrantedAuthority(role.getName()));
-        }
-        return authorities;
-    }
-    
+	@JsonIgnore
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		List<GrantedAuthority> authorities = new ArrayList<>();
+		for (Role role : roles) {
+			authorities.add(new SimpleGrantedAuthority(role.getName()));
+		}
+		return authorities;
+	}
 
 	/**
-	 * Indicates whether the user's account has expired. An expired account
-	 * cannot be authenticated.
+	 * Indicates whether the user's account has expired. An expired account cannot
+	 * be authenticated.
 	 *
-	 * @return <code>true</code> if the user's account is valid (ie
-	 *         non-expired), <code>false</code> if no longer valid (ie expired)
+	 * @return <code>true</code> if the user's account is valid (ie non-expired),
+	 *         <code>false</code> if no longer valid (ie expired)
 	 */
 	@JsonIgnore
 	public boolean isAccountNonExpired() {
@@ -261,8 +250,8 @@ public class User extends AbstractEntity implements Serializable, UserDetails {
 	}
 
 	/**
-	 * Indicates whether the user is enabled or disabled. A disabled user cannot
-	 * be authenticated.
+	 * Indicates whether the user is enabled or disabled. A disabled user cannot be
+	 * authenticated.
 	 *
 	 * @return <code>true</code> if the user is enabled, <code>false</code>
 	 *         otherwise
@@ -284,7 +273,7 @@ public class User extends AbstractEntity implements Serializable, UserDetails {
 
 	public void setDepartment(Department department) {
 		this.department = department;
-		if( department != null)
+		if (department != null)
 			this.depId = department.getId();
 		else
 			depId = null;
@@ -309,6 +298,7 @@ public class User extends AbstractEntity implements Serializable, UserDetails {
 	public void setRoles(List<Role> roles) {
 		this.roles = roles;
 	}
+
 	public boolean isSupervisor() {
 		return supervisor;
 	}

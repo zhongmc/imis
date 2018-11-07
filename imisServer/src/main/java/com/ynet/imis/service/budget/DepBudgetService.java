@@ -30,4 +30,5 @@ public interface DepBudgetService {
 
     Page<Map<String, Object>> getDepPrjBudgetByPage(int page, int size, Long depId, int year);
 
+    public void deleteAll();
 }

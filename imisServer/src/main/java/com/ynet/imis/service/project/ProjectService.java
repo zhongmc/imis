@@ -1,12 +1,10 @@
 package com.ynet.imis.service.project;
 
-import java.io.File;
 import java.util.List;
 
 import com.ynet.imis.domain.project.Project;
 
 import org.springframework.data.domain.Page;
-import org.springframework.web.multipart.MultipartFile;
 
 public interface ProjectService {
 
@@ -21,4 +19,5 @@ public interface ProjectService {
     public Page<Project> getProjectByPage(int page, int size, String keywords, Long customId, Long departmentId,
             Long prjType, Long prjClass, String beginDateScope, List<Long> depIds);
 
+    public void deleteAll();
 }

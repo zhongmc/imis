@@ -11,6 +11,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.ynet.imis.service.utils.InitData;
 
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -44,10 +45,13 @@ public class Test {
 
             Test t = new Test();
             // t.importCostItemInfo("D:/公司预算/预算_北1部 2018年.xlsx");
+            String fileName = "C:\\xuexi\\imis\\imisServer\\src\\main\\resources\\test.xlsx";
+            t.excelDateCellTest(fileName);
 
-            String fileName = "C:\\xuexi\\imis\\imisServer\\src\\main\\resources\\initData.json";
+            // fileName =
+            // "C:\\xuexi\\imis\\imisServer\\src\\main\\resources\\initData.json";
+            // t.importJsonInitData(fileName);
 
-            t.importJsonInitData(fileName);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -65,6 +69,75 @@ public class Test {
         InitData initData = mapper.readValue(new File(fileName), InitData.class);
 
         System.out.println(ImisUtils.objectJsonStr(initData));
+    }
+
+    private void excelDateCellTest(String fileName) throws Exception {
+        System.out.println();
+        System.out.println(fileName);
+        File file = new File(fileName);
+        FileInputStream instream = new FileInputStream(file);
+
+        // XSSFWorkbook workbook;
+        Workbook workbook = WorkbookFactory.create(instream);
+        Sheet sheet = workbook.getSheetAt(0);
+        SimpleDateFormat fmt = new SimpleDateFormat("yyyy/MM/dd");
+
+        Row row = sheet.getRow(1);
+        Cell cell = row.getCell(1);
+        CellType cellType = cell.getCellType();
+        double nvalue = cell.getNumericCellValue();
+        long lvalue = (long) nvalue;
+
+        Date date = cell.getDateCellValue();
+        // String strVal = cell.getStringCellValue();
+        System.out.println(cellType);
+        System.out.println(fmt.format(date));
+        System.out.println(lvalue);
+        System.out.println(date.getTime());
+
+        cell = row.getCell(2);
+        cellType = cell.getCellType();
+        date = cell.getDateCellValue();
+        nvalue = cell.getNumericCellValue();
+        lvalue = (long) nvalue;
+
+        System.out.println(cellType);
+        System.out.println(fmt.format(date));
+        System.out.println(lvalue);
+        System.out.println(date.getTime());
+
+        cell = row.getCell(3);
+        cellType = cell.getCellType();
+        date = cell.getDateCellValue();
+        nvalue = cell.getNumericCellValue();
+        lvalue = (long) nvalue;
+        System.out.println(cellType);
+        System.out.println(fmt.format(date));
+        System.out.println(lvalue);
+        System.out.println(date.getTime());
+
+        cell = row.getCell(4);
+        cellType = cell.getCellType();
+        date = cell.getDateCellValue();
+        nvalue = cell.getNumericCellValue();
+        lvalue = (long) nvalue;
+        System.out.println(cellType);
+        System.out.println(fmt.format(date));
+        System.out.println(lvalue);
+        System.out.println(date.getTime());
+
+        cell = row.getCell(5);
+        cellType = cell.getCellType();
+        date = cell.getDateCellValue();
+        nvalue = cell.getNumericCellValue();
+        lvalue = (long) nvalue;
+        System.out.println(cellType);
+        System.out.println(fmt.format(date));
+        System.out.println(lvalue);
+        System.out.println(date.getTime());
+
+        workbook.close();
+
     }
 
     public void importCostItemInfo(String fileName) throws Exception {

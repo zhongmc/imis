@@ -105,6 +105,7 @@ public class DataImportServiceImpl implements DataImportService {
         logger.info("import data from file: " + file.getOriginalFilename() + " for dep " + depId);
         try {
             doImportData(file.getInputStream(), depId);
+            logger.info("import finished!");
             return 0;
         } catch (Exception e) {
             logger.error("Faile to import file " + file, e);
@@ -145,6 +146,7 @@ public class DataImportServiceImpl implements DataImportService {
 
                 logger.info("import cost budget of " + name + " for dep: " + depId);
                 importDepCostInfo(sheet, depId, bgType.getId(), year, costItemMap);
+                logger.info("import cost budget of " + name + " completed !");
 
             }
         }
@@ -167,7 +169,7 @@ public class DataImportServiceImpl implements DataImportService {
             if (row == null)
                 continue;
             Cell cell = row.getCell(1);
-            if (cell == null)
+            if (cell == null || cell.getCellType() != CellType.STRING)
                 break;
             String itemName = cell.getStringCellValue();
             if (itemName == null || itemName.isEmpty())
@@ -182,7 +184,7 @@ public class DataImportServiceImpl implements DataImportService {
             List<CostBudgetInfo> costBudgets = new ArrayList<CostBudgetInfo>();
             for (int k = 0; k < 12; k++) {
                 cell = row.getCell(2 + k);
-                if (cell != null && cell.getCellType() == CellType.NUMERIC) {
+                if (cell != null) {
                     CostBudgetInfo bgItem = new CostBudgetInfo();
                     bgItem.setDepId(depId);
                     bgItem.setBudgetTypeId(budgetTypeId);
@@ -190,6 +192,7 @@ public class DataImportServiceImpl implements DataImportService {
                     bgItem.setMonth((short) k);
                     bgItem.setCostItemId(item.getId());
                     bgItem.setAmount(BigDecimal.valueOf(cell.getNumericCellValue()));
+                    costBudgets.add(bgItem);
                 }
 
             }
@@ -225,7 +228,7 @@ public class DataImportServiceImpl implements DataImportService {
                 isSamePrj = false;
 
                 Cell cell = row.getCell(4); // 4:合同名称
-                if (cell == null)
+                if (cell == null || cell.getCellType() != CellType.STRING)
                     continue;
                 String prjName = cell.getStringCellValue();
                 if (prjName == null || prjName.length() == 0)
@@ -240,14 +243,14 @@ public class DataImportServiceImpl implements DataImportService {
                 project.setPrjClass(PrjClass.LAST_PRJ);
 
                 cell = row.getCell(2); // 2:客户名称
-                if (cell != null) {
+                if (cell != null && cell.getCellType() == CellType.STRING) {
                     String customName = cell.getStringCellValue();
                     Custom custom = getOrAddCustomByName(customName);
                     project.setCustom(custom);
                 }
 
                 cell = row.getCell(3); // 3:合同编号
-                if (cell != null) {
+                if (cell != null && cell.getCellType() == CellType.STRING) {
                     String constractNo = cell.getStringCellValue();
                     project.setContractNo(constractNo);
                     if (prevProject != null && constractNo.equals(prevProject.getContractNo())) {
@@ -272,10 +275,10 @@ public class DataImportServiceImpl implements DataImportService {
                 }
 
                 cell = row.getCell(6); // 6 预计签订日期
-                if (cell != null) {
+                if (cell != null && cell.getCellType() == CellType.NUMERIC) {
                     try {
                         Date contractDate = cell.getDateCellValue();
-                        project.setContractDate(contractDate);
+                        project.setContractDate(validateDate(contractDate));
                     } catch (Exception e) {
 
                     }
@@ -381,6 +384,7 @@ public class DataImportServiceImpl implements DataImportService {
                 cell = row.getCell(25);
                 if (cell != null) {
                     avgManMonthCost = BigDecimal.valueOf(cell.getNumericCellValue());
+                    // avgManMonthCost.setScale(2);
                     prjBudget.setAvgManMonthCost(avgManMonthCost);
                 }
 
@@ -551,7 +555,7 @@ public class DataImportServiceImpl implements DataImportService {
 
             isSamePrj = false;
             Cell cell = row.getCell(4); // 4 合同（项目）名称
-            if (cell == null)
+            if (cell == null || cell.getCellType() != CellType.STRING)
                 continue;
             String prjName = cell.getStringCellValue();
             if (prjName == null || prjName.length() == 0)
@@ -564,20 +568,20 @@ public class DataImportServiceImpl implements DataImportService {
             project.setPrjClass(PrjClass.LAST_PRJ);
 
             cell = row.getCell(2); // 2:客户名称
-            if (cell != null) {
+            if (cell != null && cell.getCellType() == CellType.STRING) {
                 String customName = cell.getStringCellValue();
                 Custom custom = getOrAddCustomByName(customName);
                 project.setCustom(custom);
             }
 
             cell = row.getCell(3); // 3:合同编号
-            if (cell != null) {
+            if (cell != null && cell.getCellType() == CellType.STRING) {
                 String constractNo = cell.getStringCellValue();
                 project.setContractNo(constractNo);
             }
 
             cell = row.getCell(5); // 5 核算类型 (北一的多两列)
-            if (cell != null) {
+            if (cell != null && cell.getCellType() == CellType.STRING) {
                 String prjType = cell.getStringCellValue();
                 if ("实施类".equals(prjType))
                     project.setPrjType(PrjType.PROJECT);
@@ -592,9 +596,9 @@ public class DataImportServiceImpl implements DataImportService {
             }
 
             cell = row.getCell(6); // 6 合同日期
-            if (cell != null) {
+            if (cell != null && cell.getCellType() == CellType.NUMERIC) {
                 Date contractDate = cell.getDateCellValue();
-                project.setContractDate(contractDate);
+                project.setContractDate(validateDate(contractDate));
             }
 
             cell = row.getCell(7); // 7 合同金额
@@ -674,6 +678,7 @@ public class DataImportServiceImpl implements DataImportService {
             cell = row.getCell(25);
             if (cell != null) {
                 avgManMonthCost = BigDecimal.valueOf(cell.getNumericCellValue());
+                // avgManMonthCost.setScale(2);
                 prjBudget.setAvgManMonthCost(avgManMonthCost);
                 // prjBudget.setProject( project );
             }
@@ -790,6 +795,16 @@ public class DataImportServiceImpl implements DataImportService {
             custom = customDao.save(custom);
         }
         return custom;
+    }
+
+    private Date validateDate(Date date) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        int year = cal.get(Calendar.YEAR);
+        if (year > 2050 || year < 2000)
+            return null;
+        return date;
+
     }
 
 }

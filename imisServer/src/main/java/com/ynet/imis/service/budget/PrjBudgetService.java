@@ -4,7 +4,7 @@
 * @description 
 * @created Wed Oct 10 2018 11:11:50 GMT+0800 (中国标准时间)
 * @copyright YNET
-* @last-modified Fri Oct 26 2018 09:47:28 GMT+0800 (中国标准时间)
+* @last-modified Wed Nov 07 2018 11:01:24 GMT+0800 (中国标准时间)
 */
 
 package com.ynet.imis.service.budget;
@@ -65,5 +65,8 @@ public interface PrjBudgetService {
     public PrjIncomeForecast confirmPrjIncome(Long incomeId, Date date, BigDecimal amount);
 
     public PrjRightsConfirm confirmPrjRight(Long rightId, Date date, BigDecimal amount);
+
+    // 清理数据，导入错误时用？
+    public void deleteAll();
 
 }

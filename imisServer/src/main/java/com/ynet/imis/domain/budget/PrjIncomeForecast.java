@@ -4,12 +4,11 @@
 * @description 
 * @created Thu Oct 18 2018 14:40:43 GMT+0800 (中国标准时间)
 * @copyright YNET
-* @last-modified Sat Nov 03 2018 13:50:13 GMT+0800 (中国标准时间)
+* @last-modified Wed Nov 07 2018 10:40:03 GMT+0800 (中国标准时间)
 */
 
 package com.ynet.imis.domain.budget;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -41,7 +40,7 @@ public class PrjIncomeForecast extends CommBudget {
     private Long prjId;
 
     @JsonIgnore
-    @ManyToOne( fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "PRJ_ID", nullable = false, updatable = false, insertable = false)
     private Project project;
 

@@ -4,7 +4,7 @@
 * @description 
 * @created Mon Oct 08 2018 10:51:34 GMT+0800 (中国标准时间)
 * @copyright YNET
-* @last-modified Tue Nov 06 2018 17:02:17 GMT+0800 (中国标准时间)
+* @last-modified Wed Nov 07 2018 11:12:08 GMT+0800 (中国标准时间)
 */
 
 package com.ynet.imis.controller;
@@ -24,8 +24,11 @@ import com.ynet.imis.domain.menu.User;
 import com.ynet.imis.domain.org.Custom;
 import com.ynet.imis.domain.org.Department;
 import com.ynet.imis.service.budget.BudgetAdminService;
+import com.ynet.imis.service.budget.DepBudgetService;
+import com.ynet.imis.service.budget.PrjBudgetService;
 import com.ynet.imis.service.menu.MenuService;
 import com.ynet.imis.service.menu.RoleService;
+import com.ynet.imis.service.menu.UserService;
 import com.ynet.imis.service.org.CustomService;
 import com.ynet.imis.service.org.DepartmentService;
 import com.ynet.imis.service.project.ProjectService;
@@ -65,7 +68,15 @@ public class AdminController {
     private ProjectService projectService;
 
     @Autowired
+    private PrjBudgetService prjBudgetService;
+    @Autowired
+    private DepBudgetService depBudgetService;
+
+    @Autowired
     private DataImportService dataImportService;
+
+    @Autowired
+    private UserService userService;
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -362,6 +373,22 @@ public class AdminController {
             return new ResponseBean("success", "", cit);
 
         return new ResponseBean("error", "CostItem with id: " + pid + " not found!");
+    }
+
+    @RequestMapping(value = "/budget/clear", method = RequestMethod.POST)
+    public ResponseBean clearBudgetData(String userName, String password) {
+        logger.info("required to remove all budget data... user: " + userName);
+
+        if (!userService.verifyUser(userName, password))
+            return new ResponseBean("error", "你没有权限这么做!");
+        logger.info("Remove prj budget data...");
+        prjBudgetService.deleteAll();
+        logger.info("Remove department cost data...");
+        depBudgetService.deleteAll();
+        logger.info("Remove project data...");
+        projectService.deleteAll();
+
+        return new ResponseBean("success", "成功清理预算数据!");
     }
 
     @RequestMapping(value = "/budget/import", method = RequestMethod.POST)

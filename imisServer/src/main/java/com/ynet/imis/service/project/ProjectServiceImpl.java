@@ -1,14 +1,5 @@
 package com.ynet.imis.service.project;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.math.BigDecimal;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import javax.persistence.criteria.CriteriaBuilder;
@@ -18,27 +9,9 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.transaction.Transactional;
 
-import com.ynet.imis.domain.budget.PrjBudget;
-import com.ynet.imis.domain.budget.PrjIncomeForecast;
-import com.ynet.imis.domain.budget.PrjMonthBudget;
-import com.ynet.imis.domain.budget.PrjRightsConfirm;
-import com.ynet.imis.domain.org.Custom;
 import com.ynet.imis.domain.project.Project;
-import com.ynet.imis.domain.project.Project.PrjClass;
-import com.ynet.imis.domain.project.Project.PrjType;
-import com.ynet.imis.repository.budget.PrjBudgetRepository;
-import com.ynet.imis.repository.budget.PrjIncomeForecastRepository;
-import com.ynet.imis.repository.budget.PrjRightsConfirmRepository;
-import com.ynet.imis.repository.org.CustomRepository;
 import com.ynet.imis.repository.project.ProjectRepository;
-import com.ynet.imis.utils.ImisUtils;
 
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellType;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,7 +20,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @Transactional
@@ -58,18 +30,6 @@ public class ProjectServiceImpl implements ProjectService {
     @Autowired
     private ProjectRepository projectDao;
 
-    @Autowired
-    private CustomRepository customDao;
-
-    @Autowired
-    private PrjBudgetRepository prjBudgetDao;
-
-    @Autowired
-    private PrjIncomeForecastRepository prjIncomeDao;
-    @Autowired
-    private PrjRightsConfirmRepository prjConfirmDao;
-
-    // private PrjI prjIncomeDao
     @Override
     public Project addProject(Project project) {
 
@@ -153,6 +113,11 @@ public class ProjectServiceImpl implements ProjectService {
         Page<Project> pageOfPrj = projectDao.findAll(spec, pageReq);
 
         return pageOfPrj;
+    }
+
+    @Override
+    public void deleteAll() {
+        projectDao.deleteAllInBatch();
     }
 
 }

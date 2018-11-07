@@ -1,6 +1,8 @@
 import axios from "axios";
 import { Message } from "element-ui";
 
+import router from "../router";
+
 axios.interceptors.request.use(
   config => {
     return config;
@@ -13,16 +15,22 @@ axios.interceptors.request.use(
 axios.interceptors.response.use(
   data => {
     if (data.status && data.status == 200 && data.data.status == "error") {
-      Message.error({ message: data.data.msg });
+      Message.error({ message: data.data.message });
       return;
     }
     return data;
   },
   err => {
+    console.log(err);
     if (err.response.status == 504 || err.response.status == 404) {
       Message.error({ message: "服务器不可用，稍后再试！" });
     } else if (err.response.status == 403) {
       Message.error({ message: "权限不足,请联系管理员!" });
+    } else if (err.response.status == 401) {
+      router.replace({
+        path: "/",
+        query: { redirect: router.currentRoute.path }
+      });
     } else {
       Message.error({ message: "未知错误!" });
     }

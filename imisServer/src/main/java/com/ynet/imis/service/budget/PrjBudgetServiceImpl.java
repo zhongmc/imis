@@ -4,7 +4,7 @@
 * @description 
 * @created Wed Oct 10 2018 11:12:21 GMT+0800 (中国标准时间)
 * @copyright YNET
-* @last-modified Thu Nov 01 2018 11:07:45 GMT+0800 (中国标准时间)
+* @last-modified Wed Nov 07 2018 11:05:47 GMT+0800 (中国标准时间)
 */
 
 package com.ynet.imis.service.budget;
@@ -161,6 +161,14 @@ public class PrjBudgetServiceImpl implements PrjBudgetService {
         confirm.setRealAmount(amount);
         prjRIghtsConfirmDao.save(confirm);
         return confirm;
+    }
+
+    @Override
+    public void deleteAll() {
+        prjIncomeForecastDao.deleteAllInBatch();
+        prjRIghtsConfirmDao.deleteAllInBatch();
+        prjMonthBudgetDao.deleteAllInBatch();
+        prjBudgetDao.deleteAllInBatch();
     }
 
 }

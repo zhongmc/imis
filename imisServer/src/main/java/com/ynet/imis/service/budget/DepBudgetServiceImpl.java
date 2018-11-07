@@ -21,6 +21,7 @@ import com.ynet.imis.repository.budget.PrjBudgetRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -127,7 +128,10 @@ public class DepBudgetServiceImpl implements DepBudgetService {
             }
 
         };
-        PageRequest pageReq = PageRequest.of(page, size);
+
+        // PageRequest pageReq = PageRequest.of(page, size, sort);
+        Sort sort = Sort.by("id");
+        PageRequest pageReq = PageRequest.of(page, size, sort);
         Page<PrjBudget> prjBudgets = prjBudgetDao.findAll(spec, pageReq);
 
         return prjBudgets.map(new Function<PrjBudget, Map<String, Object>>() {
@@ -139,6 +143,11 @@ public class DepBudgetServiceImpl implements DepBudgetService {
             }
         });
 
+    }
+
+    @Override
+    public void deleteAll() {
+        costBudgetInfoDao.deleteAllInBatch();
     }
 
 }

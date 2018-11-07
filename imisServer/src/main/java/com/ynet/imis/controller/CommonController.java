@@ -4,7 +4,7 @@
 * @description 
 * @created Wed Sep 26 2018 16:53:24 GMT+0800 (中国标准时间)
 * @copyright YNET
-* @last-modified Tue Nov 06 2018 16:30:15 GMT+0800 (中国标准时间)
+* @last-modified Wed Nov 07 2018 15:34:29 GMT+0800 (中国标准时间)
 */
 
 package com.ynet.imis.controller;
@@ -57,7 +57,6 @@ public class CommonController {
     public void loginRequierd(HttpServletResponse response) throws IOException {
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         response.setContentType("application/json:charset=UTF-8");
-
         PrintWriter out = response.getWriter();
         out.write("{\"status\":\"error\",\"msg\":\"尚未登录，请先登录！\"}");
         out.flush();
