@@ -77,8 +77,8 @@ export default {
     },
 
     changeDep: function(depId) {
-      console.log(this.depId);
-      console.log(this.$refs.cost);
+      // console.log(this.depId);
+      // console.log(this.$refs.cost);
 
       this.$refs.prjBudget.changeDep(depId); //depId
       this.$refs.comm.changeDep(depId); //depId

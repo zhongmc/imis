@@ -1,6 +1,7 @@
 package com.ynet.imis.controller;
 
 import java.math.BigDecimal;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -8,6 +9,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.mail.internet.MimeUtility;
+import javax.servlet.http.HttpServletRequest;
 
 import com.ynet.imis.bean.CostCollectionItem;
 import com.ynet.imis.domain.budget.BudgetType;
@@ -29,6 +33,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -174,6 +182,57 @@ public class DepBudgetController {
 
     }
 
+    @RequestMapping(value = "/budgetTable/export/{depId}", method = RequestMethod.GET)
+    public ResponseEntity<byte[]> exportDepBudgetTable(HttpServletRequest request, @PathVariable Long depId) {
+
+        List<CostCollectionItem> costCollect = getCostBudgetInfosByDepId(depId);
+        List<CostCollectionItem> budgetTable = this.getBudgetTableDepId(depId);
+
+        Map<String, List<CostCollectionItem>> costCollMap = new HashMap<String, List<CostCollectionItem>>();
+        costCollMap.put("部门预算表", budgetTable);
+        costCollMap.put("部门费用汇总表", costCollect);
+
+        try {
+
+            String encodedFileName = null;
+
+            String fileName = "部门预算表.xlsx";
+            String userAgentString = request.getHeader("User-Agent");
+
+            boolean knownBrowser = false;
+            if (userAgentString.indexOf("Chrome") != -1)
+                knownBrowser = true;
+            else if (userAgentString.indexOf("Internet Exploer") != -1)
+                knownBrowser = true;
+            else if (userAgentString.indexOf("Safari") != -1)
+                knownBrowser = true;
+
+            if (knownBrowser) {
+
+                encodedFileName = URLEncoder.encode(fileName, "utf-8").replaceAll("\\+", "%20");
+
+            } else {
+
+                encodedFileName = MimeUtility.encodeWord(fileName);
+
+            }
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentDispositionFormData("attachment", encodedFileName);
+            headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+
+            byte[] body = ImisUtils.exportCostCollection2Excel(costCollMap);
+
+            return new ResponseEntity<byte[]>(body, headers, HttpStatus.OK);
+
+        } catch (Exception e) {
+            logger.error("failed to export!", e);
+
+            return new ResponseEntity<byte[]>(("Internal error:" + e).getBytes(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        // return PoiUtils.exportEmp2Excel(empService.getAllEmployees());
+    }
+
     ///// department collection table
 
     // 部门费用汇总
@@ -236,7 +295,7 @@ public class DepBudgetController {
         for (int i = 0; i < typedItems.length; i++)
             items.add(typedItems[i]);
 
-        logger.info(" dep cost collection: " + ImisUtils.objectJsonStr(items));
+        // logger.info(" dep cost collection: " + ImisUtils.objectJsonStr(items));
         return items;
     }
 
@@ -261,12 +320,19 @@ public class DepBudgetController {
         item3.setName("增值税");
 
         // 主营业务成本
-        CostCollectionItem itms[] = this.loadDeparmentPrjCosts(depIds, year);
+        CostCollectionItem itms[] = this.loadConfirmedDeparmentPrjCosts(depIds, year);
+
+        CostCollectionItem itms1[] = this.loadDeparmentPrjCosts(depIds, year);
+
         CostCollectionItem item4 = itms[0];
+
+        // 主营业务递延成本
+        CostCollectionItem item41 = itms[2];
 
         // 毛利
         CostCollectionItem item5 = item2.subtract(item3);
         item5 = item5.subtract(item4);
+        item5 = item5.subtract(item41);
         item5.setName("毛利");
 
         // 毛利率
@@ -297,6 +363,8 @@ public class DepBudgetController {
         items.add(item2);
         items.add(item3);
         items.add(item4);
+        items.add(item41);
+
         items.add(item5);
         items.add(item6);
         items.add(item7);
@@ -305,6 +373,11 @@ public class DepBudgetController {
         items.add(item10);
 
         items.add(itms[1]); // 人月
+        items.add(itms[3]); // 递延人月
+
+        items.add(itms1[1]); //
+        items.add(itms1[0]); //
+
         items.add(item11); // 现金
 
         return items;
@@ -332,17 +405,57 @@ public class DepBudgetController {
     }
 
     /**
-     * 项目成本汇总
+     * 当年确权项目成本汇总
+     * 
+     * @param depIds
+     * @param year
+     * @return
+     */
+    private CostCollectionItem[] loadConfirmedDeparmentPrjCosts(List<Long> depIds, int year) {
+        CostCollectionItem item = new CostCollectionItem("", "主营业务成本");
+        CostCollectionItem item1 = new CostCollectionItem("", "主营业务人月数");
+        CostCollectionItem item2 = new CostCollectionItem("", "上年递延成本");
+        CostCollectionItem item3 = new CostCollectionItem("", "上年递延人月数");
+
+        List<PrjMonthBudget> monthBudgets = prjBudgetService.getConfirmedPrjMonthBudgetsByDepId(depIds, year);
+
+        // logger.info(ImisUtils.objectJsonStr(monthBudgets));
+
+        for (int i = 0; i < monthBudgets.size(); i++) {
+            PrjMonthBudget budget = monthBudgets.get(i);
+            if (budget.getYear() != year) {
+                item2.addAmount(budget.getMonth(), budget.getAmount());
+                item3.addAmount(budget.getMonth(), BigDecimal.valueOf(budget.getManMonth()));
+
+            } else {
+                item.addAmount(budget.getMonth(), budget.getAmount());
+                item1.addAmount(budget.getMonth(), BigDecimal.valueOf(budget.getManMonth()));
+            }
+        }
+
+        CostCollectionItem items[] = new CostCollectionItem[4];
+        items[0] = item;
+        items[1] = item1;
+        items[2] = item2;
+        items[3] = item3;
+
+        return items;
+    }
+
+    /**
+     * 当年项目（主营业务）投入
      * 
      * @param depIds
      * @param year
      * @return
      */
     private CostCollectionItem[] loadDeparmentPrjCosts(List<Long> depIds, int year) {
-        CostCollectionItem item = new CostCollectionItem("", "主营业务成本");
-        CostCollectionItem item1 = new CostCollectionItem("", "主营业务人月数");
+        CostCollectionItem item = new CostCollectionItem("", "今年主营业务投入");
+        CostCollectionItem item1 = new CostCollectionItem("", "今年主营业务投入人月");
 
         List<PrjMonthBudget> monthBudgets = prjBudgetService.getPrjMonthBudgetsByDepId(depIds, year);
+        // logger.info(ImisUtils.objectJsonStr(monthBudgets));
+
         for (int i = 0; i < monthBudgets.size(); i++) {
             PrjMonthBudget budget = monthBudgets.get(i);
             item.addAmount(budget.getMonth(), budget.getAmount());
@@ -352,6 +465,7 @@ public class DepBudgetController {
         CostCollectionItem items[] = new CostCollectionItem[2];
         items[0] = item;
         items[1] = item1;
+
         return items;
     }
 

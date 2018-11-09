@@ -89,13 +89,11 @@ export default {
   methods: {
     loadSettings() {
       var _this = this;
-      console.log(this.editable);
       this.getRequest("/system/budget/settings").then(resp => {
         //          _this.loading = false;
         if (resp && resp.status == 200) {
           _this.costItems = resp.data.costItems;
           _this.costGroups = resp.data.costGroups;
-          console.log("cost settings load ok");
           _this.initData();
         }
       });
@@ -111,8 +109,6 @@ export default {
       ).then(resp => {
         if (resp && resp.status == 200) {
           _this.costBudgetInfos = resp.data;
-          console.log("cost load ok!");
-          console.log(resp.data);
           _this.newInitData();
         }
       });
@@ -121,12 +117,6 @@ export default {
     changeDep(depId) {
       this.depId = depId;
       this.loadData();
-    },
-
-    formatAmount1(scope) {
-      console.log(scope.index);
-      console.log(scope.row);
-      console.log(scope.column);
     },
 
     formatAmount(row, column, cellValue) {
@@ -148,10 +138,10 @@ export default {
         //同步两个http请求
         return;
 
-      console.log("init data...");
+      // console.log("init data...");
       var costBudgets = new Array(this.costItems.length);
 
-      console.log("create array ok");
+      // console.log("create array ok");
 
       for (var i = 0; i < this.costItems.length; i++) {
         var costItem = this.costItems[i];
@@ -171,14 +161,14 @@ export default {
         costBudgets[i] = costBudgetItem;
       }
 
-      console.log(costBudgets);
+      // console.log(costBudgets);
 
       for (var i = 0; i < this.costBudgetInfos.length; i++) {
         this.setCostBudgetInfoToCostItem(this.costBudgetInfos[i], costBudgets);
       }
 
       this.costBudgets = costBudgets;
-      console.log(this.costBudgets);
+      // console.log(this.costBudgets);
     },
 
     setCostBudgetInfoToCostItem(info, budgets) {

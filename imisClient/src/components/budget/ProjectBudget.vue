@@ -161,12 +161,6 @@ export default {
       this.loadData();
     },
 
-    formatAmount1(scope) {
-      console.log(scope.index);
-      console.log(scope.row);
-      console.log(scope.column);
-    },
-
     formatAmount(row, column, cellValue) {
       var props = column.property.split(".");
 
@@ -181,7 +175,7 @@ export default {
 
     currentChange(currentChange) {
       this.currentPage = currentChange;
-      this.page = currentChange-1;
+      this.page = currentChange - 1;
       this.loadData();
     },
 
@@ -308,11 +302,6 @@ export default {
         f2 = parseFloat(this.inputColumn1);
         f3 = parseFloat(row.amounts[index].manMonth);
         f4 = parseFloat(row.avgManMonthCost);
-
-        console.log(f1);
-        console.log(f2);
-        console.log(f3);
-
         var ff = f1 - f3 + f2;
 
         // console.log(ff);
@@ -399,7 +388,7 @@ export default {
 
       totalCount: -1,
       currentPage: 1,
-      page:0,
+      page: 0,
       pageSize: 10,
 
       tableTitles: [

@@ -75,12 +75,6 @@ export default {
       this.loadData();
     },
 
-    formatAmount1(scope) {
-      console.log(scope.index);
-      console.log(scope.row);
-      console.log(scope.column);
-    },
-
     formatAmount(row, column, cellValue) {
       var props = column.property.split(".");
 

@@ -2,6 +2,7 @@ package com.ynet.imis.utils;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -44,13 +45,29 @@ public class Test {
             System.out.println(outFmt.format(today) + " " + today.getTime());
 
             Test t = new Test();
-            // t.importCostItemInfo("D:/公司预算/预算_北1部 2018年.xlsx");
-            String fileName = "C:\\xuexi\\imis\\imisServer\\src\\main\\resources\\test.xlsx";
-            t.excelDateCellTest(fileName);
+
+            t.bigdecimalTest();
+
+            // String fileName =
+            // "C:\\xuexi\\imis\\imisServer\\src\\main\\resources\\test.xlsx";
+            // t.excelDateCellTest(fileName);
 
             // fileName =
             // "C:\\xuexi\\imis\\imisServer\\src\\main\\resources\\initData.json";
             // t.importJsonInitData(fileName);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void bigdecimalTest() {
+        BigDecimal bd1, bd2;
+        bd1 = BigDecimal.valueOf(35629611.02);
+        bd2 = BigDecimal.valueOf(11470184.8088);
+        try {
+            BigDecimal bd3 = bd2.divide(bd1, 2);
+            System.out.println(String.format("%s / %s = %s", bd2.doubleValue(), bd1.doubleValue(), bd3.doubleValue()));
 
         } catch (Exception e) {
             e.printStackTrace();

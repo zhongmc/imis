@@ -72,21 +72,24 @@ public class CostCollectionItem implements Serializable {
         CostCollectionItem newItem = new CostCollectionItem();
         BigDecimal amounts[] = new BigDecimal[12];
         BigDecimal ams[] = item.getAmounts();
+        BigDecimal zero = BigDecimal.valueOf(0);
 
         for (int i = 0; i < 12; i++) {
             try {
-                amounts[i] = this.amounts[i].divide(ams[i]);
+                amounts[i] = this.amounts[i].divide(ams[i], 3);
             } catch (Exception e) {
-                logger.error("failed to div", e.toString());
+                amounts[i] = zero;
+                // logger.error("failed to div", e.toString());
             }
         }
 
         newItem.setAmounts(amounts);
         try {
-            BigDecimal sum = this.sum.divide(item.getSum());
+            BigDecimal sum = this.sum.divide(item.getSum(), 3);
             newItem.setSum(sum);
         } catch (Exception e) {
-            logger.error("failed to div", e.toString());
+            newItem.setSum(zero);
+            logger.error("failed to div sum: " + sum.doubleValue() + "/" + item.getSum().doubleValue());
 
         }
         return newItem;
@@ -96,11 +99,13 @@ public class CostCollectionItem implements Serializable {
         CostCollectionItem newItem = new CostCollectionItem();
         BigDecimal amounts[] = new BigDecimal[12];
 
+        BigDecimal zero = BigDecimal.valueOf(0);
         for (int i = 0; i < 12; i++) {
             try {
                 amounts[i] = this.amounts[i].multiply(mult);
             } catch (Exception e) {
-                logger.error("failed to div", e.toString());
+                amounts[i] = zero;
+                // logger.error("failed to mult", e.toString());
             }
         }
 

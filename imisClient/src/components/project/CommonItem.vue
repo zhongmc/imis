@@ -223,7 +223,7 @@ export default {
   beforeMount: function() {},
 
   mounted: function() {
-    console.log(this.name + " prjId:" + this.prjid + " depId: " + this.depid);
+ //   console.log(this.name + " prjId:" + this.prjid + " depId: " + this.depid);
     this.placeHolder = "请输入新的" + this.name + "名称...";
     (this.label = this.name + "项名称："), this.loadData();
     this.commonItem.prjId = this.prjid;
@@ -236,7 +236,7 @@ export default {
       var _this = this;
       this.loading = true;
       var url = "/budget/project/" + this.type + "/" + this.prjid;
-      console.log(url);
+//      console.log(url);
 
       this.getRequest(url).then(resp => {
         _this.loading = false;
@@ -361,8 +361,8 @@ export default {
     },
 
     formatPeriod(row, column, cellValue) {
-      console.log("common item of confirm: ")
-      console.log( row );
+      // console.log("common item of confirm: ")
+      // console.log( row );
       var beg = row.begDate;
       var end = row.endDate;
 

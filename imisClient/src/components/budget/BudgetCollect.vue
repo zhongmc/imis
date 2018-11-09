@@ -12,6 +12,11 @@
           :value="item.id">
          </el-option>
        </el-select>
+
+         <el-button type="success" size="mini" @click="exportBudgetTable"><i class="fa fa-lg fa-level-down"
+                                                                       style="margin-right: 5px"></i>导出数据
+          </el-button>
+        
     </div>
 
       <el-tabs  type="card" v-model="activeTab">
@@ -49,11 +54,31 @@ export default {
     },
 
     changeDep: function(depId) {
-      console.log(this.depId);
-      console.log(this.$refs.cost);
-
+      // console.log(this.depId);
+      // console.log(this.$refs.cost);
+      this.depId = depId;
       this.$refs.depBudget.changeDep(depId);
       this.$refs.depCost.changeDep(depId);
+    },
+
+    exportBudgetTable() {
+      //        var iframe = document.createElement("iframe");
+      //        iframe.style.display = 'none';
+      //        iframe.src = "/employee/basic/exportEmp";
+      //        iframe.onload=function () {
+      //          document.body.removeChild(iframe);
+      //        }
+      //        document.body.appendChild(iframe);
+      if (this.depId == null || this.depId == "") {
+        this.$message({
+          type: "error",
+          message: "Please select a department!"
+        });
+        return;
+      }
+
+      var url = "/budget/budgetTable/export/" + this.depId;
+      window.open(url, "_parent");
     }
   },
 

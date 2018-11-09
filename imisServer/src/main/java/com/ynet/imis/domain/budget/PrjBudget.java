@@ -4,7 +4,7 @@
 * @description 
 * @created Tue Sep 18 2018 16:53:17 GMT+0800 (中国标准时间)
 * @copyright YNET
-* @last-modified Sun Nov 04 2018 19:09:02 GMT+0800 (中国标准时间)
+* @last-modified Thu Nov 08 2018 14:50:33 GMT+0800 (中国标准时间)
 */
 
 package com.ynet.imis.domain.budget;
@@ -38,25 +38,36 @@ public class PrjBudget extends AbstractEntity {
 
     private BigDecimal avgManMonthCost;
 
-    // 递延到今年的人月与费用
-    private double defferedManMonth;
-    private BigDecimal defferedAmount;
+    // 递延到今年的人月与费用 （最近确权需要递延的成本？？？只作为导入时的用处，其它）
+    // 统一计到上年的12月份！！！！
+    // private double defferedManMonth;
+    // private BigDecimal defferedAmount;
 
-    public double getDefferedManMonth() {
-        return this.defferedManMonth;
+    private int confirmYear; // 确权年份，是否今年确权
+
+    public int getConfirmYear() {
+        return this.confirmYear;
     }
 
-    public void setDefferedManMonth(double defferedManMonth) {
-        this.defferedManMonth = defferedManMonth;
+    public void setConfirmYear(int confirmYear) {
+        this.confirmYear = confirmYear;
     }
 
-    public BigDecimal getDefferedAmount() {
-        return this.defferedAmount;
-    }
+    // public double getDefferedManMonth() {
+    // return this.defferedManMonth;
+    // }
 
-    public void setDefferedAmount(BigDecimal defferedAmount) {
-        this.defferedAmount = defferedAmount;
-    }
+    // public void setDefferedManMonth(double defferedManMonth) {
+    // this.defferedManMonth = defferedManMonth;
+    // }
+
+    // public BigDecimal getDefferedAmount() {
+    // return this.defferedAmount;
+    // }
+
+    // public void setDefferedAmount(BigDecimal defferedAmount) {
+    // this.defferedAmount = defferedAmount;
+    // }
 
     @Column(name = "DEP_ID")
     private Long depId;
@@ -104,6 +115,8 @@ public class PrjBudget extends AbstractEntity {
 
     public void setPrjId(Long prjId) {
         this.prjId = prjId;
+        for (PrjMonthBudget pmb : monthBudgets)
+            pmb.setPrjId(prjId);
     }
 
     public Project getProject() {
@@ -112,12 +125,11 @@ public class PrjBudget extends AbstractEntity {
 
     public void setProject(Project project) {
         this.project = project;
-        if( project != null )
-        {
-            this.prjId = project.getId();
+        if (project != null) {
+            this.setPrjId(project.getId());
             this.prjName = project.getName();
         }
-        
+
     }
 
     public String getPrjNo() {
@@ -184,8 +196,10 @@ public class PrjBudget extends AbstractEntity {
         prjBudget.prjId = prjId;
         prjBudget.prjName = prjName;
         prjBudget.prjNo = prjNo;
-        prjBudget.defferedAmount = defferedAmount;
-        prjBudget.defferedManMonth = defferedManMonth;
+        prjBudget.confirmYear = confirmYear;
+        // prjBudget.defferedAmount = defferedAmount;
+        // prjBudget.defferedManMonth = defferedManMonth;
+
         prjBudget.avgManMonthCost = avgManMonthCost;
 
         return prjBudget;

@@ -21,6 +21,7 @@ axios.interceptors.response.use(
     return data;
   },
   err => {
+    console.log("error in axios response:");
     console.log(err);
     if (err.response.status == 504 || err.response.status == 404) {
       Message.error({ message: "服务器不可用，稍后再试！" });

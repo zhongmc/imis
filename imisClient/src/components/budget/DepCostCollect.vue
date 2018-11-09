@@ -83,8 +83,6 @@ export default {
       this.getRequest("/budget/dep/costColl/" + this.depId).then(resp => {
         if (resp && resp.status == 200) {
           _this.costBudgets = resp.data;
-          console.log("cost load ok!");
-          console.log(resp.data);
         }
       });
     },
@@ -92,12 +90,6 @@ export default {
     changeDep(depId) {
       this.depId = depId;
       this.loadData();
-    },
-
-    formatAmount1(scope) {
-      console.log(scope.index);
-      console.log(scope.row);
-      console.log(scope.column);
     },
 
     formatAmount(row, column, cellValue) {

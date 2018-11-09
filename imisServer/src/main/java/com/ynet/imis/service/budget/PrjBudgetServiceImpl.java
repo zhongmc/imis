@@ -4,12 +4,13 @@
 * @description 
 * @created Wed Oct 10 2018 11:12:21 GMT+0800 (中国标准时间)
 * @copyright YNET
-* @last-modified Wed Nov 07 2018 11:05:47 GMT+0800 (中国标准时间)
+* @last-modified Thu Nov 08 2018 14:48:51 GMT+0800 (中国标准时间)
 */
 
 package com.ynet.imis.service.budget;
 
 import java.math.BigDecimal;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -96,11 +97,51 @@ public class PrjBudgetServiceImpl implements PrjBudgetService {
 
     @Override
     public PrjRightsConfirm savePrjRightsConfirm(PrjRightsConfirm prjRightsConfirm) {
-        return prjRIghtsConfirmDao.save(prjRightsConfirm);
+
+        // update prj cost confirm year
+        int begYear, endYear, begMonth, endMonth;
+        Calendar cal = Calendar.getInstance();
+
+        int year = cal.get(Calendar.YEAR);
+        // prjRightsConfirm.getExpectDate();
+
+        cal.setTime(prjRightsConfirm.getBegDate());
+        begYear = cal.get(Calendar.YEAR);
+        begMonth = cal.get(Calendar.MONTH);
+
+        cal.setTime(prjRightsConfirm.getEndDate());
+        endYear = cal.get(Calendar.YEAR);
+        endMonth = cal.get(Calendar.MONTH);
+        int beg = begYear * 12 + begMonth;
+        int end = endYear * 12 + endMonth;
+
+        prjMonthBudgetDao.updatePrjCostConfirmYear(prjRightsConfirm.getPrjId(), year, beg, end);
+        PrjRightsConfirm prjConfirm = prjRIghtsConfirmDao.save(prjRightsConfirm);
+
+        return prjConfirm;
     }
 
     @Override
     public int deletePrjRightsConfirm(Long id) {
+
+        PrjRightsConfirm prjConfirm = prjRIghtsConfirmDao.findById(id).get();
+        if (prjConfirm == null)
+            return 0;
+        int begYear, endYear, begMonth, endMonth;
+        Calendar cal = Calendar.getInstance();
+
+        cal.setTime(prjConfirm.getBegDate());
+        begYear = cal.get(Calendar.YEAR);
+        begMonth = cal.get(Calendar.MONTH);
+
+        cal.setTime(prjConfirm.getEndDate());
+        endYear = cal.get(Calendar.YEAR);
+        endMonth = cal.get(Calendar.MONTH);
+        int beg = begYear * 12 + begMonth;
+        int end = endYear * 12 + endMonth;
+
+        prjMonthBudgetDao.updatePrjCostConfirmYear(prjConfirm.getPrjId(), 0, beg, end);
+
         prjRIghtsConfirmDao.deleteById(id);
         return 1;
     }
@@ -112,10 +153,15 @@ public class PrjBudgetServiceImpl implements PrjBudgetService {
         return 1;
     }
 
-    // 根据部门id 取所有的项目预算
+    // 根据部门id 取所有的项目预算，某年的
     @Override
     public List<PrjMonthBudget> getPrjMonthBudgetsByDepId(List<Long> depIds, int year) {
         return prjMonthBudgetDao.getPrjMonthBudgetsByDepId(depIds, year);
+    }
+
+    @Override // 根据部门id 取所有的当年确权项目的预算
+    public List<PrjMonthBudget> getConfirmedPrjMonthBudgetsByDepId(List<Long> depIds, int year) {
+        return prjMonthBudgetDao.getConfirmedPrjMonthBudgetsByDepId(depIds, year);
     }
 
     // 根据部门id 取所有的项目确权

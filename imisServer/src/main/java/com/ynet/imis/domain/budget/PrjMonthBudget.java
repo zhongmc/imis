@@ -4,7 +4,7 @@
 * @description 项目月预算条目
 * @created Tue Sep 18 2018 16:53:38 GMT+0800 (中国标准时间)
 * @copyright YNET
-* @last-modified Tue Oct 30 2018 17:47:20 GMT+0800 (中国标准时间)
+* @last-modified Thu Nov 08 2018 14:01:51 GMT+0800 (中国标准时间)
 */
 
 package com.ynet.imis.domain.budget;
@@ -29,13 +29,24 @@ public class PrjMonthBudget extends AbstractEntity {
 
     private static final long serialVersionUID = 1399722498180677635L;
 
-    private int year;
+    private int year; // 发生年份
+
     private short month;
     private BigDecimal amount;
     private BigDecimal realAmount;
 
     private float manMonth;
     private float realManMonth;
+
+    private int confirmYear = 0; // 确权年份（成本也相应计入） 0 代表未确权
+
+    public int getConfirmYear() {
+        return this.confirmYear;
+    }
+
+    public void setConfirmYear(int confirmYear) {
+        this.confirmYear = confirmYear;
+    }
 
     @Column(name = "DEP_ID")
     private Long depId;

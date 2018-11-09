@@ -214,6 +214,7 @@ public class DataImportServiceImpl implements DataImportService {
         Calendar calendar = Calendar.getInstance();
         int year = calendar.get(Calendar.YEAR);
         int newPrjCount = 0;
+        boolean shouldConfirm = false;
         Sheet sheet = workbook.getSheet("延续性项目");
 
         if (sheet != null) {
@@ -361,6 +362,8 @@ public class DataImportServiceImpl implements DataImportService {
                     }
 
                 }
+
+                shouldConfirm = false;
                 // 10 确权（ 本年确认含税收入）
                 cell = row.getCell(10);
                 if (cell != null) {
@@ -377,6 +380,7 @@ public class DataImportServiceImpl implements DataImportService {
                     cal.set(Calendar.MONTH, 11);
                     confirm.setExpectDate(cal.getTime()); // 今年
                     confirms.add(confirm);
+                    shouldConfirm = true;
                 }
 
                 // 25 人均成本
@@ -388,20 +392,36 @@ public class DataImportServiceImpl implements DataImportService {
                     prjBudget.setAvgManMonthCost(avgManMonthCost);
                 }
 
+                BigDecimal defferedAmount = null;
+                double defferedManMonth = 0;
                 // 26 上年递延成本
                 cell = row.getCell(26);
                 if (cell != null) {
-                    BigDecimal defferedAmount = BigDecimal.valueOf(cell.getNumericCellValue());
-                    prjBudget.setDefferedAmount(defferedAmount);
-                    // prjBudget.setProject( project );
+                    defferedAmount = BigDecimal.valueOf(cell.getNumericCellValue());
                 }
-
                 // 28 递延成本对应人月数
                 cell = row.getCell(28);
                 if (cell != null) {
-                    double defferedManMonth = cell.getNumericCellValue();
-                    prjBudget.setDefferedManMonth(defferedManMonth);
-                    // prjBudget.setProject( project );
+                    defferedManMonth = cell.getNumericCellValue();
+                }
+
+                // 递延成本计到上年12月
+                if (defferedAmount != null) {
+                    PrjMonthBudget prjMonth = new PrjMonthBudget();
+                    prjMonth.setManMonth((float) defferedManMonth);
+                    prjMonth.setMonth((short) 11);
+                    prjMonth.setYear(year - 1); // last year
+                    prjMonth.setDepId(depId);
+                    prjMonth.setAmount(defferedAmount);
+
+                    if (shouldConfirm)
+                        prjMonth.setConfirmYear(year);
+
+                    if (isSamePrj) {
+                        prevPrjBudget.addPrjMonthBudget(prjMonth);
+                    } else
+                        prjBudget.addPrjMonthBudget(prjMonth);
+
                 }
 
                 for (int k = 0; k < 12; k++) // 34 1-12月 人月数
@@ -417,6 +437,10 @@ public class DataImportServiceImpl implements DataImportService {
                     prjMonth.setMonth((short) k);
                     prjMonth.setYear(year);
                     prjMonth.setDepId(depId);
+
+                    if (shouldConfirm)
+                        prjMonth.setConfirmYear(year);
+
                     if (avgManMonthCost != null) {
                         prjMonth.setAmount(avgManMonthCost.multiply(BigDecimal.valueOf(manMonth)));
                     }
@@ -562,10 +586,12 @@ public class DataImportServiceImpl implements DataImportService {
                 continue;
 
             PrjBudget prjBudget = new PrjBudget();
+            prjBudget.setDepId(depId);
 
             Project project = new Project();
             project.setName(prjName);
             project.setPrjClass(PrjClass.LAST_PRJ);
+            project.setDepId(depId);
 
             cell = row.getCell(2); // 2:客户名称
             if (cell != null && cell.getCellType() == CellType.STRING) {
@@ -695,6 +721,8 @@ public class DataImportServiceImpl implements DataImportService {
                 prjMonth.setManMonth((float) manMonth);
                 prjMonth.setMonth((short) k);
                 prjMonth.setYear(year);
+                prjMonth.setDepId( depId );
+                
 
                 if (avgManMonthCost != null) {
                     prjMonth.setAmount(avgManMonthCost.multiply(BigDecimal.valueOf(manMonth)));

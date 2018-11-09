@@ -4,6 +4,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ynet.imis.domain.menu.User;
 
 import com.ynet.imis.service.menu.UserDetailService;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -19,15 +22,20 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
+import org.springframework.security.web.savedrequest.RequestCache;
+import org.springframework.security.web.savedrequest.SavedRequest;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Enumeration;
 
 /**
  * Created by sang on 2017/12/28.
@@ -106,6 +114,43 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         out.close();
                     }
                 }).and().logout().permitAll().and().csrf().disable().exceptionHandling()
-                .accessDeniedHandler(authenticationAccessDeniedHandler);
+                .accessDeniedHandler(authenticationAccessDeniedHandler)
+                .authenticationEntryPoint(new CustomizedAuthenticationEntryPoint() {
+
+                });
+    }
+
+    public class CustomizedAuthenticationEntryPoint implements AuthenticationEntryPoint {
+
+        RequestCache requestCache = new HttpSessionRequestCache();
+
+        Logger logger = LoggerFactory.getLogger(this.getClass());
+
+        @Override
+        public void commence(HttpServletRequest request, HttpServletResponse response,
+                AuthenticationException authException) throws IOException, ServletException {
+
+            String targetUrl = "";
+
+            SavedRequest savedRequest = requestCache.getRequest(request, response);
+
+            if (savedRequest != null) {
+                targetUrl = savedRequest.getRedirectUrl();
+            }
+            logger.info("请求 [" + targetUrl + "] 需要身份认证!");
+
+            // Enumeration<String> headerNames = request.getHeaderNames();
+            // while (headerNames.hasMoreElements()) {
+            // String aName = headerNames.nextElement();
+            // logger.info(aName + ":" + request.getHeader(aName));
+            // }
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // SC_UNAUTHORIZED);
+            response.setContentType("application/json:charset=UTF-8");
+            PrintWriter out = response.getWriter();
+            out.write("{\"status\":\"error\",\"msg\":\"尚未登录，请先登录！\"}");
+            out.flush();
+            out.close();
+        }
+
     }
 }

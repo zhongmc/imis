@@ -76,7 +76,7 @@
 <script>
 export default {
   mounted: function() {
-    console.log("ManMonth prjId:" + this.prjid);
+    //    console.log("ManMonth prjId:" + this.prjid);
     this.loadPrjBudget(this.prjid);
   },
   methods: {
@@ -86,7 +86,7 @@ export default {
       _this.tableLoading = true;
       _this.getRequest("/budget/project/" + prjId).then(resp => {
         _this.tableLoading = false;
-        console.log(resp.status);
+        //        console.log(resp.status);
 
         if (resp && resp.status == 200) {
           _this.sortPrjBudget(resp.data);
@@ -100,8 +100,8 @@ export default {
     savePrjBudget() {
       var _this = this;
       _this.tableLoading = true;
-      console.log(this.prjBudget);
-      console.log(this.budgets);
+      // console.log(this.prjBudget);
+      // console.log(this.budgets);
 
       _this.postJsonRequest("/budget/project", this.prjBudget).then(resp => {
         _this.tableLoading = false;
@@ -121,7 +121,7 @@ export default {
       var idx = 0,
         k = 0;
 
-      console.log(curYear);
+      // console.log(curYear);
       budgets[idx] = new Object();
 
       budgets[idx].budgets = new Array();
