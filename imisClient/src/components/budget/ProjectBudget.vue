@@ -76,7 +76,7 @@
               align = "center"
               width="120">
               <template slot-scope="scope">
-                {{ formatMoney( scope.row.amountSum,1) }}元
+                元
               </template>
             </el-table-column>
 
@@ -88,7 +88,7 @@
               align = "center"
               width="150">
               <template slot-scope="scope">
-                {{scope.row.manMonthSum}}人月<br/>
+                {{scope.row.manMonthSum.toFixed(2)}}人月<br/>
                 {{ formatMoney( scope.row.amountSum,1) }}元
               </template>
             </el-table-column>
@@ -187,6 +187,7 @@ export default {
       //     console.log("init project budgets.....");
       //     console.log(budgets);
 
+      var curYear = new Date().getFullYear();
       var sortedPrjBudgets = new Array(budgets.length);
 
       for (var idx = 0; idx < budgets.length; idx++) {
@@ -210,13 +211,28 @@ export default {
 
         //       console.log(amounts);
 
-        for (var k = 0; k < 12; k++) amounts[k] = null; //this.emptyMonthBudget;
+        if (prjBudget.monthBudgets.length != 12) {
+          for (var k = 0; k < 12; k++)
+            amounts[k] = {
+              id: null,
+              prjBudgetId: prjBudget.id,
+              depId: prjBudget.depId,
+              prjId: prjBudget.prjId,
+              amount: 0,
+              manMonth: 0,
+              month: k,
+              year: curYear
+            }; //this.emptyMonthBudget;
+        }
 
         for (var k = 0; k < prjBudget.monthBudgets.length; k++) {
           var ii = prjBudget.monthBudgets[k].month;
           amounts[ii] = prjBudget.monthBudgets[k];
         }
         //       console.log(amounts);
+
+        if (prjBudget.monthBudgets.length != 12)
+          prjBudget.monthBudgets = amounts;
 
         var amountSum = 0.0;
         var manMonthSum = 0.0;

@@ -58,6 +58,16 @@ public class CostBudgetInfo extends AbstractEntity {
     @JoinColumn(name = "COST_ITEM_ID", nullable = false, updatable = false, insertable = false)
     private CostItem costItem;
 
+    private Long costGroupId;
+
+    public Long getCostGroupId() {
+        return this.costGroupId;
+    }
+
+    public void setCostGroupId(Long costGroupId) {
+        this.costGroupId = costGroupId;
+    }
+
     public int getYear() {
         return this.year;
     }
@@ -131,5 +141,6 @@ public class CostBudgetInfo extends AbstractEntity {
     public void setCostItem(CostItem costItem) {
         this.costItem = costItem;
         costItemId = costItem.getId();
+        this.costGroupId = costItem.getGroupId();
     }
 }

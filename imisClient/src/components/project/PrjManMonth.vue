@@ -18,22 +18,15 @@
           </el-row -->
 
           <el-row>
-            <el-col :span="8">
+            <el-col :span="6">
               <el-form-item label="项目平均人月费用:" prop="avgManMonthCost">
                 <el-input size="mini" style="width: 130px"  v-model = "prjBudget.avgManMonthCost"  @blur="handleAvgManMonthChange()"  @keyup.enter.native="handleAvgManMonthChange()" />
               </el-form-item>
             </el-col>
-            <el-col :span="8">
-              <el-form-item label="项目递延成本:" prop="defferedAmount">
-                <el-input size="mini" style="width: 130px"  v-model = "prjBudget.defferedAmount" />
-              </el-form-item>
+          <el-col :span="16">
+              <span style="margin-left:40px;">人月合计:</span><span style="margin-left:10px;">{{totalManmonth}}人月</span>
+              <span style="margin-left:20px;">项目费用合计:</span><span style="margin-left:10px;">{{formatMoney(totalAmount, 1) }}元</span>
             </el-col>
-            <el-col :span="8">
-              <el-form-item label="项目递延人月数:" prop="defferedManMonth">
-                <el-input size="mini"  style="width: 130px" v-model = "prjBudget.defferedManMonth" />
-              </el-form-item>
-            </el-col>
-
 
           </el-row>
 
@@ -91,6 +84,7 @@ export default {
         if (resp && resp.status == 200) {
           _this.sortPrjBudget(resp.data);
           _this.prjBudget = resp.data;
+          _this.updateTotal();
         } else {
           _this.curPrjId = -1;
         }
@@ -116,15 +110,22 @@ export default {
       if (data.monthBudgets == null || data.monthBudgets.length == 0)
         return null;
 
+      var date = new Date();
+      var theYear = date.getFullYear();
+
       var budgets = new Array();
       var curYear = data.monthBudgets[0].year;
+
       var idx = 0,
         k = 0;
 
       // console.log(curYear);
       budgets[idx] = new Object();
 
-      budgets[idx].budgets = new Array();
+      if (curYear == theYear)
+        budgets[idx].budgets = this.getEmptyMonthBudgets(data, theYear);
+      else budgets[idx].budgets = new Array();
+
       budgets[idx].year = curYear;
 
       for (var i = 0; i < data.monthBudgets.length; i++) {
@@ -135,27 +136,86 @@ export default {
 
           budgets[idx] = new Object();
 
-          budgets[idx].budgets = new Array();
+          if (curYear == theYear)
+            budgets[idx].budgets = this.getEmptyMonthBudgets(data, theYear);
+          else budgets[idx].budgets = new Array();
           budgets[idx].year = curYear;
         }
 
-        budgets[idx].budgets[k++] = data.monthBudgets[i];
+        if (curYear == theYear)
+          budgets[idx].budgets[data.monthBudgets[i].month] =
+            data.monthBudgets[i];
+        else budgets[idx].budgets[k++] = data.monthBudgets[i];
       }
+
+      var idx = data.monthBudgets.length;
+      for (var i = 0; i < budgets.length; i++) {
+        if (budgets[i].year != theYear) continue;
+        var bgs = budgets[i].budgets;
+        for (var k = 0; k < bgs.length; k++) {
+          if (bgs[k].id == null) data.monthBudgets[idx++] = bgs[k];
+        }
+      }
+
       this.prjBudget = data;
       this.budgets = budgets;
+    },
+
+    getEmptyMonthBudgets: function(prjBudget, iyear) {
+      var budgets = new Array(12);
+
+      for (var idx = 0; idx < 12; idx++) {
+        budgets[idx] = {
+          id: null,
+          prjId: prjBudget.prjId,
+          prjBudgetId: prjBudget.id,
+          depId: prjBudget.depId,
+          month: idx,
+          year: iyear,
+          amount: 0,
+          manMonth: 0,
+          changed: false
+        };
+      }
+
+      return budgets;
     },
 
     handleManMonthChange: function(monthBudget) {
       monthBudget.amount =
         this.prjBudget.avgManMonthCost * monthBudget.manMonth;
+      if (monthBudget.id == null) monthBudget.changed = true;
+
+      this.updateTotal();
+    },
+
+    updateTotal: function() {
+      var totalAmount = 0,
+        totalMan = 0;
+      for (var idx = 0; idx < this.prjBudget.monthBudgets.length; idx++) {
+        totalMan = totalMan + this.prjBudget.monthBudgets[idx].manMonth;
+        totalAmount = totalAmount + this.prjBudget.monthBudgets[idx].amount;
+      }
+      this.totalAmount = totalAmount;
+      this.totalManmonth = totalMan;
+      console.log(this.totalManmonth + ":" + this.totalAmount);
     },
 
     handleAvgManMonthChange: function() {
+      var totalAmount = 0,
+        totalMan = 0;
+      var amount, manmonth;
       for (var idx = 0; idx < this.prjBudget.monthBudgets.length; idx++) {
-        this.prjBudget.monthBudgets[idx].amount =
-          this.prjBudget.avgManMonthCost *
-          this.prjBudget.monthBudgets[idx].manMonth;
+        manmonth = this.prjBudget.monthBudgets[idx].manMonth;
+        amount = manmonth * this.prjBudget.avgManMonthCost;
+
+        this.prjBudget.monthBudgets[idx].amount = amount;
+        totalAmount = totalAmount + amount;
+        totalMan = totalMan + manmonth;
       }
+      this.totalAmount = totalAmount;
+      this.totalManmonth = totalMan;
+      console.log(this.totalManmonth + ":" + this.totalAmount);
     }
   }, //methods
 
@@ -176,96 +236,9 @@ export default {
       multipleSelection: [],
       budgets: [],
 
-      prjBudget: {
-        prjId: -1,
-        prjName: "test",
-        prjNo: "23-324",
-        avgManMonthCost: 0,
-        contractAmount: 0,
-        curYearAmount: 0,
-        budgets: [
-          {
-            year: 2017,
-            budgets: [
-              {
-                month: 8,
-                amount: 0,
-                manMonth: 2,
-                costAmount: 0,
-                realManMonth: 0
-              },
-              {
-                month: 9,
-                amount: 0,
-                manMonth: 3,
-                costAmount: 0,
-                realManMonth: 0
-              },
-              {
-                month: 10,
-                amount: 0,
-                manMonth: 1,
-                costAmount: 0,
-                realManMonth: 0
-              },
-              {
-                month: 11,
-                amount: 0,
-                manMonth: 4,
-                costAmount: 0,
-                realManMonth: 0
-              },
-              {
-                month: 12,
-                amount: 0,
-                manMonth: 5,
-                costAmount: 0,
-                realManMonth: 0
-              }
-            ]
-          },
-          {
-            year: 2018,
-            budgets: [
-              {
-                month: 1,
-                amount: 0,
-                manMonth: 3,
-                costAmount: 0,
-                realManMonth: 0
-              },
-              {
-                month: 2,
-                amount: 0,
-                manMonth: 4,
-                costAmount: 0,
-                realManMonth: 0
-              },
-              {
-                month: 3,
-                amount: 0,
-                manMonth: 1,
-                costAmount: 0,
-                realManMonth: 0
-              },
-              {
-                month: 4,
-                amount: 0,
-                manMonth: 2,
-                costAmount: 0,
-                realManMonth: 0
-              },
-              {
-                month: 5,
-                amount: 0,
-                manMonth: 6,
-                costAmount: 0,
-                realManMonth: 0
-              }
-            ]
-          }
-        ]
-      },
+      totalManmonth: 0.0,
+      totalAmount: 0.0,
+      prjBudget: {},
 
       budgetRules: {
         avgManMonthCost: [

@@ -226,9 +226,13 @@ public class DataImportServiceImpl implements DataImportService {
                 if (row == null)
                     continue;
 
+                Cell cell = row.getCell(0); // 合计 代表结束行
+                if (cell != null && "合计".equals(cell.getStringCellValue()))
+                    break;
+
                 isSamePrj = false;
 
-                Cell cell = row.getCell(4); // 4:合同名称
+                cell = row.getCell(4); // 4:合同名称
                 if (cell == null || cell.getCellType() != CellType.STRING)
                     continue;
                 String prjName = cell.getStringCellValue();
@@ -368,19 +372,44 @@ public class DataImportServiceImpl implements DataImportService {
                 cell = row.getCell(10);
                 if (cell != null) {
                     BigDecimal confirmAmount = BigDecimal.valueOf(cell.getNumericCellValue());
-                    PrjRightsConfirm confirm = new PrjRightsConfirm();
-                    confirm.setAmount(confirmAmount);
-                    if (begDate != null) {
+                    if (confirmAmount != null && confirmAmount.doubleValue() > 10) {
+                        PrjRightsConfirm confirm = new PrjRightsConfirm();
+                        confirm.setAmount(confirmAmount);
+
+                        Calendar cal = Calendar.getInstance();
+                        if (begDate == null) {
+                            cal.set(Calendar.YEAR, cal.get(Calendar.YEAR) - 1);
+                            cal.set(Calendar.MONTH, 9);
+                            begDate = cal.getTime();
+                        }
+
+                        if (endDate == null) {
+                            cal = Calendar.getInstance();
+                            cal.set(Calendar.MONTH, 11);
+                            endDate = cal.getTime();
+                        }
+
                         confirm.setBegDate(begDate);
                         confirm.setEndDate(endDate);
+
+                        if (confirmName == null)
+                            confirmName = "确权";
+
                         confirm.setName(confirmName);
+
+                        confirm.setDepId(depId);
+
+                        cal.setTime(endDate);
+                        if (cal.get(Calendar.YEAR) != year) {
+                            cal = Calendar.getInstance();
+                            cal.set(Calendar.MONTH, 11);
+                            endDate = cal.getTime();
+                        }
+
+                        confirm.setExpectDate(endDate); // 今年
+                        confirms.add(confirm);
+                        shouldConfirm = true;
                     }
-                    confirm.setDepId(depId);
-                    Calendar cal = Calendar.getInstance();
-                    cal.set(Calendar.MONTH, 11);
-                    confirm.setExpectDate(cal.getTime()); // 今年
-                    confirms.add(confirm);
-                    shouldConfirm = true;
                 }
 
                 // 25 人均成本
@@ -406,7 +435,7 @@ public class DataImportServiceImpl implements DataImportService {
                 }
 
                 // 递延成本计到上年12月
-                if (defferedAmount != null) {
+                if (defferedAmount != null && defferedAmount.doubleValue() > 10) {
                     PrjMonthBudget prjMonth = new PrjMonthBudget();
                     prjMonth.setManMonth((float) defferedManMonth);
                     prjMonth.setMonth((short) 11);
@@ -577,8 +606,11 @@ public class DataImportServiceImpl implements DataImportService {
             if (row == null)
                 continue;
 
+            Cell cell = row.getCell(0); // 合计 代表结束行
+            if (cell != null && "合计".equals(cell.getStringCellValue()))
+                break;
             isSamePrj = false;
-            Cell cell = row.getCell(4); // 4 合同（项目）名称
+            cell = row.getCell(4); // 4 合同（项目）名称
             if (cell == null || cell.getCellType() != CellType.STRING)
                 continue;
             String prjName = cell.getStringCellValue();
@@ -683,20 +715,40 @@ public class DataImportServiceImpl implements DataImportService {
                 }
 
             }
-            // 11 确权（ 本年确认收入）
-            cell = row.getCell(11);
+            // 10 确权（ 本年确认收入 含税）
+            cell = row.getCell(10);
             if (cell != null) {
                 BigDecimal confirmAmount = BigDecimal.valueOf(cell.getNumericCellValue());
-                PrjRightsConfirm confirm = new PrjRightsConfirm();
-                confirm.setAmount(confirmAmount);
-                confirm.setBegDate(begDate);
-                confirm.setEndDate(endDate);
-                confirm.setName(confirmName);
+                if (confirmAmount != null && confirmAmount.doubleValue() > 10) {
+                    PrjRightsConfirm confirm = new PrjRightsConfirm();
+                    confirm.setAmount(confirmAmount);
+                    Calendar cal = Calendar.getInstance();
 
-                Calendar cal = Calendar.getInstance();
-                cal.set(Calendar.MONTH, 11);
-                confirm.setExpectDate(cal.getTime()); // 今年
-                confirms.add(confirm);
+                    if (begDate == null) // 年初
+                    {
+                        cal.set(Calendar.MONTH, 0);
+                        cal.set(Calendar.DAY_OF_MONTH, 0);
+                        begDate = cal.getTime();
+
+                    }
+                    confirm.setBegDate(begDate);
+
+                    if (endDate == null) // 年底
+                    {
+                        cal.set(Calendar.MONTH, 11);
+                        cal.set(Calendar.DAY_OF_MONTH, 30);
+                        endDate = cal.getTime();
+                    }
+
+                    confirm.setEndDate(endDate);
+                    confirm.setName(confirmName);
+                    confirm.setDepId(depId);
+
+                    cal = Calendar.getInstance();
+                    cal.set(Calendar.MONTH, 11);
+                    confirm.setExpectDate(cal.getTime()); // 今年
+                    confirms.add(confirm);
+                }
             }
 
             // 25 人均成本
@@ -721,16 +773,15 @@ public class DataImportServiceImpl implements DataImportService {
                 prjMonth.setManMonth((float) manMonth);
                 prjMonth.setMonth((short) k);
                 prjMonth.setYear(year);
-                prjMonth.setDepId( depId );
-                
+                prjMonth.setDepId(depId);
 
                 if (avgManMonthCost != null) {
                     prjMonth.setAmount(avgManMonthCost.multiply(BigDecimal.valueOf(manMonth)));
                 }
-                if (isSamePrj) {
-                    prevPrjBudget.addPrjMonthBudget(prjMonth);
-                } else
-                    prjBudget.addPrjMonthBudget(prjMonth);
+                // if (isSamePrj) {
+                // prevPrjBudget.addPrjMonthBudget(prjMonth);
+                // } else
+                prjBudget.addPrjMonthBudget(prjMonth);
 
             }
 
@@ -786,10 +837,10 @@ public class DataImportServiceImpl implements DataImportService {
             prevProject = project;
             prevPrjBudget = prjBudget;
 
-        }
+            incomes.clear();
+            confirms.clear();
 
-        incomes.clear();
-        confirms.clear();
+        }
 
         // 0:大区名称 1:部门名称 2:客户名称 3:合同编号 4:合同名称 5:核算类型 6:预计签订日期 7:预计合同金额
         // 8:截至18年底是否能拿回验收报告/确认单 9:对应期间 10:本年应确认含税收入（合同金额） 11:本年应确认收入 12:本年应确认成本

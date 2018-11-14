@@ -4,7 +4,7 @@
 * @description 
 * @created Wed Sep 26 2018 16:53:24 GMT+0800 (中国标准时间)
 * @copyright YNET
-* @last-modified Fri Nov 09 2018 10:25:07 GMT+0800 (中国标准时间)
+* @last-modified Wed Nov 14 2018 17:22:46 GMT+0800 (中国标准时间)
 */
 
 package com.ynet.imis.controller;
@@ -53,7 +53,12 @@ public class CommonController {
     @RequestMapping("/")
     public void defaultHomePage(HttpServletResponse response) throws IOException {
         System.out.println("Request for root!");
-        response.sendRedirect("/index.html");
+
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (user != null)
+            response.sendRedirect("/index.html");
+        else
+            response.sendRedirect("/home");
         // return "forward:/index.html";
 
         // response.setStatus(HttpServletResponse.SC_OK);

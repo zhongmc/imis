@@ -4,10 +4,10 @@
 * @description 
 * @created Thu Sep 13 2018 15:21:04 GMT+0800 (中国标准时间)
 * @copyright YNET
-* @last-modified Mon Oct 08 2018 11:30:15 GMT+0800 (中国标准时间)
+* @last-modified Wed Nov 14 2018 16:16:28 GMT+0800 (中国标准时间)
 */
 
-package com.ynet.imis.service.menu;
+package com.ynet.imis.service.security;
 
 import com.ynet.imis.domain.menu.User;
 import com.ynet.imis.repository.menu.UserRepository;
@@ -22,8 +22,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-
-
 @Service
 @Transactional
 public class UserDetailService implements UserDetailsService {
@@ -31,15 +29,14 @@ public class UserDetailService implements UserDetailsService {
     @Autowired
     UserRepository userDao;
 
-	private Logger logger = LoggerFactory.getLogger(getClass());
+    private Logger logger = LoggerFactory.getLogger(getClass());
 
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
-       
-        logger.info("Load user:" + s + ";" );
-        User user =  userDao.findByUserName(s);
 
-        
+        logger.info("Load user:" + s + ";");
+        User user = userDao.findByUserName(s);
+
         if (user == null) {
             throw new UsernameNotFoundException("用户不存在！");
         }
@@ -47,13 +44,13 @@ public class UserDetailService implements UserDetailsService {
     }
 
     public User userReg(String username, String password) {
-        //如果用户名存在，返回错误
+        // 如果用户名存在，返回错误
         if (userDao.findByUserName(username) != null) {
             return null;
         }
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         String encode = encoder.encode(password);
-        return userDao.save( new User(username, encode) );
+        return userDao.save(new User(username, encode));
     }
 
 }

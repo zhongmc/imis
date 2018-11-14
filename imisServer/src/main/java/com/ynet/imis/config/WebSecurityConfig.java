@@ -3,11 +3,12 @@ package com.ynet.imis.config;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ynet.imis.domain.menu.User;
 
-import com.ynet.imis.service.menu.UserDetailService;
+import com.ynet.imis.service.security.UserDetailService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
@@ -26,6 +27,11 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.RememberMeServices;
+import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
+import org.springframework.security.web.authentication.rememberme.PersistentTokenBasedRememberMeServices;
+import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
+import org.springframework.security.web.authentication.rememberme.TokenBasedRememberMeServices;
 import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
 import org.springframework.security.web.savedrequest.RequestCache;
 import org.springframework.security.web.savedrequest.SavedRequest;
@@ -52,6 +58,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     UrlAccessDecisionManager urlAccessDecisionManager;
     @Autowired
     AuthenticationAccessDeniedHandler authenticationAccessDeniedHandler;
+
+    @Autowired
+    private PersistentTokenRepository persistentLoginsService;
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -81,7 +90,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         httpServletResponse.setContentType("application/json;charset=utf-8");
                         PrintWriter out = httpServletResponse.getWriter();
                         StringBuffer sb = new StringBuffer();
-                        sb.append("{\"status\":\"error\",\"msg\":\"");
+                        sb.append("{\"status\":\"error\",\"message\":\"");
                         if (e instanceof UsernameNotFoundException || e instanceof BadCredentialsException) {
                             sb.append("用户名或密码输入错误，登录失败!");
                         } else if (e instanceof DisabledException) {
@@ -113,11 +122,41 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         out.flush();
                         out.close();
                     }
-                }).and().logout().permitAll().and().csrf().disable().exceptionHandling()
+                }).and().logout().permitAll().logoutSuccessHandler(new LogoutSuccessHandler() {
+
+                    @Override
+                    public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response,
+                            Authentication authentication) throws IOException, ServletException {
+                        PrintWriter out = response.getWriter();
+                        String s = "{\"status\":\"success\",\"message\":\"logout success!\"}";
+                        out.write(s);
+                        out.flush();
+                        out.close();
+
+                    }
+                }).and().csrf().disable().rememberMe().rememberMeServices(rememberServices())
+                .rememberMeParameter("rememberme").key("imis").and().exceptionHandling()
                 .accessDeniedHandler(authenticationAccessDeniedHandler)
                 .authenticationEntryPoint(new CustomizedAuthenticationEntryPoint() {
 
                 });
+    }
+
+    @Bean
+    public RememberMeServices rememberServices() {
+
+        // SavedRequestAwareAuthenticationSuccessHandler;
+        // TokenBasedRememberMeServices services = new
+        // TokenBasedRememberMeServices("imis", userService);
+
+        // key imis 与config中的一致
+        PersistentTokenBasedRememberMeServices services = new PersistentTokenBasedRememberMeServices("imis",
+                userService, persistentLoginsService);
+
+        // 一定要(不是默认的名称 remember-me时)
+        services.setParameter("rememberme");
+
+        return services;
     }
 
     public class CustomizedAuthenticationEntryPoint implements AuthenticationEntryPoint {

@@ -4,7 +4,7 @@
 * @description 
 * @created Tue Sep 18 2018 16:53:17 GMT+0800 (中国标准时间)
 * @copyright YNET
-* @last-modified Thu Nov 08 2018 14:50:33 GMT+0800 (中国标准时间)
+* @last-modified Mon Nov 12 2018 11:23:17 GMT+0800 (中国标准时间)
 */
 
 package com.ynet.imis.domain.budget;
@@ -153,6 +153,15 @@ public class PrjBudget extends AbstractEntity {
     }
 
     public void addPrjMonthBudget(PrjMonthBudget monthBudget) {
+
+        // 判断是否已存在, 导入数据时，处理递延成本
+        for (PrjMonthBudget mb : monthBudgets) {
+            if (mb.getYear() == monthBudget.getYear() && mb.getMonth() == monthBudget.getMonth()) {
+                mb.setAmount(mb.getAmount().add(monthBudget.getAmount()));
+                mb.setManMonth(mb.getManMonth() + monthBudget.getManMonth());
+                return;
+            }
+        }
         monthBudgets.add(monthBudget);
         monthBudget.setPrjBudget(this);
     }

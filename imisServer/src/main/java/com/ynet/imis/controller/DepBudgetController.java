@@ -88,6 +88,8 @@ public class DepBudgetController {
                 info.setMonth((short) k);
                 info.setDepId(depId);
                 info.setCostItemId(costItem.getId());
+                info.setCostGroupId(costItem.getGroupId());
+
                 info.setBudgetTypeId(typeId);
                 infos.add(info);
             }
@@ -164,7 +166,7 @@ public class DepBudgetController {
 
         Page<Map<String, Object>> pagedPrjBudgets = depBudgetService.getDepPrjBudgetByPage(page, size, depId, year);
 
-        logger.info(ImisUtils.objectJsonStr(pagedPrjBudgets));
+        // logger.info(ImisUtils.objectJsonStr(pagedPrjBudgets));
         return pagedPrjBudgets;
     }
 

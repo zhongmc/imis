@@ -10,7 +10,7 @@
     <el-form-item prop="password">
       <el-input type="password" v-model="loginForm.password" auto-complete="off" placeholder="密码"></el-input>
     </el-form-item>
-    <el-checkbox class="login_remember" v-model="checked" label-position="left">记住密码</el-checkbox>
+    <el-checkbox class="login_remember" v-model="loginForm.rememberMe" label-position="left">下次自动登录</el-checkbox>
     <el-form-item style="width: 100%">
       <el-button type="primary" @click.native.prevent="submitClick" style="width: 100%">登录</el-button>
     </el-form-item>
@@ -29,7 +29,8 @@ export default {
       checked: true,
       loginForm: {
         username: "admin",
-        password: "123456"
+        password: "123456",
+        remenberMe: false
       },
       loading: false
     };
@@ -40,11 +41,15 @@ export default {
       this.loading = true;
       this.postRequest("/login", {
         username: this.loginForm.username,
-        password: this.loginForm.password
+        password: this.loginForm.password,
+        rememberme: this.loginForm.rememberMe
       }).then(resp => {
         _this.loading = false;
         if (resp && resp.status == 200) {
           var data = resp.data;
+          if (data.msg.userface == null || data.msg.userface == "")
+            data.msg.userface = "/static/imgs/userFace.jpg";
+
           _this.$store.commit("login", data.msg);
           var path = _this.$route.query.redirect;
           _this.$router.replace({

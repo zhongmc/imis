@@ -17,9 +17,10 @@
           </el-badge>
           <el-dropdown @command="handleCommand">
   <span class="el-dropdown-link home_userinfo" style="display: flex;align-items: center">
-    {{user.nickName}}
+    
     <i><img v-if="user.userface!=''" :src="user.userface"
             style="width: 40px;height: 40px;margin-right: 5px;margin-left: 5px;border-radius: 40px"/></i>
+        {{user.nickName}}            
   </span>
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item>个人中心</el-dropdown-item>
@@ -163,7 +164,7 @@ export default {
           type: "warning"
         })
           .then(() => {
-            _this.getRequest("/logout");
+            _this.getRequest("/logout"); //logout
             _this.$store.commit("logout");
             _this.$router.replace({ path: "/" });
           })
