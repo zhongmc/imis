@@ -49,8 +49,13 @@ export default {
           var data = resp.data;
           if (data.msg.userface == null || data.msg.userface == "")
             data.msg.userface = "/static/imgs/userFace.jpg";
+          console.log("login return:");
+          console.log(data);
 
           _this.$store.commit("login", data.msg);
+
+          _this.initMenu(_this.$router, _this.$store);
+
           var path = _this.$route.query.redirect;
           _this.$router.replace({
             path: path == "/" || path == undefined ? "/home" : path

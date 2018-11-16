@@ -12,15 +12,19 @@ export const isNotNullORBlank = (...args) => {
   return true;
 };
 export const initMenu = (router, store) => {
+  console.log("init menu: ");
   if (store.state.routes.length > 0) {
     return;
   }
+
+  console.log("do init the menu.... ");
+
   getRequest("/config/sysmenu").then(resp => {
     if (resp && resp.status == 200) {
       var fmtRoutes = formatRoutes(resp.data);
       router.addRoutes(fmtRoutes);
       store.commit("initMenu", fmtRoutes);
-      console.log(fmtRoutes);
+      //      console.log(fmtRoutes);
       // store.dispatch('connect');
     }
   });
@@ -87,13 +91,13 @@ export const removeFormatMoney = s => {
   return parseFloat(s.replace(/[^\d\.-]/g, ""));
 };
 
-/* 
-* formatMoney(s,type) 
-* 功能：金额按千位逗号分隔
-* 参数：s，需要格式化的金额数值. 
-* 参数：type,判断格式化后的金额是否需要小数位. 
-* 返回：返回格式化后的数值字符串. 
-*/
+/*
+ * formatMoney(s,type)
+ * 功能：金额按千位逗号分隔
+ * 参数：s，需要格式化的金额数值.
+ * 参数：type,判断格式化后的金额是否需要小数位.
+ * 返回：返回格式化后的数值字符串.
+ */
 
 export const formatMoney1 = (s, type) => {
   if (/[^0-9\.]/.test(s)) return "0.00";

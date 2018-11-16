@@ -94,7 +94,7 @@ export default {
         if (resp && resp.status == 200) {
           _this.costItems = resp.data.costItems;
           _this.costGroups = resp.data.costGroups;
-          _this.initData();
+          // _this.newInitData();
         }
       });
     },

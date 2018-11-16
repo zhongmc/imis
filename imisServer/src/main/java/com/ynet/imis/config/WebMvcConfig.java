@@ -29,7 +29,6 @@ public class WebMvcConfig implements WebMvcConfigurer {
         return new BCryptPasswordEncoder();
     }
 
-
     @Bean
     public MultipartConfigElement multipartConfigElement() {
         String tmpUtl = "";
@@ -48,6 +47,6 @@ public class WebMvcConfig implements WebMvcConfigurer {
         MultipartConfigFactory factory = new MultipartConfigFactory();
         factory.setLocation(tmpUtl);
         return factory.createMultipartConfig();
-    }    
+    }
 
 }

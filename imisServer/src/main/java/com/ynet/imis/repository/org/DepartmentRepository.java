@@ -21,6 +21,9 @@ public interface DepartmentRepository extends JpaRepository<Department, Long>, J
 
 	@Query("select a from Department a where a.name=?1")
 	public Department findByName(String name);
+
+	@Query("select a.name from Department a where a.id=?1")
+	public String getDepartmentName(Long id);
 	// public Department(Long id, Long pid, Long rootDepId, String name, int level,
 	// DepType type, String desc,
 	// String orgNumber, String fullId) {

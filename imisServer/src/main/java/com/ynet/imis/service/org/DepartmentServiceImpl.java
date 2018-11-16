@@ -140,4 +140,9 @@ public class DepartmentServiceImpl implements DepartmentService {
         return depIds;
     }
 
+    @Override
+    public String getDepartmentName(Long id) {
+        return departmentDao.getDepartmentName(id);
+    }
+
 }

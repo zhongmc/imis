@@ -23,4 +23,7 @@ public interface DepartmentService {
     public List<Long> listAppDepartmentsIdByPid(Long pid);
 
     public List<Department> ListAllDepartments();
+
+    public String getDepartmentName(Long id);
+
 }

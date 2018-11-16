@@ -4,7 +4,7 @@
 * @description 
 * @created Wed Sep 26 2018 16:53:24 GMT+0800 (中国标准时间)
 * @copyright YNET
-* @last-modified Wed Nov 14 2018 17:22:46 GMT+0800 (中国标准时间)
+* @last-modified Thu Nov 15 2018 10:49:04 GMT+0800 (中国标准时间)
 */
 
 package com.ynet.imis.controller;
@@ -111,6 +111,19 @@ public class CommonController {
     public User userInfo() {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return user;
+    }
+
+    @RequestMapping("/config/userinfo")
+    public ResponseBean getUserInfo() {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (user != null) {
+            ResponseBean res = new ResponseBean("success", "user info", user);
+            return res;
+        } else {
+            ResponseBean res = new ResponseBean("error", "please login first!", null);
+            return res;
+
+        }
     }
 
     @RequestMapping(value = "/config/initSystem", method = RequestMethod.POST)

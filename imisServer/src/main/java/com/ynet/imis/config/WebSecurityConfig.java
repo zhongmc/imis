@@ -134,9 +134,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         out.close();
 
                     }
-                }).and().csrf().disable().rememberMe().rememberMeServices(rememberServices())
-                .rememberMeParameter("rememberme").key("imis").and().exceptionHandling()
-                .accessDeniedHandler(authenticationAccessDeniedHandler)
+                }).and().csrf().disable().rememberMe().tokenValiditySeconds(300) // 1小时？
+                .rememberMeServices(rememberServices()).rememberMeParameter("rememberme").key("imis").and()
+                .exceptionHandling().accessDeniedHandler(authenticationAccessDeniedHandler)
                 .authenticationEntryPoint(new CustomizedAuthenticationEntryPoint() {
 
                 });
@@ -155,7 +155,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
         // 一定要(不是默认的名称 remember-me时)
         services.setParameter("rememberme");
-
+        services.setTokenValiditySeconds(48 * 3600); // 两天
         return services;
     }
 

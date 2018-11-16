@@ -129,7 +129,7 @@
     },
 
     {
-      "name": "部门预算",
+      "name": "预算管理",
       "url": "/",
       "path": "/home",
       "component": "pages/Home.vue",
@@ -147,6 +147,13 @@
           "url": "/budget/collect/**",
           "path": "/budget/collect",
           "component": "components/budget/BudgetCollect.vue",
+          "hidden": 0
+        },
+        {
+          "name": "部门预算比较",
+          "url": "/budget/chart/**",
+          "path": "/budget/chart",
+          "component": "components/budget/BudgetChart.vue",
           "hidden": 0
         }
       ]

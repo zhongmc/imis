@@ -13,6 +13,7 @@ import java.util.Map;
 import javax.mail.internet.MimeUtility;
 import javax.servlet.http.HttpServletRequest;
 
+import com.ynet.imis.bean.AmountCollection;
 import com.ynet.imis.bean.CostCollectionItem;
 import com.ynet.imis.domain.budget.BudgetType;
 import com.ynet.imis.domain.budget.CostBudgetInfo;
@@ -184,6 +185,7 @@ public class DepBudgetController {
 
     }
 
+    // 部门预算汇总表下载
     @RequestMapping(value = "/budgetTable/export/{depId}", method = RequestMethod.GET)
     public ResponseEntity<byte[]> exportDepBudgetTable(HttpServletRequest request, @PathVariable Long depId) {
 
@@ -299,6 +301,37 @@ public class DepBudgetController {
 
         // logger.info(" dep cost collection: " + ImisUtils.objectJsonStr(items));
         return items;
+    }
+
+    // 多部门损益对比表
+    @RequestMapping(value = "/dep/chart", method = RequestMethod.POST)
+    public List<AmountCollection> getDepCharts(Long[] depIds) {
+
+        logger.info("load department chart for: " + ImisUtils.objectJsonStr(depIds));
+
+        List<AmountCollection> amcs = new ArrayList<AmountCollection>();
+        if (depIds == null || depIds.length == 0)
+            return amcs;
+        int size = depIds.length;
+        List<CostCollectionItem> items = getBudgetTableDepId(depIds[0]);
+        for (int i = 0; i < items.size(); i++) {
+            AmountCollection amc = AmountCollection.CopyFrom(items.get(i), size);
+            amcs.add(amc);
+        }
+
+        for (int k = 1; k < depIds.length; k++) {
+
+            items = getBudgetTableDepId(depIds[k]);
+
+            for (int i = 0; i < items.size(); i++) {
+                AmountCollection amc = amcs.get(i);
+                amc.setAmount(k, items.get(i).getSum());
+            }
+
+        }
+
+        logger.info("Load Ok: " + ImisUtils.objectJsonStr(amcs));
+        return amcs;
     }
 
     // 部门损益表

@@ -40,6 +40,10 @@ public class PersistentLoginsService implements PersistentTokenRepository {
     public void updateToken(String series, String tokenValue, Date lastUsed) {
 
         PersistentLogins login = loginsDao.findBySeries(series);
+        if (login == null) {
+            logger.info("persistent login for series: " + series + " not founded!");
+            return;
+        }
         login.setToken(tokenValue);
         login.setLastUsed(lastUsed);
         loginsDao.save(login);
@@ -51,6 +55,10 @@ public class PersistentLoginsService implements PersistentTokenRepository {
         logger.info("get user persistent login:" + seriesId);
 
         PersistentLogins login = loginsDao.findBySeries(seriesId);
+        if (login == null) {
+            logger.info("persistent login for series: " + seriesId + " not founded!");
+            return null;
+        }
         PersistentRememberMeToken token = new PersistentRememberMeToken(login.getUsername(), login.getSeries(),
                 login.getToken(), login.getLastUsed());
         logger.info(ImisUtils.objectJsonStr(login));

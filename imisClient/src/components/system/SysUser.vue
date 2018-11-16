@@ -93,7 +93,7 @@
           style="padding: 0px;"
           :close-on-click-modal="false"
           :visible.sync="dialogVisible"
-          width="50%">
+          width="60%">
           <el-row>
             <el-col :span="12">
                 <el-form-item label="用户ID:" prop="userName">
@@ -127,6 +127,25 @@
                   </el-form-item>
                 </el-col>
               </el-row>
+
+          <el-row>
+            <el-col :span="12">
+                <el-form-item label="密码:" prop="password">
+                  <el-input  v-model="user.password" size="mini" style="width: 150px" :type="passwordType"
+                            placeholder="请输入初始密码"></el-input>
+                </el-form-item>
+            </el-col>
+            <el-col :span="12">
+                <el-form-item label="重试密码:" prop="rePassword">
+                  <el-input  v-model="user.rePassword" size="mini" style="width: 150px"  :type="passwordType"
+                            placeholder="请重试密码">
+ <i class="el-icon-view el-input__icon" :style="fontstyle" slot="suffix" @click="showPassword"></i>        <i slot="prefix" class="icon-mima"></i>
+                            
+                            </el-input>
+                </el-form-item>
+            </el-col>
+          </el-row>
+
            <span slot="footer" class="dialog-footer">
     <el-button size="mini" @click="cancelEdit">取 消</el-button>
     <el-button size="mini" type="primary" @click="addUser('addUserForm')">确 定</el-button>
@@ -141,6 +160,16 @@
 <script>
 export default {
   data() {
+    var validatePass = (rule, value, callback) => {
+      if (value === "") {
+        callback(new Error("请输入重试密码"));
+      } else if (value != this.user.password) {
+        callback(new Error("密码不一致！"));
+      } else {
+        callback();
+      }
+    };
+
     return {
       keywords: "",
       fullloading: false,
@@ -156,12 +185,15 @@ export default {
       dialogVisible: false,
       showOrHidePop: false,
       depTextColor: "#c0c4cc",
+      passwordType: "password",
+      fontstyle: {},
       user: {
         id: -1,
         userName: "",
         depId: null,
         nickName: "",
-        password: "123",
+        password: "",
+        rePassword: "",
         status: "ACTIVE"
       },
       departmentName: "",
@@ -173,7 +205,17 @@ export default {
         nickName: [
           { required: true, message: "用户名称不能为空", trigger: "blur" }
         ],
-        depId: [{ required: true, message: "必填:所属部门", trigger: "change" }]
+        depId: [
+          { required: true, message: "必填:所属部门", trigger: "change" }
+        ],
+
+        password: [
+          { required: true, message: "请输入密码", trigger: "blur" },
+          { min: 6, message: "密码长度最少为6位", trigger: "blur" }
+        ],
+        rePassword: [
+          { required: true, trigger: "blur", validator: validatePass }
+        ]
       },
 
       defaultProps: {
@@ -199,6 +241,15 @@ export default {
         status: "ACTIVE"
       };
       this.departmentName = "";
+    },
+
+    showPassword() {
+      this.fontstyle === ""
+        ? (this.fontstyle = "color: red")
+        : (this.fontstyle = ""); // 改变密码可见按钮颜色
+      this.passwordType === ""
+        ? (this.passwordType = "password")
+        : (this.passwordType = "");
     },
 
     showAddUserView() {
