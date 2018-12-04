@@ -1,124 +1,218 @@
 <!-- 部门项目预算表（本年度） -->
 <template>
-<div>
+  <div>
+    <el-table
+      :data="sortedPrjBudgets"
+      v-loading="tableLoading"
+      border
+      stripe
+      @cell-mouse-enter="handleMouseEnter"
+      @cell-mouse-leave="handleMouseOut"
+      size="mini"
+      style="width: 100%"
+    >
+      <el-table-column
+        v-if="type=='chance'"
+        prop="prjChanceNo"
+        align="left"
+        fixed
+        label="机会编号"
+        width="150"
+      ></el-table-column>
+      <el-table-column v-else prop="prjNo" align="left" fixed label="项目编号" width="150"></el-table-column>
 
-          <el-table
-            :data="sortedPrjBudgets"
-            v-loading="tableLoading"
-            border
-            stripe
-            @cell-mouse-enter="handleMouseEnter"
-            @cell-mouse-leave="handleMouseOut"            
+      <el-table-column
+        v-if="type=='chance'"
+        prop="prjChanceName"
+        fixed
+        width="220"
+        align="left"
+        label="机会名称"
+      ></el-table-column>
+      <el-table-column v-else prop="prjName" fixed width="220" align="left" label="项目名称"></el-table-column>
+
+      <el-table-column
+        v-if="type =='chance'"
+        prop="chance"
+        fixed
+        width="80"
+        align="left"
+        label="机会概率"
+      >
+        <template slot-scope="scope">
+          <span v-if="!scope.row.editFlag1" style="align:right;">
+            <span>{{ scope.row.chance }}</span>
+            <span
+              style="margin-left:10px; color:#ffffff;"
+              class="cell-icon"
+              @click="handleEdit( scope.row, -2)"
+            >
+              <i class="el-icon-edit"></i>
+            </span>
+          </span>
+          <span v-else>
+            <span class="cell-edit-input">
+              <el-input
+                v-model="inputColumn1"
+                size="mini"
+                placeholder="请输入内容"
+                @keyup.enter.native="handleSave(scope.row, -2, scope.$index)"
+                @keyup.esc.native="handleCancel(scope.row, -2)"
+              ></el-input>
+            </span>
+            <span
+              style="margin-left:10px; color:black;"
+              class="cell-icon"
+              @click="handleSave(scope.row, -2, scope.$index)"
+            >
+              <i class="el-icon-check"></i>
+            </span>
+            <span
+              style="margin-left:10px; color:black;"
+              class="cell-icon"
+              @click="handleCancel( scope.row, -2 )"
+            >
+              <i class="el-icon-close"></i>
+            </span>
+          </span>
+        </template>
+      </el-table-column>
+
+      <el-table-column prop="avgManMonthCost" width="100" align="right" label="平均人月费用">
+        <template slot-scope="scope">
+          <span v-if="!scope.row.editFlag" style="align:right;">
+            <span>{{ formatMoney( scope.row.avgManMonthCost,1) }}</span>
+            <span
+              style="margin-left:10px; color:#ffffff;"
+              class="cell-icon"
+              @click="handleEdit( scope.row, -1)"
+            >
+              <i class="el-icon-edit"></i>
+            </span>
+          </span>
+          <span v-else>
+            <span class="cell-edit-input">
+              <el-input
+                v-model="inputColumn1"
+                size="mini"
+                placeholder="请输入内容"
+                @keyup.enter.native="handleSave(scope.row, -1, scope.$index)"
+                @keyup.esc.native="handleCancel(scope.row, -1)"
+              ></el-input>
+            </span>
+            <span
+              style="margin-left:10px; color:black;"
+              class="cell-icon"
+              @click="handleSave(scope.row, -1, scope.$index)"
+            >
+              <i class="el-icon-check"></i>
+            </span>
+            <span
+              style="margin-left:10px; color:black;"
+              class="cell-icon"
+              @click="handleCancel( scope.row, -1 )"
+            >
+              <i class="el-icon-close"></i>
+            </span>
+          </span>
+        </template>
+      </el-table-column>
+
+      <el-table-column
+        v-for="(item, index ) in tableTitles"
+        :key="index"
+        :label="tableTitles[index].title"
+        :prop="tableTitles[index].idx"
+        width="120"
+        align="center"
+      >
+        <template slot-scope="scope">
+          <span v-if="scope.row.amounts[index].realAmount <= 0">
+            <span v-if="!scope.row.amounts[index].editFlag">
+              {{scope.row.amounts[index].manMonth}}人月
+              <br>
+              {{ formatMoney( scope.row.amounts[index].amount,1) }}元
+            </span>
+            <span
+              v-if="!scope.row.amounts[index].editFlag"
+              style="margin-left:10px;color:#ffffff;"
+              class="cell-icon"
+              @click="handleEdit( scope.row, index)"
+            >
+              <i class="el-icon-edit"></i>
+            </span>
+            
+            <span v-if="scope.row.amounts[index].editFlag" class="cell-edit-input">
+              <el-input
+                v-model="inputColumn1"
+                size="mini"
+                placeholder="请输入内容"
+                @keyup.enter.native="handleSave(scope.row, index, scope.$index)"
+                @keyup.esc.native="handleCancel(scope.row, index)"
+              ></el-input>
+            </span>
+            <span
+              v-if="scope.row.amounts[index].editFlag"
+              style="margin-left:10px; color:black;"
+              class="cell-icon"
+              @click="handleSave(scope.row, index, scope.$index)"
+            >
+              <i class="el-icon-check"></i>
+            </span>
+            <span
+              v-if="scope.row.amounts[index].editFlag"
+              style="margin-left:10px; color:black;"
+              class="cell-icon"
+              @click="handleCancel( scope.row, index)"
+            >
+              <i class="el-icon-close"></i>
+            </span>
+          </span>
+          <span v-else>
+            <span>
+              {{scope.row.amounts[index].realManMonth}}人月
+              <br>
+              {{ formatMoney( scope.row.amounts[index].realAmount,1) }}元
+            </span>
+          </span>
+          <!-- span>{{formatMoney( scope.row.budgetItem.amounts[index].amount,1) }}</span -->
+        </template>
+      </el-table-column>
+
+      <el-table-column label="附加费用" prop="sum" :formatter="formatAmount" align="center" width="120">
+        <template slot-scope="scope">元</template>
+      </el-table-column>
+
+      <el-table-column label="总计" prop="sum" :formatter="formatAmount" align="center" width="150">
+        <template slot-scope="scope">
+          {{ (scope.row.manMonthSum + scope.row.realManMonthSum).toFixed(2) }}人月
+          <br>
+          {{ formatMoney( scope.row.amountSum + scope.row.realAmountSum,1) }}元
+        </template>
+      </el-table-column>
+
+      <el-table-column label="操作" width="195">
+        <template slot-scope="scope">
+          <el-button
+            v-show="scope.row.changed"
+            @click="updatePrjBudget(scope.row, scope.$index)"
+            type="danger"
             size="mini"
-            style="width: 100%">
+          >提交修改</el-button>
+        </template>
+      </el-table-column>
+    </el-table>
 
-            <el-table-column
-              prop="prjNo"
-              align="left"
-              fixed
-              label="项目编号"
-              width="150">
-            </el-table-column>
-            <el-table-column
-              prop="prjName"
-              fixed
-              width="220"
-              align="left"
-              label="项目名称">
-            </el-table-column>
-
-            <el-table-column
-              prop="avgManMonthCost"
-              width="100"
-              align="right"
-              label="平均人月费用">
-                <template slot-scope="scope">
-                      <span v-if="!scope.row.editFlag" style="align:right;">
-                        <span>{{ formatMoney( scope.row.avgManMonthCost,1) }}</span>
-                        <span style="margin-left:10px; color:#ffffff;" class="cell-icon" @click="handleEdit( scope.row, -1)"> <i class="el-icon-edit"></i> </span>
-                      </span>
-                      <span v-else>
-                        <span class="cell-edit-input"><el-input v-model="inputColumn1" size="mini" placeholder="请输入内容"  @keyup.enter.native="handleSave(scope.row, -1, scope.$index)" @keyup.esc.native="handleCancel(scope.row, -1)"></el-input></span>
-                        <span style="margin-left:10px; color:black;" class="cell-icon" @click="handleSave(scope.row, -1, scope.$index)"> <i class="el-icon-check"></i> </span>
-                        <span style="margin-left:10px; color:black;" class="cell-icon" @click="handleCancel( scope.row, -1 )"> <i class="el-icon-close"></i> </span>
-                      </span>
-
-                </template>
-
-            </el-table-column>
-
-            <el-table-column
-              v-for="(item, index ) in tableTitles" :key="index"
-              :label="tableTitles[index].title" 
-              :prop=tableTitles[index].idx width="120" align="center" >
-
-                <template slot-scope="scope">
-                <span v-if = "scope.row.amounts[index] != null">
-                  <span v-if="!scope.row.amounts[index].editFlag">{{scope.row.amounts[index].manMonth}}人月<br/>{{ formatMoney( scope.row.amounts[index].amount,1) }}元 </span>
-                  <span v-if="!scope.row.amounts[index].editFlag" style="margin-left:10px;color:#ffffff;" class="cell-icon" @click="handleEdit( scope.row, index)"> <i class="el-icon-edit"></i> </span>
-                  
-                  <span v-if="scope.row.amounts[index].editFlag" class="cell-edit-input"><el-input v-model="inputColumn1" size="mini" placeholder="请输入内容"  @keyup.enter.native="handleSave(scope.row, index, scope.$index)" @keyup.esc.native="handleCancel(scope.row, index)"></el-input></span>
-                  <span v-if="scope.row.amounts[index].editFlag" style="margin-left:10px; color:black;" class="cell-icon" @click="handleSave(scope.row, index, scope.$index)"> <i class="el-icon-check"></i> </span>
-                  <span v-if="scope.row.amounts[index].editFlag" style="margin-left:10px; color:black;" class="cell-icon" @click="handleCancel( scope.row, index)"> <i class="el-icon-close"></i> </span>
-                </span>
-                <span v-else>
-                  ---
-                </span>
-                  <!-- span>{{formatMoney( scope.row.budgetItem.amounts[index].amount,1) }}</span -->
-                </template>
-
-            </el-table-column>
-
-            <el-table-column
-              label="附加费用"
-              prop="sum"
-              :formatter="formatAmount"
-              align = "center"
-              width="120">
-              <template slot-scope="scope">
-                元
-              </template>
-            </el-table-column>
-
-
-            <el-table-column
-              label="总计"
-              prop="sum"
-              :formatter="formatAmount"
-              align = "center"
-              width="150">
-              <template slot-scope="scope">
-                {{scope.row.manMonthSum.toFixed(2)}}人月<br/>
-                {{ formatMoney( scope.row.amountSum,1) }}元
-              </template>
-            </el-table-column>
-
-            <el-table-column
-              label="操作"
-              width="195">
-              <template slot-scope="scope">
-                <el-button v-show="scope.row.changed" 
-                   @click="updatePrjBudget(scope.row, scope.$index)" 
-                  type="danger" 
-                   size="mini">提交修改
-                </el-button>
-              </template>
-            </el-table-column>
-          </el-table>
-
-          <div style="display: flex;justify-content: space-between;margin: 2px">
-            <el-pagination
-              background
-              :page-size="pageSize"
-              :current-page="currentPage"
-              @current-change="currentChange"
-              layout="prev, pager, next"
-              :total="totalCount">
-            </el-pagination>
-          </div>
-      
- 
-
+    <div style="display: flex;justify-content: space-between;margin: 2px">
+      <el-pagination
+        background
+        :page-size="pageSize"
+        :current-page="currentPage"
+        @current-change="currentChange"
+        layout="prev, pager, next"
+        :total="totalCount"
+      ></el-pagination>
+    </div>
   </div>
 </template>
 
@@ -135,14 +229,26 @@ export default {
     loadData() {
       var _this = this;
       this.loading = true;
+      var url;
 
-      var url =
-        "/budget/dep/prj/paged?depId=" +
-        this.depId +
-        "&size=" +
-        this.pageSize +
-        "&page=" +
-        this.page;
+      if (this.type && this.type == "chance") {
+        url =
+          "/budget/dep/prjChance/paged?depId=" +
+          this.depId +
+          "&size=" +
+          this.pageSize +
+          "&page=" +
+          this.page;
+      } else {
+        url =
+          "/budget/dep/prj/paged?depId=" +
+          this.depId +
+          "&size=" +
+          this.pageSize +
+          "&page=" +
+          this.page;
+      }
+
       // var url = "/budget/dep/prj/" + this.depId;
 
       this.getRequest(url).then(resp => {
@@ -199,10 +305,18 @@ export default {
           prjId: prjBudget.prjId,
           prjNo: prjBudget.prjNo,
           prjName: prjBudget.prjName,
+
+          prjChanceNo: prjBudget.prjChanceNo,
+          chance: prjBudget.chance,
+          prjChanceName: prjBudget.prjChanceName,
+
           avgManMonthCost: prjBudget.avgManMonthCost,
-          amountSum: 0,
+          realAmountSum: 0.0,
+          realManMonthSum: 0.0,
+          amountSum: 0.0,
           manMonthSum: 0.0,
           editFlag: false,
+          editFlag1: false,
           changed: false,
           amounts: new Array(12)
         };
@@ -220,6 +334,8 @@ export default {
               prjId: prjBudget.prjId,
               amount: 0,
               manMonth: 0,
+              realAmount: 0,
+              realManMonth: 0,
               month: k,
               year: curYear
             }; //this.emptyMonthBudget;
@@ -227,6 +343,10 @@ export default {
 
         for (var k = 0; k < prjBudget.monthBudgets.length; k++) {
           var ii = prjBudget.monthBudgets[k].month;
+          if (prjBudget.monthBudgets[k].realAmount == null) {
+            prjBudget.monthBudgets[k].realAmount = 0.0; //??
+          }
+
           amounts[ii] = prjBudget.monthBudgets[k];
         }
         //       console.log(amounts);
@@ -236,6 +356,9 @@ export default {
 
         var amountSum = 0.0;
         var manMonthSum = 0.0;
+        var realAmountSum = 0.0,
+          realManMonthSum = 0.0;
+
         var tmp = 0;
         var avg = prjBudget.avgManMonthCost;
 
@@ -243,14 +366,22 @@ export default {
           if (amounts[i] == null) continue;
 
           this.$set(amounts[i], "editFlag", false);
-          tmp = amounts[i].manMonth * avg;
-          amounts[i].amount = tmp;
-          amountSum += tmp;
-          manMonthSum += amounts[i].manMonth;
+          if (amounts[i].realAmount > 0) {
+            realAmountSum += amounts[i].realAmount;
+            realManMonthSum += amounts[i].realManMonth;
+          } else {
+            tmp = amounts[i].manMonth * avg;
+            amounts[i].amount = tmp;
+            amountSum += tmp;
+            manMonthSum += amounts[i].manMonth;
+          }
           //          budgetItem.amounts[i].editFlag = false;
         }
         sortedPrjBudgets[idx].amountSum = amountSum;
         sortedPrjBudgets[idx].manMonthSum = manMonthSum;
+
+        sortedPrjBudgets[idx].realAmountSum = realAmountSum;
+        sortedPrjBudgets[idx].realManMonthSum = realManMonthSum;
       }
 
       this.sortedPrjBudgets = sortedPrjBudgets;
@@ -283,6 +414,9 @@ export default {
       if (idx == -1) {
         row.editFlag = true;
         this.inputColumn1 = row.avgManMonthCost;
+      } else if (idx == -2) {
+        row.editFlag1 = true;
+        this.inputColumn1 = row.chance;
       } else {
         if (row.amounts[idx] != null) {
           row.amounts[idx].editFlag = true;
@@ -301,13 +435,16 @@ export default {
         this.prjBudgets[idx].avgManMonthCost = row.avgManMonthCost;
 
         for (var i = 0; i < 12; i++) {
-          if (row.amounts[i] != null) {
-            row.amounts[i].amount = parseFloat(
-              row.amounts[i].manMonth * row.avgManMonthCost
-            );
+          if (row.amounts[i] != null && row.amounts[i].realAmount <= 0) {
+            row.amounts[i].amount =
+              parseFloat(row.amounts[i].manMonth) * row.avgManMonthCost;
           }
         }
         row.amountSum = parseFloat(row.manMonthSum * row.avgManMonthCost);
+      } else if (index == -2) {
+        row.editFlag1 = false;
+        row.chance = parseInt(this.inputColumn1);
+        this.prjBudgets[idx].chance = row.chance;
       } else {
         row.amounts[index].editFlag = false;
         var f1 = 0.0,
@@ -335,6 +472,7 @@ export default {
 
     handleCancel: function(row, idx) {
       if (idx == -1) row.editFlag = false;
+      else if (idx == -2) row.editFlag1 = false;
       else row.amounts[idx].editFlag = false;
     },
 
@@ -373,24 +511,31 @@ export default {
     updatePrjBudget: function(row, idx) {
       var _this = this;
       this.tableLoading = true;
-      this.postJsonRequest("budget/dep/prj", this.prjBudgets[idx]).then(
-        resp => {
-          _this.tableLoading = false;
-          if (resp && resp.status == 200) {
-            var data = resp.data;
-            _this.$message({ type: data.status, message: data.msg });
-            row.changed = false;
-          }
+
+      var url;
+
+      if (this.type && this.type == "chance") {
+        url = "budget/dep/prjChance";
+      } else {
+        url = "budget/dep/prj";
+      }
+
+      this.postJsonRequest(url, this.prjBudgets[idx]).then(resp => {
+        _this.tableLoading = false;
+        if (resp && resp.status == 200) {
+          var data = resp.data;
+          _this.$message({ type: data.status, message: data.message });
+          row.changed = false;
         }
-      );
+      });
     }
   },
 
   data() {
     return {
       loading: false,
-      prjBudgets: [], //来自服务器
 
+      prjBudgets: [], //来自服务器
       sortedPrjBudgets: [], //前端整理后的
 
       depId: null,
@@ -422,7 +567,8 @@ export default {
         { title: "十二月", idx: "12" }
       ]
     };
-  }
+  },
+  props: ["type"]
 };
 </script>
 

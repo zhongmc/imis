@@ -4,7 +4,7 @@
 * @description 
 * @created Tue Sep 18 2018 16:53:17 GMT+0800 (中国标准时间)
 * @copyright YNET
-* @last-modified Mon Nov 12 2018 11:23:17 GMT+0800 (中国标准时间)
+* @last-modified Tue Dec 04 2018 09:59:43 GMT+0800 (中国标准时间)
 */
 
 package com.ynet.imis.domain.budget;
@@ -36,7 +36,7 @@ public class PrjBudget extends AbstractEntity {
 
     private static final long serialVersionUID = -5971215572107380355L;
 
-    private BigDecimal avgManMonthCost;
+    private BigDecimal avgManMonthCost = new BigDecimal(0);
 
     // 递延到今年的人月与费用 （最近确权需要递延的成本？？？只作为导入时的用处，其它）
     // 统一计到上年的12月份！！！！
@@ -94,7 +94,7 @@ public class PrjBudget extends AbstractEntity {
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "PRJ_BUDGET_ID")
-    @OrderBy("month ASC")
+    @OrderBy("year, month ASC")
     List<PrjMonthBudget> monthBudgets = new ArrayList<PrjMonthBudget>();
 
     public PrjBudget() {
@@ -232,5 +232,24 @@ public class PrjBudget extends AbstractEntity {
         }
 
         return retMap;
+    }
+
+    public void copyFrom(PrjChanceBudget prjChanceBudget) {
+
+        this.depId = prjChanceBudget.getDepId();
+        this.avgManMonthCost = prjChanceBudget.getAvgManMonthCost();
+        this.confirmYear = prjChanceBudget.getConfirmYear();
+
+        for (PrjChanceMonthBudget prjCMB : prjChanceBudget.getMonthBudgets()) {
+            PrjMonthBudget prjMonthBudget = new PrjMonthBudget();
+            prjMonthBudget.setPrjBudget(this);
+            prjMonthBudget.setMonth(prjCMB.getMonth());
+            prjMonthBudget.setYear(prjCMB.getYear());
+            prjMonthBudget.setConfirmYear(prjCMB.getConfirmYear());
+            prjMonthBudget.setAmount(prjCMB.getAmount());
+            prjMonthBudget.setManMonth(prjCMB.getManMonth());
+            prjMonthBudget.setDepId(this.depId);
+        }
+
     }
 }

@@ -1,3 +1,12 @@
+/**
+* CostCollectionItem.java
+* @author ZHONGMC
+* @description 
+* @created Wed Oct 24 2018 15:48:38 GMT+0800 (中国标准时间)
+* @copyright YNET
+* @last-modified Mon Nov 26 2018 09:58:57 GMT+0800 (中国标准时间)
+*/
+
 package com.ynet.imis.bean;
 
 import java.io.Serializable;

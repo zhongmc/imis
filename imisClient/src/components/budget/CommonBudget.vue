@@ -1,105 +1,102 @@
 <template>
-<div>
-  <el-form :model="commonBudgetItem" :rules="rules" ref="addCommBudgetForm" style="margin: 0px;padding: 0px;">
+  <div>
+    <el-form
+      :model="commonBudgetItem"
+      :rules="rules"
+      ref="addCommBudgetForm"
+      style="margin: 0px;padding: 0px;"
+    >
+      <el-row>
+        <el-col :span="6">
+          <el-form-item label="费用项名称:" prop="name">
+            <el-input
+              v-model="commonBudgetItem.name"
+              size="mini"
+              style="width: 150px"
+              placeholder="请输入新的费用项名称"
+            ></el-input>
+          </el-form-item>
+        </el-col>
 
-        <el-row>
-            <el-col :span="6">
-                <el-form-item label="费用项名称:" prop="name">
-                  <el-input v-model="commonBudgetItem.name" size="mini" style="width: 150px"
-                            placeholder="请输入新的费用项名称"></el-input>
-                </el-form-item>
-            </el-col>
-
-            <el-col :span="6" >
-                <el-form-item label="费用金额:" prop="amount">
-                  <el-input v-model="commonBudgetItem.amount" size="mini" style="width: 150px"
-                            placeholder="金额"></el-input>
-                </el-form-item>
-           </el-col>
-          <el-col   :span="6">
-            <el-form-item prop="expectDate" label="预计发生时间:">
-                 <el-date-picker
-                    v-model="commonBudgetItem.expectDate"
-                    size="mini"
-                    style="width: 130px"
-                    type="date"
-                    value-format="yyyy-MM-dd"
-                    placeholder="预计发生日期">
-                  </el-date-picker>
-
-            </el-form-item>
-          </el-col>
-        </el-row>
-          <el-row>
-          <el-col  :span="12">
-            <el-form-item label="备注:" prop="desc">
-              <el-input v-model="commonBudgetItem.desc" size="mini" placeholder="备注..." style="width:300px;"></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">          
-             <el-button type="primary" size="mini" @click="cancelEditCommonItem()" v-if="editing">取 消</el-button>      
-             <el-button type="primary" size="mini" @click="addCommBudgetItem('addCommBudgetForm')">{{buttonLabel}}</el-button>
-         </el-col>
-        </el-row>
-    </el-form>
- 
-
-
-          <el-table
-            :data="commonBudges"
-            v-loading="tableLoading"
-            border
-            stripe
+        <el-col :span="6">
+          <el-form-item label="费用金额:" prop="amount">
+            <el-input
+              v-model="commonBudgetItem.amount"
+              size="mini"
+              style="width: 150px"
+              placeholder="金额"
+            ></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item prop="expectDate" label="预计发生时间:">
+            <el-date-picker
+              v-model="commonBudgetItem.expectDate"
+              size="mini"
+              style="width: 130px"
+              type="date"
+              value-format="yyyy-MM-dd"
+              placeholder="预计发生日期"
+            ></el-date-picker>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="12">
+          <el-form-item label="备注:" prop="desc">
+            <el-input
+              v-model="commonBudgetItem.desc"
+              size="mini"
+              placeholder="备注..."
+              style="width:300px;"
+            ></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-button type="primary" size="mini" @click="cancelEditCommonItem()" v-if="editing">取 消</el-button>
+          <el-button
+            type="primary"
             size="mini"
-            style="width: 100%">
+            @click="addCommBudgetItem('addCommBudgetForm')"
+          >{{buttonLabel}}</el-button>
+        </el-col>
+      </el-row>
+    </el-form>
 
-            <el-table-column
-              prop="name"
-              align="left"
-              label="预算费用名称"
-              width="160">
-            </el-table-column>
-            <el-table-column
-              prop="expectDate"
-              width="100"
-              align="left"
-              label="预计发生时间">
-              <template slot-scope="scope">{{ scope.row.expectDate | formatDate}}</template>
+    <el-table
+      :data="commonBudges"
+      v-loading="tableLoading"
+      border
+      stripe
+      size="mini"
+      style="width: 100%"
+    >
+      <el-table-column prop="name" align="left" label="预算费用名称" width="160"></el-table-column>
+      <el-table-column prop="expectDate" width="100" align="left" label="预计发生时间">
+        <template slot-scope="scope">{{ scope.row.expectDate | formatDate}}</template>
+      </el-table-column>
 
-            </el-table-column>
+      <el-table-column prop="amount" width="90" align="right" :formatter="formatAmount" label="金额"></el-table-column>
 
-            <el-table-column
-              prop="amount"
-              width="90"
-              align="right"
-              :formatter="formatAmount"
-              label="金额">
-            </el-table-column>
+      <el-table-column prop="desc" width="200" label="备注"></el-table-column>
 
-            <el-table-column
-              prop="desc"
-              width="200"
-              
-              label="备注">
-            </el-table-column>
+      <el-table-column label="操作" width="150">
+        <template slot-scope="scope">
+          <el-button
+            @click="editCommonBudget(scope.row)"
+            style="padding: 3px 4px 3px 4px;margin: 2px"
+            size="mini"
+          >编辑</el-button>
 
-            <el-table-column
-              label="操作"
-              width="150">
-              <template slot-scope="scope">
-                <el-button @click="editCommonBudget(scope.row)" style="padding: 3px 4px 3px 4px;margin: 2px"
-                           size="mini">编辑
-                </el-button>
-
-               <el-button type="danger" style="padding: 3px 4px 3px 4px;margin: 2px" size="mini"
-                           @click="deleteCommonBudget(scope.row)">删除
-                </el-button>
-
-              </template>
-            </el-table-column>
-          </el-table>
-
-
+          <el-button
+            type="danger"
+            style="padding: 3px 4px 3px 4px;margin: 2px"
+            size="mini"
+            @click="deleteCommonBudget(scope.row)"
+          >删除</el-button>
+        </template>
+      </el-table-column>
+    </el-table>
   </div>
 </template>
 
@@ -127,6 +124,7 @@ export default {
 
     changeDep(depId) {
       this.depId = depId;
+      this.emptyBudgetItemData();
       this.loadData();
     },
 
@@ -246,6 +244,7 @@ export default {
 
       commonBudgetItem: {
         id: -1,
+        depId: -1,
         name: "",
         amount: 0,
         expectDate: "",

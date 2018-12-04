@@ -78,11 +78,11 @@ public class DataImportServiceImpl implements DataImportService {
     private BudgetTypeRepository budgetTypeDao;
 
     @Override
-    public int ImportDepartmentBudgetInfo(File file, Long depId) {
+    public int ImportDepartmentBudgetInfo(File file, Long depId, int realDataMOnth) {
         FileInputStream fin = null;
         try {
             fin = new FileInputStream(file);
-            doImportData(fin, depId);
+            doImportData(fin, depId, realDataMOnth);
             fin.close();
             fin = null;
             return 0;
@@ -100,11 +100,11 @@ public class DataImportServiceImpl implements DataImportService {
     }
 
     @Override
-    public int importDepartmentBudgetInfo(MultipartFile file, Long depId) {
+    public int importDepartmentBudgetInfo(MultipartFile file, Long depId, int realDataMonth) {
 
         logger.info("import data from file: " + file.getOriginalFilename() + " for dep " + depId);
         try {
-            doImportData(file.getInputStream(), depId);
+            doImportData(file.getInputStream(), depId, realDataMonth);
             logger.info("import finished!");
             return 0;
         } catch (Exception e) {
@@ -113,9 +113,9 @@ public class DataImportServiceImpl implements DataImportService {
         return -1;
     }
 
-    private void doImportData(InputStream in, Long depId) throws Exception {
+    private void doImportData(InputStream in, Long depId, int realDataMonth) throws Exception {
         Workbook workbook = WorkbookFactory.create(in);
-        importPrjBudgetInfo(workbook, depId);
+        importPrjBudgetInfo(workbook, depId, realDataMonth);
 
         List<CostItem> costItems = costItemDao.findAll();
         Map<String, CostItem> costItemMap = new HashMap<String, CostItem>();
@@ -202,7 +202,14 @@ public class DataImportServiceImpl implements DataImportService {
 
     }
 
-    private void importPrjBudgetInfo(Workbook workbook, Long depId) throws Exception {
+    /**
+     * 
+     * @param workbook
+     * @param depId
+     * @param realDataMonth 项目真实发生截至月份
+     * @throws Exception
+     */
+    private void importPrjBudgetInfo(Workbook workbook, Long depId, int realDataMonth) throws Exception {
 
         SimpleDateFormat fmt = new SimpleDateFormat("yyyy/MM");
 
@@ -438,10 +445,12 @@ public class DataImportServiceImpl implements DataImportService {
                 if (defferedAmount != null && defferedAmount.doubleValue() > 10) {
                     PrjMonthBudget prjMonth = new PrjMonthBudget();
                     prjMonth.setManMonth((float) defferedManMonth);
+                    prjMonth.setRealManMonth((float) defferedManMonth);
                     prjMonth.setMonth((short) 11);
                     prjMonth.setYear(year - 1); // last year
                     prjMonth.setDepId(depId);
                     prjMonth.setAmount(defferedAmount);
+                    prjMonth.setRealAmount(defferedAmount);
 
                     if (shouldConfirm)
                         prjMonth.setConfirmYear(year);
@@ -472,6 +481,11 @@ public class DataImportServiceImpl implements DataImportService {
 
                     if (avgManMonthCost != null) {
                         prjMonth.setAmount(avgManMonthCost.multiply(BigDecimal.valueOf(manMonth)));
+                    }
+
+                    if (realDataMonth != 0 && k < realDataMonth) {
+                        prjMonth.setRealAmount(prjMonth.getAmount());
+                        prjMonth.setRealManMonth(prjMonth.getManMonth());
                     }
 
                     if (isSamePrj) {
@@ -778,6 +792,12 @@ public class DataImportServiceImpl implements DataImportService {
                 if (avgManMonthCost != null) {
                     prjMonth.setAmount(avgManMonthCost.multiply(BigDecimal.valueOf(manMonth)));
                 }
+
+                if (realDataMonth != 0 && k < realDataMonth) {
+                    prjMonth.setRealAmount(prjMonth.getAmount());
+                    prjMonth.setRealManMonth(prjMonth.getManMonth());
+                }
+
                 // if (isSamePrj) {
                 // prevPrjBudget.addPrjMonthBudget(prjMonth);
                 // } else

@@ -1,3 +1,13 @@
+/**
+* AmountCollection.java
+* @author ZHONGMC
+* @description  报表用，总量表，如多个部门比较时的，某项合计报表
+*
+* @created Fri Nov 16 2018 17:10:44 GMT+0800 (中国标准时间)
+* @copyright YNET
+* @last-modified Mon Nov 26 2018 09:56:54 GMT+0800 (中国标准时间)
+*/
+
 package com.ynet.imis.bean;
 
 import java.io.Serializable;

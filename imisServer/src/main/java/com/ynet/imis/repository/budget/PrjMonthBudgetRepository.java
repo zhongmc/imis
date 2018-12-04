@@ -4,7 +4,7 @@
 * @description 
 * @created Wed Oct 10 2018 10:51:16 GMT+0800 (中国标准时间)
 * @copyright YNET
-* @last-modified Mon Nov 12 2018 10:27:51 GMT+0800 (中国标准时间)
+* @last-modified Tue Dec 04 2018 08:48:10 GMT+0800 (中国标准时间)
 */
 
 package com.ynet.imis.repository.budget;
@@ -32,4 +32,5 @@ public interface PrjMonthBudgetRepository extends JpaRepository<PrjMonthBudget, 
     @Modifying
     @Query("update PrjMonthBudget a set a.confirmYear = ?2 where a.prjId=?1 and (12*a.year+a.month)>=?3 and (12*a.year+a.month)<=?4")
     public void updatePrjCostConfirmYear(Long prjId, int year, int beg, int end);
+
 }

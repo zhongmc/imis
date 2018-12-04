@@ -2,31 +2,31 @@
 <template>
   <div style="margin-top: 10px">
     <div style="padding:10px;">
-     <label>请选择部门：</label>
-    
-      <el-select v-model="depId" style="width: 130px" size="mini" placeholder="请选择部门" @change="changeDep">
-         <el-option
-           v-for="item in myDeps"
-            :key="item.id"
-          :label="item.name"
-          :value="item.id">
-         </el-option>
-       </el-select>
+      <label>请选择部门：</label>
 
-         <el-button type="success" size="mini" @click="exportBudgetTable"><i class="fa fa-lg fa-level-down"
-                                                                       style="margin-right: 5px"></i>导出数据
-          </el-button>
-        
+      <el-select
+        v-model="depId"
+        style="width: 130px"
+        size="mini"
+        placeholder="请选择部门"
+        @change="changeDep"
+      >
+        <el-option v-for="item in myDeps" :key="item.id" :label="item.name" :value="item.id"></el-option>
+      </el-select>
+
+      <el-button type="success" size="mini" @click="exportBudgetTable">
+        <i class="fa fa-lg fa-level-down" style="margin-right: 5px"></i>导出数据
+      </el-button>
     </div>
 
-      <el-tabs  type="card" v-model="activeTab">
-        <el-tab-pane label="部门预算表" name="depBudget" >
-          <dep-budget ref="depBudget"></dep-budget>
-        </el-tab-pane>
-        <el-tab-pane label="经营费用汇总"  name="depCost">
-          <dep-cost budgetTypeId=-1 v-bind:editable=false ref="depCost"> </dep-cost>
-        </el-tab-pane>
-      </el-tabs>
+    <el-tabs type="card" v-model="activeTab">
+      <el-tab-pane label="部门预算表" name="depBudget">
+        <dep-budget ref="depBudget"></dep-budget>
+      </el-tab-pane>
+      <el-tab-pane label="经营费用汇总" name="depCost">
+        <dep-cost budgetTypeId="-1" v-bind:editable="false" ref="depCost"></dep-cost>
+      </el-tab-pane>
+    </el-tabs>
   </div>
 </template>
 
@@ -45,7 +45,7 @@ export default {
     loadMyDeps() {
       var _this = this;
       this.loading = true;
-      this.getRequest("/system/basic/myDeps").then(resp => {
+      this.getRequest("/config/dep/myDeps").then(resp => {
         _this.loading = false;
         if (resp && resp.status == 200) {
           _this.myDeps = resp.data;

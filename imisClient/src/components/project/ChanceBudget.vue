@@ -4,35 +4,24 @@
       <!-- 确保下面的内容充满 -->
       <el-row>
         <el-col :span="8">
-          <label class="el-form-item__label">项目名称:</label>
-          <div class="el-form-item__content">{{prjBudget.prjName}}</div>
+          <label class="el-form-item__label">项目机会名称:</label>
+          <div class="el-form-item__content">{{prjChanceBudget.prjChanceName}}</div>
         </el-col>
         <el-col :span="8">
-          <label class="el-form-item__label">项目编号:</label>
-          <div class="el-form-item__content">{{prjBudget.prjNo}}</div>
+          <label class="el-form-item__label">项目机会编号:</label>
+          <div class="el-form-item__content">{{prjChanceBudget.prjChanceNo}}</div>
         </el-col>
       </el-row>
 
       <el-tabs type="card" v-model="activeTab">
         <el-tab-pane label="人月" name="manmonth">
-          <man-month v-bind:prjid="this.curPrjId"></man-month>
-        </el-tab-pane>
-        <el-tab-pane label="费用" name="cost">
-          <common-item type="cost" name="费用" v-bind:prjid="this.curPrjId" v-bind:depid="this.depId"></common-item>
-        </el-tab-pane>
-        <el-tab-pane label="收款" name="income">
-          <common-item
-            type="income"
-            name="收款"
-            v-bind:prjid="this.curPrjId"
-            v-bind:depid="this.depId"
-          ></common-item>
+          <man-month v-bind:prjid="this.curPrjChanceId" type="chance"></man-month>
         </el-tab-pane>
         <el-tab-pane label="确权" name="rights">
           <common-item
-            type="confirm"
-            name="确权"
-            v-bind:prjid="this.curPrjId"
+            type="chanceC"
+            name="机会确权预测"
+            v-bind:prjid="this.curPrjChanceId"
             v-bind:depid="this.depId"
           ></common-item>
         </el-tab-pane>
@@ -49,22 +38,21 @@ import ManMonth from "./PrjManMonth.vue";
 
 export default {
   beforeMount: function() {
-    this.curPrjId = this.$route.params.id;
+    this.curPrjChanceId = this.$route.params.id;
     this.depId = this.$route.params.depId;
-
-    console.log("prjId:" + this.curPrjId + " depId:" + this.depId);
+    console.log("prjChanceId:" + this.curPrjChanceId + " depId:" + this.depId);
   },
 
   mounted: function() {
     this.depId = this.$route.params.depId;
-    this.curPrjId = this.$route.params.id;
-    this.prjBudget.prjNo = this.$route.params.prjNo;
-    this.prjBudget.prjName = this.$route.params.prjName;
+    this.curPrjChanceId = this.$route.params.id;
+    this.prjChanceBudget.prjChanceNo = this.$route.params.prjChanceNo;
+    this.prjChanceBudget.prjChanceName = this.$route.params.prjChanceName;
     console.log(
-      "prjId:" +
-        this.curPrjId +
-        " prjName:" +
-        this.$route.params.prjName +
+      "prjChanceId:" +
+        this.curPrjChanceId +
+        " prjChanceName:" +
+        this.$route.params.prjChanceName +
         " depId: " +
         this.depId
     );
@@ -93,13 +81,13 @@ export default {
     return {
       loading: false,
       activeTab: "manmonth",
-      curPrjId: -1,
+      curPrjChanceId: null,
       depId: -1,
-      prjBudget: {
-        prjId: -1,
-        prjNo: "",
-        prjName: "",
-        prjManCostAvg: 0,
+      prjChanceBudget: {
+        prjChanceId: -1,
+        prjChanceNo: "",
+        prjChanceName: "",
+        prjChanceManCostAvg: 0,
         contractAmount: 0,
         curYearAmount: 0,
         budgets: [

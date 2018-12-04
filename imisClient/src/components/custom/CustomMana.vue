@@ -31,8 +31,7 @@
            
       </div>
 
-    </div -->
-
+    </div-->
     <div style="text-align: left">
       <el-input
         placeholder="添加客户..."
@@ -40,11 +39,10 @@
         @keyup.enter.native="addNewCustom"
         style="width: 300px;"
         prefix-icon="el-icon-plus"
-        v-model="customName">
-      </el-input>
+        v-model="customName"
+      ></el-input>
       <el-button type="primary" icon="el-icon-plus" size="mini" @click="addNewCustom">添加</el-button>
     </div>
-
 
     <div style="max-width:800px;">
       <el-tree
@@ -54,43 +52,46 @@
         :filter-node-method="filterNode"
         v-loading="treeLoading"
         style="margin-top: 10px"
-        :render-content="renderContent">
-      </el-tree>
+        :render-content="renderContent"
+      ></el-tree>
       <div style="text-align: left">
-        <el-dialog
-          title="添加客户部门"
-          :visible.sync="dialogVisible"
-          width="35%">
+        <el-dialog :title="dialogTitle" :visible.sync="dialogVisible" width="45%">
           <div>
             <span>上级部门：</span>
 
-                  <el-popover
-                    v-model="showOrHidePop"
-                    placement="right"
-                    title="请选择部门"
-                    trigger="manual">
-                    <el-tree :data="treeData" :default-expand-all="true" 
-                      :props="defaultProps" :expand-on-click-node="false"
-                             @node-click="handleNodeClick">
-                    </el-tree>
-                    <div slot="reference"
-                         style="width: 150px;height: 26px;
+            <el-popover v-model="showOrHidePop" placement="right" title="请选择部门" trigger="manual">
+              <el-tree
+                :data="treeData"
+                :default-expand-all="true"
+                :props="defaultProps"
+                :expand-on-click-node="false"
+                @node-click="handleNodeClick"
+              ></el-tree>
+              <div
+                slot="reference"
+                style="width: 250px;height: 26px;
                          display: inline-flex;font-size:13px;border: 1px;
                          border-radius: 5px;border-style: solid;padding-left: 13px;box-sizing:border-box;border-color: #dcdfe6;cursor: pointer;align-items: center"
-                         @click.left="showCustomTree" v-bind:style="{color: depTextColor}">{{pCustomName}}
-                    </div>
-                  </el-popover>
-
+                @click.left="showCustomTree"
+                v-bind:style="{color: depTextColor}"
+              >{{pCustomName}}</div>
+            </el-popover>
           </div>
           <div style="margin-top: 10px">
             <span>部门名称：</span>
-            <el-input size="mini" style="width: 200px;" v-model="customName" placeholder="请输入部门名称..." @keyup.enter.native="addCustom"></el-input>
+            <el-input
+              size="mini"
+              style="width: 250px;"
+              v-model="customName"
+              placeholder="请输入部门名称..."
+              @keyup.enter.native="addCustom"
+            ></el-input>
           </div>
           <span slot="footer" class="dialog-footer">
-    <el-button size="small" @click="dialogVisible = false">取消</el-button>
-    <el-button size="small" type="primary" @click="addCustom">添加</el-button>
-  </span>
-  </el-dialog>
+            <el-button size="small" @click="dialogVisible = false">取消</el-button>
+            <el-button size="small" type="primary" @click="addCustom">确定</el-button>
+          </span>
+        </el-dialog>
       </div>
     </div>
   </div>
@@ -115,10 +116,14 @@ export default {
       addCustomViewVisible: false,
 
       customName: "",
-
       pCustomName: "",
       pCustomId: -1,
+      id: null,
       depTextColor: "#c0c4cc",
+      dialogTitle: "",
+
+      curParentId: null,
+      curNode: null,
 
       defaultProps: {
         label: "name",
@@ -149,19 +154,13 @@ export default {
       this.depTextColor = "#606266";
     },
 
-    showAddCustomView() {
-      this.pCustomId = -1;
-      this.customName = "";
-      this.addCustomViewVisible = !this.addCustomViewVisible;
-    },
-
     filterNode(value, data) {
       if (!value) return true;
       return data.name.indexOf(value) !== -1;
     },
     loadTreeData() {
       var _this = this;
-      this.getRequest("/system/custom/customTree").then(resp => {
+      this.getRequest("/config/customTree").then(resp => {
         _this.treeLoading = false;
         if (resp && resp.status == 200) {
           _this.treeData = resp.data;
@@ -170,9 +169,9 @@ export default {
     },
     setDataToTree(treeData, pId, respData) {
       if (pId == null || pId == -1) {
-        console.log("add root element: ");
+        //      console.log("add root element: ");
         this.treeData = treeData.concat(respData); // concat(respData);
-        console.log(treeData);
+        //      console.log(treeData);
         return;
       }
 
@@ -195,7 +194,7 @@ export default {
       }
 
       this.treeLoading = true;
-      this.postRequest("/system/custom", {
+      this.postRequest("/custom/basic", {
         name: this.customName
       }).then(resp => {
         _this.treeLoading = false;
@@ -203,7 +202,7 @@ export default {
           var respData = resp.data;
           _this.$message({ type: respData.status, message: respData.message });
           if (respData.status == "success") {
-            console.log("add new custom: " + respData.retObject);
+            //           console.log("add new custom: " + respData.retObject);
             _this.setDataToTree(_this.treeData, -1, respData.retObject);
           }
           _this.customName = "";
@@ -216,29 +215,47 @@ export default {
       var _this = this;
       this.dialogVisible = false;
       this.treeLoading = true;
-      this.postRequest("/system/custom", {
+      this.postRequest("/custom/basic", {
         name: this.customName,
-        parentId: this.pCustomId
+        parentId: this.pCustomId,
+        id: this.id
       }).then(resp => {
         _this.treeLoading = false;
         if (resp && resp.status == 200) {
           var respData = resp.data;
           _this.customName = "";
           _this.$message({ type: respData.status, message: respData.message });
-          if (respData.status == "success")
+          if (respData.status == "success") {
+            if (_this.id != -1) {
+              _this.deleteLocalCustom(_this.treeData, _this.curNode);
+            }
+
             _this.setDataToTree(
               _this.treeData,
               _this.pCustomId,
               respData.retObject
             );
+          }
         }
       });
+    },
+
+    showEditCustomView(data, event) {
+      this.dialogVisible = true;
+      this.pCustomId = data.parentId;
+      this.customName = data.name;
+      this.id = data.id;
+      this.dialogTitle = "修改客户";
+      (this.curParentId = data.parentId), (this.curNode = data);
     },
 
     showAddCustomView(data, event) {
       this.dialogVisible = true;
       this.pCustomId = data.id;
       this.pCustomName = data.name;
+      this.customName = "";
+      this.id = -1;
+      this.dialogTitle = "添加新客户部门";
 
       event.stopPropagation();
     },
@@ -257,7 +274,7 @@ export default {
         })
           .then(() => {
             _this.treeLoading = true;
-            _this.deleteRequest("/system/custom/" + data.id).then(resp => {
+            _this.deleteRequest("/custom/basic/" + data.id).then(resp => {
               _this.treeLoading = false;
               if (resp && resp.status == 200) {
                 var respData = resp.data;
@@ -302,6 +319,17 @@ export default {
               维护部门：
               {data.departmentId}{" "}
             </span>
+
+            <el-button
+              style="font-size: 12px;"
+              type="primary"
+              size="mini"
+              style="padding:3px"
+              on-click={() => this.showEditCustomView(data, event)}
+            >
+              编辑
+            </el-button>
+
             <el-button
               style="font-size: 12px;"
               type="primary"
@@ -309,7 +337,7 @@ export default {
               style="padding:3px"
               on-click={() => this.showAddCustomView(data, event)}
             >
-              添加部门
+              添加
             </el-button>
             <el-button
               style="font-size: 12px;"
@@ -318,7 +346,7 @@ export default {
               style="padding:3px"
               on-click={() => this.deleteCustom(data, event)}
             >
-              删除部门
+              删除
             </el-button>
           </span>
         </span>

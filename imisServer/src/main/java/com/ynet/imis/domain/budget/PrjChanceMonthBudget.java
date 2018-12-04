@@ -1,11 +1,3 @@
-/**
-* PrjMonthBudget.java
-* @author ZHONGMC
-* @description 项目月预算条目
-* @created Tue Sep 18 2018 16:53:38 GMT+0800 (中国标准时间)
-* @copyright YNET
-* @last-modified Fri Nov 30 2018 10:09:49 GMT+0800 (中国标准时间)
-*/
 
 package com.ynet.imis.domain.budget;
 
@@ -24,20 +16,19 @@ import com.ynet.imis.domain.AbstractEntity;
 import com.ynet.imis.domain.org.Department;
 
 @Entity
-@Table(name = "PRJ_MONTH_BUDGET")
-public class PrjMonthBudget extends AbstractEntity {
+@Table(name = "PRJ_CHANCE_MONTH_BUDGET")
+public class PrjChanceMonthBudget extends AbstractEntity {
 
-    private static final long serialVersionUID = 1399722498180677635L;
+    private static final long serialVersionUID = 8185136374594922384L;
 
     private int year; // 发生年份
 
     private short month;
     private BigDecimal amount = new BigDecimal(0);
-    private BigDecimal realAmount = new BigDecimal(0);
 
     private float manMonth = 0;
-    private float realManMonth = 0;
-
+    // private float realManMonth;
+    // private BigDecimal realAmount;
     private int confirmYear = 0; // 确权年份（成本也相应计入） 0 代表未确权
 
     public int getConfirmYear() {
@@ -56,35 +47,27 @@ public class PrjMonthBudget extends AbstractEntity {
     @JoinColumn(name = "DEP_ID", nullable = false, updatable = false, insertable = false)
     private Department department;
 
-    @Column(name = "PRJ_BUDGET_ID")
-    private Long prjBudgetId;
+    @Column(name = "PRJ_CHANCE_BUDGET_ID")
+    private Long prjChanceBudgetId;
 
     @JsonIgnore
     @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
-    @JoinColumn(name = "PRJ_BUDGET_ID", nullable = false, updatable = false, insertable = false)
-    private PrjBudget prjBudget;
+    @JoinColumn(name = "PRJ_CHANCE_BUDGET_ID", nullable = false, updatable = false, insertable = false)
+    private PrjChanceBudget prjChanceBudget;
 
-    @Column(name = "PRJ_ID")
-    private Long prjId;
+    @Column(name = "PRJ_CHANCE_ID")
+    private Long prjChanceId;
 
-    public Long getPrjId() {
-        return this.prjId;
+    public Long getPrjChanceId() {
+        return this.prjChanceId;
     }
 
-    public void setPrjId(Long prjId) {
-        this.prjId = prjId;
+    public void setPrjChanceId(Long prjId) {
+        this.prjChanceId = prjId;
     }
 
-    public PrjMonthBudget() {
+    public PrjChanceMonthBudget() {
 
-    }
-
-    public PrjMonthBudget(Long id, int year, short month, BigDecimal amount, float manMonth) {
-        this.id = id;
-        this.year = year;
-        this.month = month;
-        this.amount = amount;
-        this.manMonth = manMonth;
     }
 
     public int getYear() {
@@ -109,14 +92,6 @@ public class PrjMonthBudget extends AbstractEntity {
 
     public void setAmount(BigDecimal amount) {
         this.amount = amount;
-    }
-
-    public BigDecimal getRealAmount() {
-        return realAmount;
-    }
-
-    public void setRealAmount(BigDecimal realAmount) {
-        this.realAmount = realAmount;
     }
 
     public Long getDepId() {
@@ -144,29 +119,21 @@ public class PrjMonthBudget extends AbstractEntity {
         manMonth = value;
     }
 
-    public float getRealManMonth() {
-        return realManMonth;
+    public Long getPrjChanceBudgetId() {
+        return this.prjChanceBudgetId;
     }
 
-    public void setRealManMonth(float value) {
-        realManMonth = value;
+    public void setPrjChanceBudgetId(Long id) {
+        this.prjChanceBudgetId = id;
     }
 
-    public Long getPrjBudgetId() {
-        return this.prjBudgetId;
+    public PrjChanceBudget getPrjChanceBudget() {
+        return this.prjChanceBudget;
     }
 
-    public void setPrjBudgetId(Long id) {
-        this.prjBudgetId = id;
-    }
-
-    public PrjBudget getPrjBudget() {
-        return this.prjBudget;
-    }
-
-    public void setPrjBudget(PrjBudget prjBudget) {
-        this.prjBudget = prjBudget;
-        this.prjBudgetId = prjBudget.getId();
+    public void setPrjChanceBudget(PrjChanceBudget prjChanceBudget) {
+        this.prjChanceBudget = prjChanceBudget;
+        this.prjChanceBudgetId = prjChanceBudget.getId();
     }
 
 }

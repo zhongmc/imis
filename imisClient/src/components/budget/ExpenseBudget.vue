@@ -1,79 +1,90 @@
 <!-- 部门费用预算表  -->
 <template>
-<div>
+  <div>
+    <el-table
+      :data="costBudgets"
+      v-loading="tableLoading"
+      border
+      stripe
+      show-summary
+      :summary-method="getSummaries"
+      @cell-mouse-enter="handleMouseEnter"
+      @cell-mouse-leave="handleMouseOut"
+      size="mini"
+      style="width: 100%"
+    >
+      <el-table-column
+        prop="groupId"
+        align="left"
+        fixed
+        label="费用类别"
+        :formatter="formatExpenseGroup"
+        width="150"
+      ></el-table-column>
+      <el-table-column prop="name" fixed width="200" align="left" label="费用名称"></el-table-column>
 
-          <el-table
-            :data="costBudgets"
-            v-loading="tableLoading"
-            border
-            stripe
-            show-summary            
-            :summary-method="getSummaries"
-        
-            @cell-mouse-enter="handleMouseEnter"
-            @cell-mouse-leave="handleMouseOut"            
-            size="mini"
-            style="width: 100%">
+      <el-table-column
+        v-for="(item, index ) in tableTitles"
+        :key="index"
+        :label="tableTitles[index].title"
+        :prop="tableTitles[index].idx"
+        width="100"
+      >
+        <template slot-scope="scope">
+          <span v-if="editable === true">
+            <span
+              v-if="!scope.row.amounts[index].editFlag"
+            >{{ formatMoney( scope.row.amounts[index].amount,1) }}</span>
+            <span
+              v-if="!scope.row.amounts[index].editFlag & scope.row.refItem == -1"
+              style="margin-left:10px;"
+              class="cell-icon"
+              @click="handleEdit( scope.row, index)"
+            >
+              <i class="el-icon-edit"></i>
+            </span>
+            <span
+              v-if="scope.row.amounts[index].editFlag  & scope.row.refItem == -1"
+              class="cell-edit-input"
+            >
+              <el-input
+                v-model="inputColumn1"
+                size="mini"
+                placeholder="请输入内容"
+                @keyup.enter.native="handleSave(scope.row, index)"
+                @keyup.esc.native="handleCancel(scope.row, index)"
+              ></el-input>
+            </span>
+            <span
+              v-if="scope.row.amounts[index].editFlag  & scope.row.refItem == -1"
+              style="margin-left:10px; color:black;"
+              class="cell-icon"
+              @click="handleSave(scope.row, index)"
+            >
+              <i class="el-icon-check"></i>
+            </span>
+            <span
+              v-if="scope.row.amounts[index].editFlag  & scope.row.refItem == -1"
+              style="margin-left:10px; color:black;"
+              class="cell-icon"
+              @click="handleCancel( scope.row, index )"
+            >
+              <i class="el-icon-close"></i>
+            </span>
+          </span>
+          <span v-else>{{ formatMoney( scope.row.amounts[index].amount,1) }}</span>
+          <!-- span>{{formatMoney( scope.row.amounts[index].amount,1) }}</span -->
+        </template>
+      </el-table-column>
 
-            <el-table-column
-              prop="groupId"
-              align="left"
-              fixed
-              label="费用类别"
-              :formatter="formatExpenseGroup"
-              width="150">
-            </el-table-column>
-            <el-table-column
-              prop="name"
-              fixed
-              width="200"
-              align="left"
-              label="费用名称">
-            </el-table-column>
+      <el-table-column label="总计" prop="sum" :formatter="formatAmount" align="right" width="120"></el-table-column>
 
-            <el-table-column
-              v-for="(item, index ) in tableTitles" :key="index"
-              :label="tableTitles[index].title" 
-              :prop=tableTitles[index].idx width="100" >
+      <el-table-column prop="desc" label="备注" width="80"></el-table-column>
+    </el-table>
 
-                <template slot-scope="scope">
-                  <span v-if="editable === true">
-                    <span v-if="!scope.row.amounts[index].editFlag">{{ formatMoney( scope.row.amounts[index].amount,1) }}</span>
-                    <span v-if="!scope.row.amounts[index].editFlag & scope.row.refItem == -1" style="margin-left:10px;" class="cell-icon" @click="handleEdit( scope.row, index)"> <i class="el-icon-edit"></i> </span>
-                    <span v-if="scope.row.amounts[index].editFlag  & scope.row.refItem == -1" class="cell-edit-input"><el-input v-model="inputColumn1" size="mini" placeholder="请输入内容"  @keyup.enter.native="handleSave(scope.row, index)" @keyup.esc.native="handleCancel(scope.row, index)"></el-input></span>
-                    <span v-if="scope.row.amounts[index].editFlag  & scope.row.refItem == -1" style="margin-left:10px; color:black;" class="cell-icon" @click="handleSave(scope.row, index)"> <i class="el-icon-check"></i> </span>
-                    <span v-if="scope.row.amounts[index].editFlag  & scope.row.refItem == -1" style="margin-left:10px; color:black;" class="cell-icon" @click="handleCancel( scope.row, index )"> <i class="el-icon-close"></i> </span>
-                  </span>
-                  <span v-else >
-                    {{ formatMoney( scope.row.amounts[index].amount,1) }}
-                  </span>     
-                  <!-- span>{{formatMoney( scope.row.amounts[index].amount,1) }}</span -->
-                </template>
-
-            </el-table-column>
-
-            <el-table-column
-              label="总计"
-              prop="sum"
-              :formatter="formatAmount"
-              align = "right"
-              width="120">
-            </el-table-column>
-
-            <el-table-column
-              prop="desc"
-              label="备注"
-              width="80">
-            </el-table-column>
-
-          </el-table>
-
-          <div  class="el-dialog__footer" style="margin: 2px">
-            <el-button type="danger" size="mini"  :disabled="!changed"
-                       @click="commitChange">提交修改
-            </el-button>
-          </div>
-
+    <div class="el-dialog__footer" style="margin: 2px">
+      <el-button type="danger" size="mini" :disabled="!changed" @click="commitChange">提交修改</el-button>
+    </div>
   </div>
 </template>
 
@@ -89,7 +100,7 @@ export default {
   methods: {
     loadSettings() {
       var _this = this;
-      this.getRequest("/system/budget/settings").then(resp => {
+      this.getRequest("/config/budget/settings").then(resp => {
         //          _this.loading = false;
         if (resp && resp.status == 200) {
           _this.costItems = resp.data.costItems;

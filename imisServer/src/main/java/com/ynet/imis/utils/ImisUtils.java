@@ -9,6 +9,7 @@ import java.util.Set;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.ynet.imis.bean.AmountCollection;
 import com.ynet.imis.bean.CostCollectionItem;
 
 import org.apache.poi.ss.usermodel.Cell;
@@ -50,6 +51,42 @@ public class ImisUtils {
 
     }
 
+    /**
+     * 部门预算损益比较表导出到excel
+     */
+    public static byte[] exportDepBudgetChart2Excel(String depNames[], List<AmountCollection> amcs) throws Exception {
+        Workbook workbook = new XSSFWorkbook();
+
+        Sheet sheet = workbook.createSheet();
+
+        Row row = sheet.createRow(0);
+        for (int i = 0; i < depNames.length; i++) {
+            Cell cell = row.createCell(1 + i, CellType.STRING);
+            cell.setCellValue(depNames[i]);
+        }
+
+        int rowCount = 1;
+        for (AmountCollection amc : amcs) {
+            row = sheet.createRow(rowCount);
+            Cell cell = row.createCell(0, CellType.STRING);
+            cell.setCellValue(amc.getName());
+            for (int i = 0; i < amc.getAmounts().length; i++) {
+                cell = row.createCell(1 + i, CellType.NUMERIC);
+                cell.setCellValue(amc.getAmounts()[i].doubleValue());
+            }
+
+            rowCount++;
+        }
+
+        ByteArrayOutputStream bo = new ByteArrayOutputStream();
+        workbook.write(bo);
+        workbook.close();
+        bo.close();
+
+        return bo.toByteArray();
+
+    }
+
     public static byte[] exportCostCollection2Excel(Map<String, List<CostCollectionItem>> collects) throws Exception {
 
         Workbook workbook = new XSSFWorkbook();
@@ -65,8 +102,9 @@ public class ImisUtils {
 
         ByteArrayOutputStream bo = new ByteArrayOutputStream();
         workbook.write(bo);
-
+        workbook.close();
         bo.close();
+
         return bo.toByteArray();
 
     }

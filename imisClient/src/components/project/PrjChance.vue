@@ -6,7 +6,7 @@
       >
         <div style="display: inline">
           <el-input
-            placeholder="项目名称搜索，记得回车哦..."
+            placeholder="机会名称搜索，记得回车哦..."
             clearable
             @change="keywordsChange"
             style="width: 300px;margin: 0px;padding: 0px;"
@@ -38,25 +38,10 @@
           </el-button>
         </div>
         <div style="margin-left: 5px;margin-right: 20px;display: inline">
-          <el-upload
-            :show-file-list="false"
-            accept="application/vnd.ms-excel"
-            action="/project/basic/importPrj"
-            :on-success="fileUploadSuccess"
-            :on-error="fileUploadError"
-            :disabled="fileUploadBtnText=='正在导入'"
-            :before-upload="beforeFileUpload"
-            style="display: inline"
-          >
-            <el-button size="mini" type="success" :loading="fileUploadBtnText=='正在导入'">
-              <i class="fa fa-lg fa-level-up" style="margin-right: 5px"></i>
-              {{fileUploadBtnText}}
-            </el-button>
-          </el-upload>
           <el-button type="success" size="mini" @click="exportEmps">
             <i class="fa fa-lg fa-level-down" style="margin-right: 5px"></i>导出数据
           </el-button>
-          <el-button type="primary" size="mini" icon="el-icon-plus" @click="showAddPrjView">添加项目</el-button>
+          <el-button type="primary" size="mini" icon="el-icon-plus" @click="showAddPrjView">添加机会</el-button>
         </div>
       </el-header>
 
@@ -69,7 +54,7 @@
             >
               <el-form :inline="true" :model="advSearchData">
                 <el-row>
-                  <el-col :span="10">
+                  <el-col :span="8">
                     <el-form-item label="所属客户:" prop="customId">
                       <el-popover
                         v-model="showOrHideCustomPop2"
@@ -117,50 +102,6 @@
                       </el-popover>
                     </el-form-item>
                   </el-col>
-                </el-row>
-                <el-row>
-                  <el-col :span="7">
-                    <el-form-item label="项目类型:">
-                      <el-select
-                        v-model="advSearchData.prjType"
-                        style="width: 130px"
-                        size="mini"
-                        placeholder="请选择项目类型"
-                      >
-                        <el-option
-                          v-for="item in prjTypes"
-                          :key="item.id"
-                          :label="item.name"
-                          :value="item.id"
-                        ></el-option>
-                      </el-select>
-                    </el-form-item>
-                  </el-col>
-                  <el-col :span="9">
-                    <el-form-item label="项目分类:" prop="prjClass">
-                      <el-radio-group v-model="advSearchData.prjClass">
-                        <el-radio label="ALL">全部</el-radio>
-                        <el-radio label="LAST_PRJ">延续形</el-radio>
-                        <el-radio style="margin-left: 15px" label="NEW_PRJ">新项目</el-radio>
-                      </el-radio-group>
-                    </el-form-item>
-                  </el-col>
-                </el-row>
-                <el-row>
-                  <el-col :span="11">
-                    <el-form-item label="立项日期:" prop="beginDateScope">
-                      <el-date-picker
-                        v-model="advSearchData.beginDateScope"
-                        unlink-panels
-                        size="mini"
-                        type="daterange"
-                        value-format="yyyy-MM-dd"
-                        range-separator="至"
-                        start-placeholder="开始日期"
-                        end-placeholder="结束日期"
-                      ></el-date-picker>
-                    </el-form-item>
-                  </el-col>
                   <el-col :span="5" :offset="2">
                     <el-button size="mini" type="info" @click="emptySearchData">重置</el-button>
                     <el-button size="mini" @click="cancelSearch">取消</el-button>
@@ -187,9 +128,11 @@
           >
             <el-table-column type="selection" align="left" width="30"></el-table-column>
 
-            <el-table-column prop="prjNo" label="项目编号" width="150"></el-table-column>
+            <el-table-column prop="prjNo" label="机会编号" width="150"></el-table-column>
 
-            <el-table-column prop="name" label="项目名称" fixed width="250"></el-table-column>
+            <el-table-column prop="name" label="机会名称" fixed width="250"></el-table-column>
+
+            <el-table-column prop="chanceState" label="状态" width="60"></el-table-column>
 
             <el-table-column
               prop="departmentName"
@@ -207,8 +150,6 @@
               width="200"
             ></el-table-column>
 
-            <el-table-column prop="contractNo" width="85" align="left" label="合同编号"></el-table-column>
-
             <el-table-column
               prop="contractAmount"
               width="80"
@@ -217,9 +158,7 @@
               label="合同金额"
             ></el-table-column>
 
-            <el-table-column width="85" align="left" label="签订日期">
-              <template slot-scope="scope">{{ scope.row.signDate | formatDate}}</template>
-            </el-table-column>
+            <el-table-column prop="chance" width="80" align="left" label="机会概率"></el-table-column>
 
             <el-table-column prop="incomeYear" width="100" label="确认收入年份"></el-table-column>
 
@@ -230,39 +169,47 @@
               <template slot-scope="scope">{{ scope.row.endDate | formatDate}}</template>
             </el-table-column>
 
-            <el-table-column prop="totalPeopleMonth" width="80" align="left" label="人月总数"></el-table-column>
-
             <el-table-column prop="budgetPeopleMonth" width="80" align="left" label="预算人月总数"></el-table-column>
 
             <el-table-column prop="costAmount" width="80" align="left" label="成本合计"></el-table-column>
 
-            <el-table-column prop="labourAmount" width="80" align="left" label="人工成本"></el-table-column>
-
-            <el-table-column prop="expenseAmount" width="80" align="left" label="费用成本"></el-table-column>
-
-            <el-table-column prop="labourBudget" width="80" align="left" label="人工预算"></el-table-column>
-
-            <el-table-column prop="expenseBudget" width="80" align="left" label="费用预算"></el-table-column>
-
             <el-table-column fixed="right" label="操作" width="195">
               <template slot-scope="scope">
                 <el-button
+                  v-if="scope.row.chanceState=='NORMAL'"
                   @click="showEditPrjView(scope.row)"
                   style="padding: 3px 4px 3px 4px;margin: 2px"
                   size="mini"
                 >编辑</el-button>
                 <el-button
+                  v-if="scope.row.chanceState=='NORMAL'"
                   @click="showEditPrjBudgetView(scope.row)"
                   style="padding: 3px 4px 3px 4px;margin: 2px"
                   type="primary"
                   size="mini"
-                >项目预算</el-button>
+                >机会预算</el-button>
                 <el-button
                   type="danger"
                   style="padding: 3px 4px 3px 4px;margin: 2px"
                   size="mini"
                   @click="deletePrj(scope.row)"
                 >删除</el-button>
+
+                <el-button
+                  v-if="scope.row.chanceState=='NORMAL'"
+                  type="danger"
+                  style="padding: 3px 4px 3px 4px;margin: 2px"
+                  size="mini"
+                  @click="closePrj(scope.row)"
+                >关闭</el-button>
+
+                <el-button
+                  v-if="scope.row.chanceState=='NORMAL'"
+                  type="primary"
+                  style="padding: 3px 4px 3px 4px;margin: 2px"
+                  size="mini"
+                  @click="transferPrj(scope.row)"
+                >转为项目</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -297,17 +244,17 @@
         >
           <el-row>
             <el-col :span="10">
-              <el-form-item label="项目名称:" prop="name">
-                <el-input v-model="prj.name" size="mini" style="width: 250px" placeholder="请输入项目名称"></el-input>
+              <el-form-item label="机会名称:" prop="name">
+                <el-input v-model="prj.name" size="mini" style="width: 250px" placeholder="请输入机会名称"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="项目编号:" prop="prjNo">
+              <el-form-item label="机会编号:" prop="chanceNo">
                 <el-input
-                  v-model="prj.prjNo"
+                  v-model="prj.chanceNo"
                   size="mini"
                   style="width: 150px"
-                  placeholder="请输入项目编号"
+                  placeholder="请输入机会编号"
                 ></el-input>
               </el-form-item>
             </el-col>
@@ -382,11 +329,24 @@
               </el-form-item>
             </el-col>
             <el-col :span="9">
-              <el-form-item label="项目分类:" prop="prjClass">
-                <el-radio-group v-model="prj.prjClass">
-                  <el-radio label="LAST_PRJ">延续形</el-radio>
-                  <el-radio label="NEW_PRJ">新项目</el-radio>
-                </el-radio-group>
+              <el-form-item label="合同金额:" prop="contractAmount">
+                <el-input
+                  v-model="prj.contractAmount"
+                  size="mini"
+                  style="width: 150px"
+                  placeholder="合同金额"
+                ></el-input>
+              </el-form-item>
+            </el-col>
+
+            <el-col :span="6">
+              <el-form-item label="机会概率:" prop="chance">
+                <el-input
+                  v-model="prj.chance"
+                  size="mini"
+                  style="width: 60px"
+                  placeholder="请输入机会概率"
+                ></el-input>
               </el-form-item>
             </el-col>
           </el-row>
@@ -414,16 +374,6 @@
                   type="date"
                   placeholder="结束日期"
                 ></el-date-picker>
-              </el-form-item>
-            </el-col>
-            <el-col :span="9">
-              <el-form-item label="合同金额:" prop="contractAmount">
-                <el-input
-                  v-model="prj.contractAmount"
-                  size="mini"
-                  style="width: 150px"
-                  placeholder="合同金额"
-                ></el-input>
               </el-form-item>
             </el-col>
           </el-row>
@@ -640,7 +590,7 @@ export default {
     doDelete(ids) {
       this.tableLoading = true;
       var _this = this;
-      this.deleteRequest("/project/basic/prj/" + ids).then(resp => {
+      this.deleteRequest("/project/chance/prjChance/" + ids).then(resp => {
         _this.tableLoading = false;
         if (resp && resp.status == 200) {
           var data = resp.data;
@@ -649,6 +599,65 @@ export default {
         }
       });
     },
+
+    closePrj(row) {
+      this.$confirm(
+        "此操作将永久关闭机会[" + row.name + "], 是否继续?",
+        "提示",
+        {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        }
+      )
+        .then(() => {
+          this.doCloseChance(row.id);
+        })
+        .catch(() => {});
+    },
+
+    doCloseChance(id) {
+      this.tableLoading = true;
+      var _this = this;
+      this.postRequest("/project/chance/close", { id: id }).then(resp => {
+        _this.tableLoading = false;
+        if (resp && resp.status == 200) {
+          var data = resp.data;
+          _this.$message({ type: data.status, message: data.message });
+          _this.loadPrjs();
+        }
+      });
+    },
+
+    transferPrj(row) {
+      this.$confirm(
+        "此操作将机会[" + row.name + "]转为实际项目, 是否继续?",
+        "提示",
+        {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        }
+      )
+        .then(() => {
+          this.doTransferPrj(row.id);
+        })
+        .catch(() => {});
+    },
+
+    doTransferPrj(id) {
+      this.tableLoading = true;
+      var _this = this;
+      this.postRequest("/project/chance/toPrj", { id: id }).then(resp => {
+        _this.tableLoading = false;
+        if (resp && resp.status == 200) {
+          var data = resp.data;
+          _this.$message({ type: data.status, message: data.message });
+          _this.loadPrjs();
+        }
+      });
+    },
+
     keywordsChange(val) {
       if (val == "") {
         this.loadPrjs();
@@ -703,7 +712,7 @@ export default {
       this.tableLoading = true;
 
       var url =
-        "/project/basic/prjs?page=" +
+        "/project/chance/prjChances?page=" +
         this.page +
         "&size=10&keyword=" +
         this.keywords;
@@ -731,29 +740,33 @@ export default {
           if (this.prj.id) {
             //更新
             this.tableLoading = true;
-            this.putRequest("/project/basic/prj", this.prj).then(resp => {
-              _this.tableLoading = false;
-              if (resp && resp.status == 200) {
-                var data = resp.data;
-                _this.$message({ type: data.status, message: data.message });
-                _this.dialogVisible = false;
-                _this.emptyPrjData();
-                _this.loadPrjs();
+            this.putRequest("/project/chance/prjChance", this.prj).then(
+              resp => {
+                _this.tableLoading = false;
+                if (resp && resp.status == 200) {
+                  var data = resp.data;
+                  _this.$message({ type: data.status, message: data.message });
+                  _this.dialogVisible = false;
+                  _this.emptyPrjData();
+                  _this.loadPrjs();
+                }
               }
-            });
+            );
           } else {
             //添加
             this.tableLoading = true;
-            this.postRequest("/project/basic/prj", this.prj).then(resp => {
-              _this.tableLoading = false;
-              if (resp && resp.status == 200) {
-                var data = resp.data;
-                _this.$message({ type: data.status, message: data.message });
-                _this.dialogVisible = false;
-                _this.emptyPrjData();
-                _this.loadPrjs();
+            this.postRequest("/project/chance/prjChance", this.prj).then(
+              resp => {
+                _this.tableLoading = false;
+                if (resp && resp.status == 200) {
+                  var data = resp.data;
+                  _this.$message({ type: data.status, message: data.message });
+                  _this.dialogVisible = false;
+                  _this.emptyPrjData();
+                  _this.loadPrjs();
+                }
               }
-            });
+            );
           }
         } else {
           return false;
@@ -806,19 +819,19 @@ export default {
 
     showEditPrjBudgetView(row) {
       this.$router.push({
-        name: "项目预算",
+        name: "机会预算",
         params: {
           id: row.id,
           depId: row.depId,
-          prjNo: row.prjNo,
-          prjName: row.name
+          prjChanceNo: row.prjChanceNo,
+          prjChanceName: row.name
         }
       });
     },
 
     showEditPrjView(row) {
       console.log(row);
-      this.dialogTitle = "编辑项目信息";
+      this.dialogTitle = "编辑项目机会信息";
       this.prj = row;
 
       this.prj.endDate = this.formatDate(row.endDate);
@@ -829,7 +842,7 @@ export default {
     },
 
     showAddPrjView() {
-      this.dialogTitle = "添加新项目";
+      this.dialogTitle = "添加新项目机会";
       this.emptyPrjData();
 
       this.dialogVisible = true;
@@ -858,6 +871,7 @@ export default {
         endDate: "",
         customId: null,
         customName: "",
+        chance: 0,
         contractAmount: 0,
         prjType: null
       };

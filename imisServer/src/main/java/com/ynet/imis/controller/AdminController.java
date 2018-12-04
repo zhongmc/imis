@@ -4,7 +4,7 @@
 * @description 
 * @created Mon Oct 08 2018 10:51:34 GMT+0800 (中国标准时间)
 * @copyright YNET
-* @last-modified Wed Nov 07 2018 11:12:08 GMT+0800 (中国标准时间)
+* @last-modified Tue Dec 04 2018 15:26:56 GMT+0800 (中国标准时间)
 */
 
 package com.ynet.imis.controller;
@@ -212,40 +212,6 @@ public class AdminController {
 
     }
 
-    // custom
-    @RequestMapping(value = "/custom/customTree")
-    public List<Custom> customTree() {
-
-        return customService.getCustomTree();
-
-    }
-
-    @RequestMapping(value = "/custom", method = RequestMethod.POST)
-    public ResponseBean addCustom(Custom custom) {
-        Custom aCustom = customService.addCustom(custom);
-        if (aCustom != null) {
-            return new ResponseBean("success", "add custom success!", aCustom);
-        }
-        return new ResponseBean("error", "添加客户失败!");
-    }
-
-    @RequestMapping(value = "/custom/{did}", method = RequestMethod.DELETE)
-    public ResponseBean deleteCustomById(@PathVariable Long did) {
-        if (customService.deleteCustomById(did) == 1) {
-            return new ResponseBean("success", "删除成功!");
-        }
-        return new ResponseBean("error", "删除失败!");
-    }
-
-    @RequestMapping(value = "/custom/{id}", method = RequestMethod.GET)
-    public ResponseBean getCustomById(@PathVariable Long pid) {
-        Custom custom = customService.getCustomById(pid);
-        if (custom != null)
-            return new ResponseBean("success", "", custom);
-
-        return new ResponseBean("error", "custom with id: " + pid + " not found!");
-    }
-
     ///////////////// Budget settings
 
     @RequestMapping(value = "/budget/settings")
@@ -392,14 +358,14 @@ public class AdminController {
     }
 
     @RequestMapping(value = "/budget/import", method = RequestMethod.POST)
-    public ResponseBean importBudgetData(Long depId, MultipartFile file) {
+    public ResponseBean importBudgetData(Long depId, MultipartFile file, int realDataMonth) {
         logger.info("import budget data for dep:" + depId + " file: " + file.getOriginalFilename());
 
         if (depId == null)
             return new ResponseBean("error", "项目数据导入失败! null depId");
 
         try {
-            int ret = dataImportService.importDepartmentBudgetInfo(file, depId);
+            int ret = dataImportService.importDepartmentBudgetInfo(file, depId, realDataMonth);
             if (ret == 0)
                 return new ResponseBean("success", "项目数据导入成功!");
             else

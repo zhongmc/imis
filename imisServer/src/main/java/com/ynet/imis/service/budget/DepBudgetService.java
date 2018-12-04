@@ -18,9 +18,11 @@ public interface DepBudgetService {
 
     public List<CostBudgetInfo> getCostCollectionByDepId(Long depId, int year);
 
-    public List<CostBudgetInfo> getCostCollectionByItemDepId(List<Long> depId, Long itemId, int year);
+    public List<CostBudgetInfo> getCostCollectionByItemDepId(List<Long> depIds, Long itemId, int year);
 
     public List<DepCommBudget> getDepCommBudgets(Long depId);
+
+    public List<DepCommBudget> getDepCommBudgetsOfYear(List<Long> depIds, int year);
 
     public DepCommBudget saveDepCommBudget(DepCommBudget depCommBudget);
 
@@ -29,6 +31,8 @@ public interface DepBudgetService {
     public List<Object> getDepPrjBudgets(Long depId);
 
     Page<Map<String, Object>> getDepPrjBudgetByPage(int page, int size, Long depId, int year);
+
+    Page<Map<String, Object>> getDepPrjChanceBudgetByPage(int page, int size, Long depId, int year);
 
     public void deleteAll();
 }

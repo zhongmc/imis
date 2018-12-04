@@ -1,10 +1,10 @@
 /**
-* Project.java
+* ProjectChance.java
 * @author ZHONGMC
-* @description 
+* @description  项目机会
 * @created Tue Sep 18 2018 18:01:36 GMT+0800 (中国标准时间)
 * @copyright YNET
-* @last-modified Tue Dec 04 2018 09:49:42 GMT+0800 (中国标准时间)
+* @last-modified Tue Dec 04 2018 09:48:21 GMT+0800 (中国标准时间)
 */
 
 package com.ynet.imis.domain.project;
@@ -17,19 +17,19 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+
 import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ynet.imis.domain.AbstractEntity;
 import com.ynet.imis.domain.org.Custom;
 import com.ynet.imis.domain.org.Department;
+import com.ynet.imis.domain.project.Project.PrjType;
 
 @Entity
-@Table(name = "PROJECT")
-public class Project extends AbstractEntity {
+public class ProjectChance extends AbstractEntity {
 
-    private static final long serialVersionUID = -7981562496062481569L;
+    private static final long serialVersionUID = -1566292962548348166L;
 
     @Column(length = 128)
     private String name;
@@ -38,12 +38,34 @@ public class Project extends AbstractEntity {
         return this.name;
     }
 
+    /**
+     * @return the chance
+     */
+    public short getChance() {
+        return chance;
+    }
+
+    /**
+     * @param chance the chance to set
+     */
+    public void setChance(short chance) {
+        this.chance = chance;
+    }
+
     public void setName(String name) {
         this.name = name;
     }
 
-    @Column(name = "PRJ_NO", length = 24)
-    private String prjNo;
+    @Column(name = "CHANCE_NO", length = 24)
+    private String chanceNo;
+
+    public String getChanceNo() {
+        return this.chanceNo;
+    }
+
+    public void setChanceNo(String chanceNo) {
+        this.chanceNo = chanceNo;
+    }
 
     @Column(name = "CUSTOM_ID")
     private Long customId;
@@ -56,9 +78,7 @@ public class Project extends AbstractEntity {
     @Transient
     private String customName;
 
-    private String contractNo;
-
-    private Date contractDate;
+    private short chance; // 概率 （%）
 
     public BigDecimal getContractAmount() {
         return this.contractAmount;
@@ -70,22 +90,6 @@ public class Project extends AbstractEntity {
 
     private BigDecimal contractAmount;
 
-    public Date getContractDate() {
-        return this.contractDate;
-    }
-
-    public void setContractDate(Date contractDate) {
-        this.contractDate = contractDate;
-    }
-
-    public String getContractNo() {
-        return this.contractNo;
-    }
-
-    public void setContractNo(String contractNo) {
-        this.contractNo = contractNo;
-    }
-
     @Column(name = "DEP_ID")
     private Long depId;
 
@@ -96,14 +100,6 @@ public class Project extends AbstractEntity {
 
     @Transient
     private String depName;
-
-    public String getPrjNo() {
-        return this.prjNo;
-    }
-
-    public void setPrjNo(String prjNo) {
-        this.prjNo = prjNo;
-    }
 
     public Custom getCustom() {
         return this.custom;
@@ -180,9 +176,9 @@ public class Project extends AbstractEntity {
         this.endDate = endDate;
     }
 
-    public enum PrjType {
-        TASKS, MAN_MONTH, PROJECT, OTHER
-    };
+    // public enum PrjType {
+    // TASKS, MAN_MONTH, PROJECT, OTHER
+    // };
 
     private PrjType prjType;
 
@@ -194,30 +190,18 @@ public class Project extends AbstractEntity {
         this.prjType = prjType;
     }
 
-    public enum PrjClass {
-        LAST_PRJ, NEW_PRJ, ALL // 延续型， 新项目
+    public enum ChanceState {
+        NORMAL, TO_PRJ, CLOSED
     };
 
-    private PrjClass prjClass;
+    private ChanceState chanceState = ChanceState.NORMAL;
 
-    public PrjClass getPrjClass() {
-        return this.prjClass;
+    public ChanceState getChanceState() {
+        return this.chanceState;
     }
 
-    public void setPrjClass(PrjClass prjClass) {
-        this.prjClass = prjClass;
-    }
-
-    public void copyFrom(ProjectChance prjChance) {
-        this.name = prjChance.getName();
-        this.depId = prjChance.getDepId();
-        this.contractAmount = prjChance.getContractAmount();
-        this.customId = prjChance.getCustomId();
-        this.prjType = prjChance.getPrjType();
-        this.prjClass = PrjClass.NEW_PRJ;
-        this.beginDate = prjChance.getBeginDate();
-        this.endDate = prjChance.getEndDate();
-
+    public void setChanceState(ChanceState chanceState) {
+        this.chanceState = chanceState;
     }
 
 }

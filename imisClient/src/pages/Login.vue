@@ -1,8 +1,14 @@
 <template>
-  <el-form :rules="rules" class="login-container" :v-model="loginForm"  label-position="left"
-           label-width="0px" v-loading="loading">
+  <el-form
+    :rules="rules"
+    class="login-container"
+    :model="loginForm"
+    label-position="left"
+    label-width="0px"
+    v-loading="loading"
+  >
     <div>
-    <h3 class="login_title">系统登录</h3>
+      <h3 class="login_title">系统登录</h3>
     </div>
     <el-form-item prop="username">
       <el-input type="text" v-model="loginForm.username" auto-complete="off" placeholder="账号"></el-input>

@@ -1,77 +1,103 @@
 <template>
-  <div style="margin-top:30px;width:600px;">
+  <div style="margin-top:30px;width:700px;">
+    <el-form :rules="rules" :model="adminForm" label-position="left" ref="adminForm">
+      <el-row>
+        <el-col :span="8">
+          <el-form-item prop="username">
+            <el-input
+              type="text"
+              size="small"
+              v-model="adminForm.username"
+              auto-complete="off"
+              placeholder="账号"
+            ></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="8">
+          <el-form-item prop="password">
+            <el-input
+              type="password"
+              size="small"
+              v-model="adminForm.password"
+              auto-complete="off"
+              placeholder="密码"
+            ></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item>
+            <el-button
+              type="danger"
+              size="small"
+              @click.native.prevent="submitClick"
+              :loading="clearBtnText=='正在清空数据'"
+            >
+              <i class="fa fa-lg fa-level-up" style="margin-right: 5px"></i>
+              {{clearBtnText}}
+            </el-button>
+          </el-form-item>
+        </el-col>
+      </el-row>
+    </el-form>
 
-
-       <el-form :rules="rules" :model="adminForm"  label-position="left" ref="adminForm">
     <el-row>
-      <el-col :span="8">
-    <el-form-item prop="username">
-      <el-input type="text" size="small" v-model="adminForm.username" auto-complete="off" placeholder="账号"></el-input>
-    </el-form-item>
-      </el-col>
-      <el-col :span="8">
-    <el-form-item prop="password">
-      <el-input type="password"  size="small" v-model="adminForm.password" auto-complete="off" placeholder="密码"></el-input>
-    </el-form-item>
+      <el-col :span="4">
+        <span>所属部门:</span>
       </el-col>
       <el-col :span="6">
-    <el-form-item >
-      <el-button type="danger" size="small"  @click.native.prevent="submitClick"   :loading="clearBtnText=='正在清空数据'">
-         <i class="fa fa-lg fa-level-up" style="margin-right: 5px"></i>{{clearBtnText}}</el-button>
-    </el-form-item>
+        <el-input
+          placeholder="请选择所属部门"
+          size="small"
+          width="200"
+          v-model="departmentName"
+          suffix-icon="el-icon-caret-bottom"
+          readonly="readonly"
+          @click.native="isShowSelect = !isShowSelect"
+        ></el-input>
+        <el-tree
+          v-if="isShowSelect"
+          empty-text="暂无数据"
+          :expand-on-click-node="false"
+          :data="deps"
+          :props="defaultProps"
+          :default-expand-all="true"
+          @node-click="handleNodeClick"
+          class="objectTree"
+        ></el-tree>
+      </el-col>
+
+      <el-col :span="6">
+        <el-input placeholder="真实数据月份(1-12)：" size="small" width="100" v-model="month"></el-input>
+      </el-col>
+
+      <el-col :span="6">
+        <el-upload
+          :show-file-list="false"
+          accept="application/vnd.ms-excel"
+          action="/system/budget/import"
+          :data="uploadParam"
+          :on-success="fileUploadSuccess"
+          :on-error="fileUploadError"
+          :disabled="fileUploadBtnText=='正在导入'"
+          :before-upload="beforeFileUpload"
+          style="display: inline;margin-left:20px;"
+        >
+          <el-button size="mini" type="success" :loading="fileUploadBtnText=='正在导入'">
+            <i class="fa fa-lg fa-level-up" style="margin-right: 5px"></i>
+            {{fileUploadBtnText}}
+          </el-button>
+        </el-upload>
       </el-col>
     </el-row>
 
-  </el-form>
-
-  
-      <el-row>
-      <el-col :span="4" >
-      <span>所属部门:</span>
-      </el-col>
-      <el-col :span="10">
-        <el-input placeholder="请选择所属部门" size="small" width="200" v-model="departmentName" suffix-icon ="el-icon-caret-bottom" 
-        readonly="readonly" @click.native="isShowSelect = !isShowSelect"> 
-        </el-input> 
-          <el-tree v-if="isShowSelect" empty-text="暂无数据" 
-            :expand-on-click-node="false" 
-            :data="deps" :props="defaultProps" 
-             :default-expand-all="true"
-            @node-click="handleNodeClick" class="objectTree"> 
-            </el-tree> 
-      </el-col>
-
-          <!-- el-col :span="4">
-          <span>{{fileName}} </span>
-          </el-col -->
-
-          <el-col :span="8">
-          <el-upload
-            :show-file-list="false"
-            accept="application/vnd.ms-excel"
-            action="/system/budget/import"
-            :data="uploadParam"
-            :on-success="fileUploadSuccess"
-            :on-error="fileUploadError" :disabled="fileUploadBtnText=='正在导入'"
-            :before-upload="beforeFileUpload" style="display: inline;margin-left:20px;">
-
-
-
-            <el-button size="mini" type="success" :loading="fileUploadBtnText=='正在导入'">
-              <i class="fa fa-lg fa-level-up" style="margin-right: 5px"></i>{{fileUploadBtnText}}
-            </el-button>
-          </el-upload>
-          </el-col>
-      </el-row>
-
-      <el-card header="已上传数据" class="box-card">
-        <div v-for="item in uploaded" v-bind:key="item.depId" style="margin-bottom:5px;" >
-          {{item.depName}} -- {{item.fileName}}
-        </div>
-      </el-card>
-
-        </div>
-
+    <el-card header="已上传数据" class="box-card">
+      <div
+        v-for="item in uploaded"
+        v-bind:key="item.depId"
+        style="margin-bottom:5px;"
+      >{{item.depName}} -- {{item.fileName}}</div>
+    </el-card>
+  </div>
 </template>
 
 <script>
@@ -80,6 +106,7 @@ export default {
     return {
       deps: [],
       departmentName: "",
+      month: null,
       depId: null,
       fileName: "",
       showOrHideDepPop: false,
@@ -87,7 +114,8 @@ export default {
       uploaded: [],
 
       uploadParam: {
-        depId: null
+        depId: null,
+        realDataMonth: 0
       },
       clearBtnText: "清空数据",
       adminForm: {
@@ -174,6 +202,7 @@ export default {
       }
 
       this.uploadParam.depId = this.depId;
+      this.uploadParam.realDataMonth = this.month;
       this.fileName = file.name;
       this.fileUploadBtnText = "正在导入";
 
@@ -186,7 +215,7 @@ export default {
 
     loadDepTree() {
       var _this = this;
-      this.getRequest("/system/basic/myDepTree").then(resp => {
+      this.getRequest("/config/dep/myDepTree").then(resp => {
         //          _this.treeLoading = false;
         if (resp && resp.status == 200) {
           _this.deps = resp.data;
@@ -226,12 +255,12 @@ export default {
   position: absolute;
   overflow: auto;
   z-index: 100;
-  width: 200px;
+  width: 250px;
   height: 300px;
 }
 
 .box-card {
-  width: 480px;
+  width: 580px;
   margin-top: 20px;
   font-size: 14px;
 }

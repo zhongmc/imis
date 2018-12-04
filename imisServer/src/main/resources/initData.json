@@ -90,10 +90,17 @@
         },
         {
           "name": "项目机会",
-          "url": "project/chance/**",
+          "url": "/project/chance/**",
           "path": "/prj/chance",
-          "component": "components/project/PrjCHance.vue",
+          "component": "components/project/PrjChance.vue",
           "hidden": 0
+        },
+        {
+          "name": "机会预算",
+          "url": "/project/chance/**",
+          "path": "/prj/chanceBudget/:id",
+          "component": "components/project/ChanceBudget.vue",
+          "hidden": 1
         }
       ]
     },

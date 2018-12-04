@@ -10,14 +10,13 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.ynet.imis.domain.project.Project;
+import com.ynet.imis.domain.project.ProjectChance;
 
 @Entity
-@Table(name = "PRJ_RIGHTS_CONFIRM")
-public class PrjRightsConfirm extends CommBudget {
+@Table(name = "PRJ_CHANCE_RIGHTS_CONFIRM")
+public class PrjChanceRightsConfirm extends CommBudget {
 
-    private static final long serialVersionUID = -5724326134628837609L;
-
+    private static final long serialVersionUID = 5706330629093916741L;
     @Column(name = "BEG_DATE")
     private Date begDate; // 确权范围
     @Column(name = "END_DATE")
@@ -26,13 +25,13 @@ public class PrjRightsConfirm extends CommBudget {
     @Column(name = "DEP_ID")
     private Long depId;
 
-    @Column(name = "PRJ_ID")
-    private Long prjId;
+    @Column(name = "PRJ_CHANCE_ID")
+    private Long prjChanceId;
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY) // cascade = CascadeType.PERSIST,
-    @JoinColumn(name = "PRJ_ID", nullable = false, updatable = false, insertable = false)
-    private Project project;
+    @JoinColumn(name = "PRJ_CHANCE_ID", nullable = false, updatable = false, insertable = false)
+    private ProjectChance projectChance;
 
     public Date getBegDate() {
         return this.begDate;
@@ -58,30 +57,20 @@ public class PrjRightsConfirm extends CommBudget {
         this.depId = depId;
     }
 
-    public Project getProject() {
-        return this.project;
+    public ProjectChance getProjectChance() {
+        return this.projectChance;
     }
 
-    public void setProject(Project project) {
-        this.project = project;
-        this.prjId = project.getId();
+    public void setProjectChance(ProjectChance projectChance) {
+        this.projectChance = projectChance;
+        this.prjChanceId = projectChance.getId();
     }
 
-    public void setPrjId(Long id) {
-        prjId = id;
+    public void setPrjChanceId(Long id) {
+        prjChanceId = id;
     }
 
-    public Long getPrjId() {
-        return prjId;
-    }
-
-    public void copyFrom(PrjChanceRightsConfirm pcrc) {
-        this.depId = pcrc.getDepId();
-        this.name = pcrc.getName();
-        this.expectDate = pcrc.getExpectDate();
-        this.begDate = pcrc.getBegDate();
-        this.endDate = pcrc.getEndDate();
-        this.amount = pcrc.getAmount();
-
+    public Long getPrjChanceId() {
+        return prjChanceId;
     }
 }

@@ -14,9 +14,11 @@ import javax.persistence.criteria.Root;
 import com.ynet.imis.domain.budget.CostBudgetInfo;
 import com.ynet.imis.domain.budget.DepCommBudget;
 import com.ynet.imis.domain.budget.PrjBudget;
+import com.ynet.imis.domain.budget.PrjChanceBudget;
 import com.ynet.imis.repository.budget.CostBudgetInfoRepository;
 import com.ynet.imis.repository.budget.DepCommBudgetRepository;
 import com.ynet.imis.repository.budget.PrjBudgetRepository;
+import com.ynet.imis.repository.budget.PrjChanceBudgetRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -38,6 +40,9 @@ public class DepBudgetServiceImpl implements DepBudgetService {
 
     @Autowired
     PrjBudgetRepository prjBudgetDao;
+
+    @Autowired
+    private PrjChanceBudgetRepository prjChanceBudgetDao;
 
     @Override
     public CostBudgetInfo addCostBudgetInfo(CostBudgetInfo costBudgetInfo) {
@@ -64,8 +69,8 @@ public class DepBudgetServiceImpl implements DepBudgetService {
     }
 
     @Override
-    public List<CostBudgetInfo> getCostCollectionByItemDepId(List<Long> depId, Long itemId, int year) {
-        List<CostBudgetInfo> infos = costBudgetInfoDao.getDepartmentCostCollectionByItem(depId, itemId, year);
+    public List<CostBudgetInfo> getCostCollectionByItemDepId(List<Long> depIds, Long itemId, int year) {
+        List<CostBudgetInfo> infos = costBudgetInfoDao.getDepartmentCostCollectionByItem(depIds, itemId, year);
         return infos;
     }
 
@@ -103,6 +108,47 @@ public class DepBudgetServiceImpl implements DepBudgetService {
         }
 
         return cprjBudgets;
+    }
+
+    @Override
+    public Page<Map<String, Object>> getDepPrjChanceBudgetByPage(int page, int size, Long depId, int year) {
+
+        Specification<PrjChanceBudget> spec = new Specification<PrjChanceBudget>() {
+
+            private static final long serialVersionUID = 1L;
+
+            @Override
+            public Predicate toPredicate(Root<PrjChanceBudget> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+
+                Predicate predicate = null;
+
+                if (depId != null && depId.longValue() != -1) {
+                    predicate = cb.equal(root.<Long>get("depId"), depId);
+                    // if (predicate == null)
+                    // predicate = pred;
+                    // else
+                    // predicate = cb.and(predicate, pred);
+                }
+
+                return predicate;
+            }
+
+        };
+
+        // PageRequest pageReq = PageRequest.of(page, size, sort);
+        Sort sort = Sort.by("id");
+        PageRequest pageReq = PageRequest.of(page, size, sort);
+        Page<PrjChanceBudget> prjBudgets = prjChanceBudgetDao.findAll(spec, pageReq);
+
+        return prjBudgets.map(new Function<PrjChanceBudget, Map<String, Object>>() {
+
+            @Override
+            public Map<String, Object> apply(PrjChanceBudget prjBudget) {
+                return prjBudget.getMapedObject(year);
+
+            }
+        });
+
     }
 
     @Override
@@ -148,6 +194,11 @@ public class DepBudgetServiceImpl implements DepBudgetService {
     @Override
     public void deleteAll() {
         costBudgetInfoDao.deleteAllInBatch();
+    }
+
+    @Override
+    public List<DepCommBudget> getDepCommBudgetsOfYear(List<Long> depIds, int year) {
+        return depCommBudgetDao.getDepCommBudgetsOfYear(depIds, year);
     }
 
 }

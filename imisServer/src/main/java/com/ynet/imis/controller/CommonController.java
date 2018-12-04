@@ -4,22 +4,30 @@
 * @description 
 * @created Wed Sep 26 2018 16:53:24 GMT+0800 (中国标准时间)
 * @copyright YNET
-* @last-modified Thu Nov 15 2018 10:49:04 GMT+0800 (中国标准时间)
+* @last-modified Tue Dec 04 2018 14:53:43 GMT+0800 (中国标准时间)
 */
 
 package com.ynet.imis.controller;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.ynet.imis.domain.menu.Menu;
 import com.ynet.imis.domain.menu.User;
+import com.ynet.imis.domain.org.Custom;
+import com.ynet.imis.domain.org.Department;
+import com.ynet.imis.service.budget.BudgetAdminService;
 import com.ynet.imis.service.menu.MenuService;
+import com.ynet.imis.service.org.CustomService;
+import com.ynet.imis.service.org.DepartmentService;
 import com.ynet.imis.service.utils.InitService;
 
 import org.slf4j.Logger;
@@ -44,6 +52,15 @@ public class CommonController {
 
     @Autowired
     InitService initService;
+
+    @Autowired
+    private DepartmentService departmentService;
+
+    @Autowired
+    private CustomService customService;
+
+    @Autowired
+    BudgetAdminService budgetAdminService;
 
     /**
      * 请求缓存，保存跳转到当前服务前的请求的url
@@ -124,6 +141,52 @@ public class CommonController {
             return res;
 
         }
+    }
+
+    @RequestMapping(value = "/config/budget/settings")
+    public Map<String, Object> getBudgetSettings() {
+        Map<String, Object> map = new HashMap<>();
+
+        map.put("bePrjBudget", "true");
+        map.put("beCommonBudget", "true");
+        Map<String, Object> aMap = budgetAdminService.getMyBudgetSettings();
+        map.putAll(aMap);
+
+        return map;
+    }
+
+    @RequestMapping(value = "/config/dep/deps", method = RequestMethod.GET)
+    public List<Department> getAllDeps() {
+        return departmentService.ListAllDepartments();
+    }
+
+    @RequestMapping(value = "/config/dep/myDeps", method = RequestMethod.GET)
+    public List<Department> getMyDepartments() {
+
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Long pid = user.getDepId();
+        return departmentService.listAllDepartmentByPid(pid);
+
+    }
+
+    @RequestMapping(value = "/config/dep/myDepTree", method = RequestMethod.GET)
+    public List<Department> getMyDepartmentTree() {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Long pid = user.getDepId();
+
+        Department department = departmentService.getDepartmentTreeByPid(pid);
+        List<Department> deps = new ArrayList<Department>();
+        deps.add(department);
+        return deps;
+
+    }
+
+    // custom
+    @RequestMapping(value = "/config/customTree")
+    public List<Custom> customTree() {
+
+        return customService.getCustomTree();
+
     }
 
     @RequestMapping(value = "/config/initSystem", method = RequestMethod.POST)

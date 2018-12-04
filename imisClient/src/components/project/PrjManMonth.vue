@@ -1,10 +1,13 @@
 <template>
   <div>
- 
-    <el-form :model="prjBudget" :rules="budgetRules" ref="prjBudgetForm"
-         style="margin: 0px;padding: 0px;">
+    <el-form
+      :model="prjBudget"
+      :rules="budgetRules"
+      ref="prjBudgetForm"
+      style="margin: 0px;padding: 0px;"
+    >
       <div style="text-align: left">
-           <!-- el-row>
+        <!-- el-row>
             <el-col :span="10">
               <el-form-item label="项目名称:">
               {{prjBudget.prjName}}
@@ -15,55 +18,78 @@
                 {{prjBudget.prjNo}}
               </el-form-item>
             </el-col>
-          </el-row -->
-
-          <el-row>
-            <el-col :span="6">
-              <el-form-item label="项目平均人月费用:" prop="avgManMonthCost">
-                <el-input size="mini" style="width: 130px"  v-model = "prjBudget.avgManMonthCost"  @blur="handleAvgManMonthChange()"  @keyup.enter.native="handleAvgManMonthChange()" />
-              </el-form-item>
-            </el-col>
+        </el-row-->
+        <el-row>
+          <el-col :span="6">
+            <el-form-item label="项目平均人月费用:" prop="avgManMonthCost">
+              <el-input
+                size="mini"
+                style="width: 130px"
+                v-model.number="prjBudget.avgManMonthCost"
+                @blur="handleAvgManMonthChange()"
+                @keyup.enter.native="handleAvgManMonthChange()"
+              />
+            </el-form-item>
+          </el-col>
           <el-col :span="16">
-              <span style="margin-left:40px;">人月合计:</span><span style="margin-left:10px;">{{totalManmonth}}人月</span>
-              <span style="margin-left:20px;">项目费用合计:</span><span style="margin-left:10px;">{{formatMoney(totalAmount, 1) }}元</span>
-            </el-col>
+            <span style="margin-left:40px;">人月合计:</span>
+            <span style="margin-left:10px;">{{totalManmonth}}人月</span>
+            <span style="margin-left:20px;">项目费用合计:</span>
+            <span style="margin-left:10px;">{{formatMoney(totalAmount, 1) }}元</span>
+          </el-col>
+        </el-row>
 
-          </el-row>
-
-          <div  v-for="budget in budgets" :key=budget.year>
-            <template>
-              <el-row>
-                <el-col :span="20"> 
-                  <h3>{{budget.year}}年预算(单位：人月)</h3>
-                </el-col>
-              </el-row>
-              
-          <el-row :gutter="10">
-            <el-col v-for = "item in budget.budgets" :key=item.month :span="4" >
-                  <div style="font-size:14px;padding:5px;">
-                    <div style="line-height:35px;float:left;">
-                      <span style="margin-right:15px;">{{item.month + 1}} 月:</span> 
-                      <el-input class="col-input" v-model="item.manMonth" size="mini" style="width:80px;margin-right:15px;"
-
-                          @blur="handleManMonthChange(item)"  
-                          @keyup.enter.native="handleManMonthChange(item)" prop="manMonth"></el-input><span>人</span>
-
-                    </div>
-                    <div style="clear:both;"></div>
-                    <div style="margin-top:5px;margin-left:50px;float:clear;">共 {{formatMoney(item.amount, 1)}} 元 </div>
-                  </div>
+        <div v-for="budget in budgets" :key="budget.year">
+          <template>
+            <el-row>
+              <el-col :span="20">
+                <h3>{{budget.year}}年预算(单位：人月)</h3>
               </el-col>
-          </el-row>
+            </el-row>
 
-            </template>
-          </div>
+            <el-row :gutter="10">
+              <el-col v-for="item in budget.budgets" :key="item.month" :span="4">
+                <div
+                  style="font-size:14px;padding:5px;"
+                  v-if="item.realAmount == null ||  item.realAmount <= 10"
+                >
+                  <div style="line-height:35px;float:left;">
+                    <span style="margin-right:15px;">{{item.month + 1}} 月:</span>
+                    <el-input
+                      class="col-input"
+                      v-model.number="item.manMonth"
+                      size="mini"
+                      style="width:80px;margin-right:15px;"
+                      @blur="handleManMonthChange(item)"
+                      @keyup.enter.native="handleManMonthChange(item)"
+                      prop="manMonth"
+                    ></el-input>
+                    <span>人</span>
+                  </div>
+                  <div style="clear:both;"></div>
+                  <div
+                    style="margin-top:5px;margin-left:50px;float:clear;"
+                  >共 {{formatMoney(item.amount, 1)}} 元</div>
+                </div>
 
-           <div  class="el-dialog__footer" style="margin: 2px">
-              <el-button size="mini" type="primary" @click="savePrjBudget('prjBudgetForm')">提 交</el-button>
-          </div>
+                <div v-else>
+                  <span style="margin-right:15px;">{{item.month + 1}} 月:</span>
+                  <span>{{item.realManMonth }}人</span>
+
+                  <div
+                    style="margin-top:5px;margin-left:50px;float:clear;"
+                  >共 {{formatMoney(item.realAmount, 1)}} 元</div>
+                </div>
+              </el-col>
+            </el-row>
+          </template>
+        </div>
+
+        <div class="el-dialog__footer" style="margin: 2px">
+          <el-button size="mini" type="primary" @click="savePrjBudget('prjBudgetForm')">提 交</el-button>
+        </div>
       </div>
     </el-form>
-
   </div>
 </template>
 <script>
@@ -77,7 +103,12 @@ export default {
       var _this = this;
       _this.curPrjId = prjId;
       _this.tableLoading = true;
-      _this.getRequest("/budget/project/" + prjId).then(resp => {
+
+      var url;
+      if (this.type && this.type == "chance") url = "budget/prjChance/";
+      else url = "budget/project/";
+
+      _this.getRequest(url + prjId).then(resp => {
         _this.tableLoading = false;
         //        console.log(resp.status);
 
@@ -96,8 +127,12 @@ export default {
       _this.tableLoading = true;
       // console.log(this.prjBudget);
       // console.log(this.budgets);
+      var url;
 
-      _this.postJsonRequest("/budget/project", this.prjBudget).then(resp => {
+      if (this.type && this.type == "chance") url = "budget/prjChance";
+      else url = "budget/project";
+
+      _this.postJsonRequest(url, this.prjBudget).then(resp => {
         _this.tableLoading = false;
         if (resp && resp.status == 200) {
           var data = resp.data;
@@ -122,9 +157,10 @@ export default {
       // console.log(curYear);
       budgets[idx] = new Object();
 
-      if (curYear == theYear)
-        budgets[idx].budgets = this.getEmptyMonthBudgets(data, theYear);
-      else budgets[idx].budgets = new Array();
+      if (curYear == theYear) {
+        budgets[idx].budgets = new Array(12);
+        for (var kk = 0; kk < 12; kk++) budgets[idx].budgets[kk] = null;
+      } else budgets[idx].budgets = new Array();
 
       budgets[idx].year = curYear;
 
@@ -136,9 +172,11 @@ export default {
 
           budgets[idx] = new Object();
 
-          if (curYear == theYear)
-            budgets[idx].budgets = this.getEmptyMonthBudgets(data, theYear);
-          else budgets[idx].budgets = new Array();
+          if (curYear == theYear) {
+            budgets[idx].budgets = new Array(12);
+            for (var kk = 0; kk < 12; kk++) budgets[idx].budgets[kk] = null;
+          } else budgets[idx].budgets = new Array();
+          budgets[idx].budgets = new Array();
           budgets[idx].year = curYear;
         }
 
@@ -152,32 +190,84 @@ export default {
       for (var i = 0; i < budgets.length; i++) {
         if (budgets[i].year != theYear) continue;
         var bgs = budgets[i].budgets;
-        for (var k = 0; k < bgs.length; k++) {
-          if (bgs[k].id == null) data.monthBudgets[idx++] = bgs[k];
+        for (var k = 0; k < 12; k++) {
+          if (bgs[k] == null) {
+            bgs[k] = this.getEmptyMonthBudget(data, theYear, k);
+            data.monthBudgets[idx++] = bgs[k];
+          }
         }
       }
+      // console.log(budgets);
+      // console.log(data);
 
       this.prjBudget = data;
       this.budgets = budgets;
     },
 
-    getEmptyMonthBudgets: function(prjBudget, iyear) {
-      var budgets = new Array(12);
-
-      for (var idx = 0; idx < 12; idx++) {
-        budgets[idx] = {
+    getEmptyMonthBudget: function(prjBudget, iyear, imonth) {
+      if (this.type && this.type == "chance") {
+        return {
           id: null,
-          prjId: prjBudget.prjId,
-          prjBudgetId: prjBudget.id,
+          prjChanceId: prjBudget.prjChanceId,
+          prjChanceBudgetId: prjBudget.id,
           depId: prjBudget.depId,
-          month: idx,
+          month: imonth,
           year: iyear,
           amount: 0,
           manMonth: 0,
           changed: false
         };
+      } else {
+        return {
+          id: null,
+          prjId: prjBudget.prjId,
+          prjBudgetId: prjBudget.id,
+          depId: prjBudget.depId,
+          month: imonth,
+          year: iyear,
+          realAmount: 0,
+          realManMonth: 0,
+          amount: 0,
+          manMonth: 0,
+          changed: false
+        };
       }
+    },
 
+    getEmptyMonthBudgets: function(prjBudget, iyear) {
+      var budgets = new Array(12);
+
+      if (this.type && this.type == "chance") {
+        for (var idx = 0; idx < 12; idx++) {
+          budgets[idx] = {
+            id: null,
+            prjChanceId: prjBudget.prjChanceId,
+            prjChanceBudgetId: prjBudget.id,
+            depId: prjBudget.depId,
+            month: idx,
+            year: iyear,
+            amount: 0,
+            manMonth: 0,
+            changed: false
+          };
+        }
+      } else {
+        for (var idx = 0; idx < 12; idx++) {
+          budgets[idx] = {
+            id: null,
+            prjId: prjBudget.prjId,
+            prjBudgetId: prjBudget.id,
+            depId: prjBudget.depId,
+            month: idx,
+            year: iyear,
+            realAmount: 0,
+            realManMonth: 0,
+            amount: 0,
+            manMonth: 0,
+            changed: false
+          };
+        }
+      }
       return budgets;
     },
 
@@ -190,23 +280,25 @@ export default {
     },
 
     updateTotal: function() {
-      var totalAmount = 0,
-        totalMan = 0;
+      var totalAmount = 0.0,
+        totalMan = 0.0;
       for (var idx = 0; idx < this.prjBudget.monthBudgets.length; idx++) {
-        totalMan = totalMan + this.prjBudget.monthBudgets[idx].manMonth;
+        totalMan += parseFloat(this.prjBudget.monthBudgets[idx].manMonth);
         totalAmount = totalAmount + this.prjBudget.monthBudgets[idx].amount;
       }
       this.totalAmount = totalAmount;
       this.totalManmonth = totalMan;
-      console.log(this.totalManmonth + ":" + this.totalAmount);
+      // console.log(totalMan);
+      // console.log(this.totalManmonth + ":" + this.totalAmount);
     },
 
     handleAvgManMonthChange: function() {
-      var totalAmount = 0,
-        totalMan = 0;
-      var amount, manmonth;
+      var totalAmount = 0.0,
+        totalMan = 0.0;
+      var amount = 0,
+        manmonth = 0;
       for (var idx = 0; idx < this.prjBudget.monthBudgets.length; idx++) {
-        manmonth = this.prjBudget.monthBudgets[idx].manMonth;
+        manmonth = parseFloat(this.prjBudget.monthBudgets[idx].manMonth);
         amount = manmonth * this.prjBudget.avgManMonthCost;
 
         this.prjBudget.monthBudgets[idx].amount = amount;
@@ -215,7 +307,7 @@ export default {
       }
       this.totalAmount = totalAmount;
       this.totalManmonth = totalMan;
-      console.log(this.totalManmonth + ":" + this.totalAmount);
+      // console.log(this.totalManmonth + ":" + this.totalAmount);
     }
   }, //methods
 
@@ -253,6 +345,6 @@ export default {
     };
   }, //data
 
-  props: ["prjid"]
+  props: ["prjid", "type"]
 };
 </script>
