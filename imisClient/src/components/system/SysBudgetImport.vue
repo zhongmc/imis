@@ -1,5 +1,5 @@
 <template>
-  <div style="margin-top:30px;width:700px;">
+  <div style="margin-top:30px;width:800px;">
     <el-form :rules="rules" :model="adminForm" label-position="left" ref="adminForm">
       <el-row>
         <el-col :span="8">

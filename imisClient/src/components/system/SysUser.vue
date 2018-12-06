@@ -6,29 +6,45 @@
         prefix-icon="el-icon-search"
         size="small"
         style="width: 400px;margin-right: 10px"
-        v-model="keywords">
-      </el-input>
+        v-model="keywords"
+      ></el-input>
       <el-button size="small" type="primary" icon="el-icon-search" @click="searchClick">搜索</el-button>
     </div>
     <div style="display: flex;flex-wrap: wrap;text-align: left;">
-      <el-card style="width: 300px;margin-bottom: 20px;margin-right:20px;" v-for="(item,index) in users" :key="item.id"
-               v-loading="cardLoading[index]">
+      <el-card
+        style="width: 300px;margin-bottom: 20px;margin-right:20px;"
+        v-for="(item,index) in users"
+        :key="item.id"
+        v-loading="cardLoading[index]"
+      >
         <div slot="header" class="clearfix">
           <span>{{item.name}}</span>
-          <el-button type="text"
-                     style="color: #f6061b;margin: 0px;float: right; padding: 3px 0;width: 15px;height:15px"
-                     icon="el-icon-delete" @click="deleteUser(item.id)"></el-button>
+          <el-button
+            type="text"
+            style="color: #f6061b;margin: 0px;float: right; padding: 3px 0;width: 15px;height:15px"
+            icon="el-icon-delete"
+            @click="deleteUser(item.id)"
+          ></el-button>
         </div>
         <div>
           <div style="width: 100%;display: flex;justify-content: center">
-            <img :src="item.avadaImage" :alt="item.nickName" style="width: 100px;height: 70px;border-radius: 70px">
+            <img
+              :src="item.avadaImage"
+              :alt="item.nickName"
+              style="width: 100px;height: 70px;border-radius: 70px"
+            >
           </div>
           <div style="margin-top: 20px">
-            <div  class="user-info"><span>用户ID: {{item.userName}}</span></div>
-            <div  class="user-info"><span>用户名: {{item.nickName}}</span></div>
-            <div class="user-info"><span>所属部门: {{formatDepartmentName(item.depId)}}</span></div>
-            <div class="user-info" style="display: flex;align-items: center;">
-              用户状态:
+            <div class="user-info">
+              <span>用户ID: {{item.userName}}</span>
+            </div>
+            <div class="user-info">
+              <span>用户名: {{item.nickName}}</span>
+            </div>
+            <div class="user-info">
+              <span>所属部门: {{formatDepartmentName(item.depId)}}</span>
+            </div>
+            <div class="user-info" style="display: flex;align-items: center;">用户状态:
               <el-switch
                 style="display: inline;margin-left: 15px;font-size:10px;"
                 v-model="item.status"
@@ -37,53 +53,54 @@
                 active-text="启用"
                 active-value="ACTIVE"
                 inactive-value="FREEZE"
-                
                 @change="switchChange(item.status,item.id,index)"
-                inactive-text="禁用">
-              </el-switch>
+                inactive-text="禁用"
+              ></el-switch>
+
+              <el-button size="mini" @click="resetPassword(item, index)">重置密码</el-button>
             </div>
-            <div class="user-info">
-              用户角色:
+            <div class="user-info">用户角色:
               <el-tag
                 v-for="role in item.roles"
                 :key="role.id"
                 type="success"
                 size="mini"
                 style="margin-right: 15px"
-                :disable-transitions="false">{{role.nameZh}}
-              </el-tag>
+                :disable-transitions="false"
+              >{{role.nameZh}}</el-tag>
               <el-popover
                 v-loading="eploading[index]"
                 placement="right"
                 title="角色列表"
                 width="200"
                 @hide="updateUserRoles(item.id,index)"
-               
-                trigger="click">
+                trigger="click"
+              >
                 <el-select v-model="selRoles" multiple placeholder="请选择角色">
-                  <el-option
-                    v-for="ar in allRoles"
-                    :key="ar.id"
-                    :label="ar.nameZh"
-                    :value="ar.id">
-                  </el-option>
+                  <el-option v-for="ar in allRoles" :key="ar.id" :label="ar.nameZh" :value="ar.id"></el-option>
                 </el-select>
-                <el-button type="text" icon="el-icon-more" style="color: #09c0f6;padding-top: 0px" slot="reference"
-                           @click="loadSelRoles(item.roles,index)" :disabled="moreBtnState"></el-button>
-<!--                <i class="el-icon-more" style="color: #09c0f6;cursor: pointer" slot="reference"
-                   @click="loadSelRoles(item.roles,index)" disabled="true"></i>-->
+                <el-button
+                  type="text"
+                  icon="el-icon-more"
+                  style="color: #09c0f6;padding-top: 0px"
+                  slot="reference"
+                  @click="loadSelRoles(item.roles,index)"
+                  :disabled="moreBtnState"
+                ></el-button>
+                <!--                <i class="el-icon-more" style="color: #09c0f6;cursor: pointer" slot="reference"
+                @click="loadSelRoles(item.roles,index)" disabled="true"></i>-->
               </el-popover>
             </div>
-            <div><span class="user-info">备注:{{item.remark}}</span></div>
+            <div>
+              <span class="user-info">备注:{{item.remark}}</span>
+            </div>
           </div>
         </div>
       </el-card>
 
-      <div style="display:flex;align-items:center;">           
-        <el-button type="primary" circle icon="el-icon-plus" @click="showAddUserView">
-           
-          </el-button>
-       </div>
+      <div style="display:flex;align-items:center;">
+        <el-button type="primary" circle icon="el-icon-plus" @click="showAddUserView"></el-button>
+      </div>
     </div>
 
     <el-form :model="user" :rules="rules" ref="addUserForm" style="margin: 0px;padding: 0px;">
@@ -93,68 +110,157 @@
           style="padding: 0px;"
           :close-on-click-modal="false"
           :visible.sync="dialogVisible"
-          width="60%">
+          width="60%"
+        >
           <el-row>
             <el-col :span="12">
-                <el-form-item label="用户ID:" prop="userName">
-                  <el-input  v-model="user.userName" size="mini" style="width: 250px"
-                            placeholder="请输入用户ID"></el-input>
-                </el-form-item>
+              <el-form-item label="用户ID:" prop="userName">
+                <el-input
+                  v-model="user.userName"
+                  size="mini"
+                  style="width: 250px"
+                  placeholder="请输入用户ID"
+                ></el-input>
+              </el-form-item>
             </el-col>
             <el-col :span="12">
-                <el-form-item label="用户名称:" prop="nickName">
-                  <el-input  v-model="user.nickName" size="mini" style="width: 150px"
-                            placeholder="请输入用户名称"></el-input>
-                </el-form-item>
+              <el-form-item label="用户名称:" prop="nickName">
+                <el-input
+                  v-model="user.nickName"
+                  size="mini"
+                  style="width: 150px"
+                  placeholder="请输入用户名称"
+                ></el-input>
+              </el-form-item>
             </el-col>
           </el-row>
 
-              <el-row>
-                <el-col :span="12">
-                  <el-form-item label="所属部门:" prop = "depId">                  
-                  <el-popover
-                    v-model="showOrHidePop"
-                    placement="right"
-                    title="请选择部门"
-                    trigger="manual">
-                    <el-tree :data="deps" :default-expand-all="true" :props="defaultProps" :expand-on-click-node="false"
-                             @node-click="handleNodeClick"></el-tree>
-                    <div slot="reference"
-                         style="width: 230px;height: 26px;display: inline-flex;font-size:13px;border: 1px;border-radius: 5px;border-style: solid;padding-left: 13px;box-sizing:border-box;border-color: #dcdfe6;cursor: pointer;align-items: center"
-                         @click="showDepTree" v-bind:style="{color: depTextColor}">{{departmentName}}
-                    </div>
-                  </el-popover>
-                  </el-form-item>
-                </el-col>
-              </el-row>
-
           <el-row>
             <el-col :span="12">
-                <el-form-item label="密码:" prop="password">
-                  <el-input  v-model="user.password" size="mini" style="width: 150px" :type="passwordType"
-                            placeholder="请输入初始密码"></el-input>
-                </el-form-item>
-            </el-col>
-            <el-col :span="12">
-                <el-form-item label="重试密码:" prop="rePassword">
-                  <el-input  v-model="user.rePassword" size="mini" style="width: 150px"  :type="passwordType"
-                            placeholder="请重试密码">
- <i class="el-icon-view el-input__icon" :style="fontstyle" slot="suffix" @click="showPassword"></i>        <i slot="prefix" class="icon-mima"></i>
-                            
-                            </el-input>
-                </el-form-item>
+              <el-form-item label="所属部门:" prop="depId">
+                <el-popover
+                  v-model="showOrHidePop"
+                  placement="right"
+                  title="请选择部门"
+                  trigger="manual"
+                >
+                  <el-tree
+                    :data="deps"
+                    :default-expand-all="true"
+                    :props="defaultProps"
+                    :expand-on-click-node="false"
+                    @node-click="handleNodeClick"
+                  ></el-tree>
+                  <div
+                    slot="reference"
+                    style="width: 230px;height: 26px;display: inline-flex;font-size:13px;border: 1px;border-radius: 5px;border-style: solid;padding-left: 13px;box-sizing:border-box;border-color: #dcdfe6;cursor: pointer;align-items: center"
+                    @click="showDepTree"
+                    v-bind:style="{color: depTextColor}"
+                  >{{departmentName}}</div>
+                </el-popover>
+              </el-form-item>
             </el-col>
           </el-row>
 
-           <span slot="footer" class="dialog-footer">
-    <el-button size="mini" @click="cancelEdit">取 消</el-button>
-    <el-button size="mini" type="primary" @click="addUser('addUserForm')">确 定</el-button>
-  </span>
+          <el-row>
+            <el-col :span="12">
+              <el-form-item label="密码:" prop="password">
+                <el-input
+                  v-model="user.password"
+                  size="mini"
+                  style="width: 150px"
+                  :type="passwordType"
+                  placeholder="请输入初始密码"
+                ></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="重试密码:" prop="rePassword">
+                <el-input
+                  v-model="user.rePassword"
+                  size="mini"
+                  style="width: 150px"
+                  :type="passwordType"
+                  placeholder="请重试密码"
+                >
+                  <i
+                    class="el-icon-view el-input__icon"
+                    :style="fontstyle"
+                    slot="suffix"
+                    @click="showPassword"
+                  ></i>
+                  <i slot="prefix" class="icon-mima"></i>
+                </el-input>
+              </el-form-item>
+            </el-col>
+          </el-row>
+
+          <span slot="footer" class="dialog-footer">
+            <el-button size="mini" @click="cancelEdit">取 消</el-button>
+            <el-button size="mini" type="primary" @click="addUser('addUserForm')">确 定</el-button>
+          </span>
         </el-dialog>
       </div>
-    </el-form> <!-- end user edit/add form dialog -->
+    </el-form>
+    <!-- end user edit/add form dialog -->
+    <el-form
+      label-position="right"
+      :model="passwordForm"
+      :rules="rules"
+      ref="passwordForm"
+      style="margin: 0px;padding: 0px;"
+    >
+      <div style="text-align: left">
+        <el-dialog
+          :title="dialogTitle"
+          style="padding: 0px;"
+          :close-on-click-modal="false"
+          :visible.sync="resetPassDlgVisible"
+          width="30%"
+        >
+          <el-row>
+            <el-col :span="20">
+              <el-form-item label="新密码:" prop="password">
+                <el-input
+                  v-model="passwordForm.password"
+                  size="mini"
+                  style="width: 150px"
+                  :type="passwordType"
+                  placeholder="请输入新密码"
+                ></el-input>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="20">
+              <el-form-item label="重试密码:" prop="resetRePassword">
+                <el-input
+                  v-model="passwordForm.rePassword"
+                  size="mini"
+                  style="width: 150px"
+                  :type="passwordType"
+                  placeholder="请重试密码"
+                >
+                  <i
+                    class="el-icon-view el-input__icon"
+                    :style="fontstyle"
+                    slot="suffix"
+                    @click="showPassword"
+                  ></i>
+                  <i slot="prefix" class="icon-mima"></i>
+                </el-input>
+              </el-form-item>
+            </el-col>
+          </el-row>
 
-
+          <span slot="footer" class="dialog-footer">
+            <el-button size="mini" @click="cancelResetPassword">取 消</el-button>
+            <el-button size="mini" type="primary" @click="doResetPassword('passwordForm')">确 定</el-button>
+          </span>
+        </el-dialog>
+      </div>
+    </el-form>
+    <!-- end reset password fomrm -->
   </div>
 </template>
 <script>
@@ -164,6 +270,18 @@ export default {
       if (value === "") {
         callback(new Error("请输入重试密码"));
       } else if (value != this.user.password) {
+        callback(new Error("密码不一致！"));
+      } else {
+        callback();
+      }
+    };
+
+    var validateResetPass = (rule, value, callback) => {
+      //value undefined???
+      value = this.passwordForm.rePassword;
+      if (value === "") {
+        callback(new Error("请输入重试密码"));
+      } else if (value != this.passwordForm.password) {
         callback(new Error("密码不一致！"));
       } else {
         callback();
@@ -198,6 +316,16 @@ export default {
       },
       departmentName: "",
 
+      curIndex: -1,
+      resetPassDlgVisible: false,
+
+      passwordForm: {
+        id: null,
+        username: "",
+        password: "",
+        rePassword: ""
+      },
+
       rules: {
         userName: [
           { required: true, message: "用户ID不能为空", trigger: "blur" }
@@ -215,6 +343,10 @@ export default {
         ],
         rePassword: [
           { required: true, trigger: "blur", validator: validatePass }
+        ],
+
+        resetRePassword: [
+          { required: true, trigger: "blur", validator: validateResetPass }
         ]
       },
 
@@ -261,6 +393,47 @@ export default {
     cancelEdit() {
       this.dialogVisible = false;
       //     this.emptyEmpData();
+    },
+
+    resetPassword(user, index) {
+      this.passwordForm.id = user.id;
+      this.passwordForm.username = user.username;
+      this.curIndex = index;
+      this.resetPassDlgVisible = true;
+      this.passwordForm.password = "";
+      this.passwordForm.rePassword = "";
+      this.dialogTitle = "重置用户密码-" + user.username;
+    },
+
+    cancelResetPassword() {
+      this.passwordForm.id = null;
+      this.passwordForm.username = "";
+      this.curIndex = -1;
+      this.resetPassDlgVisible = false;
+    },
+
+    doResetPassword(formName) {
+      var _this = this;
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+          //添加
+          this.tableLoading = true;
+          this.postRequest("/system/user/resetpassword", this.passwordForm).then(
+            resp => {
+              _this.tableLoading = false;
+              if (resp && resp.status == 200) {
+                var data = resp.data;
+                _this.$message({ type: data.status, message: data.message });
+                _this.resetPassDlgVisible = false;
+                // _this.emptyUserData();
+                // _this.initCards();
+              }
+            }
+          );
+        } else {
+          return false;
+        }
+      });
     },
 
     addUser(formName) {
@@ -400,7 +573,7 @@ export default {
       } else {
         searchWords = this.keywords;
       }
-      this.getRequest("/system/user/" + searchWords).then(resp => {
+      this.getRequest("/system/user/search/" + searchWords).then(resp => {
         if (resp && resp.status == 200) {
           _this.users = resp.data;
           var length = resp.data.length;

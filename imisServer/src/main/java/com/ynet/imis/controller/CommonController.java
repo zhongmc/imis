@@ -4,7 +4,7 @@
 * @description 
 * @created Wed Sep 26 2018 16:53:24 GMT+0800 (中国标准时间)
 * @copyright YNET
-* @last-modified Tue Dec 04 2018 14:53:43 GMT+0800 (中国标准时间)
+* @last-modified Tue Dec 04 2018 21:50:19 GMT+0800 (中国标准时间)
 */
 
 package com.ynet.imis.controller;
@@ -26,6 +26,7 @@ import com.ynet.imis.domain.org.Custom;
 import com.ynet.imis.domain.org.Department;
 import com.ynet.imis.service.budget.BudgetAdminService;
 import com.ynet.imis.service.menu.MenuService;
+import com.ynet.imis.service.menu.UserService;
 import com.ynet.imis.service.org.CustomService;
 import com.ynet.imis.service.org.DepartmentService;
 import com.ynet.imis.service.utils.InitService;
@@ -62,6 +63,8 @@ public class CommonController {
     @Autowired
     BudgetAdminService budgetAdminService;
 
+    @Autowired
+    private UserService userService;
     /**
      * 请求缓存，保存跳转到当前服务前的请求的url
      */
@@ -178,6 +181,22 @@ public class CommonController {
         List<Department> deps = new ArrayList<Department>();
         deps.add(department);
         return deps;
+
+    }
+
+    @RequestMapping(value = "/config/user/changepassword", method = RequestMethod.POST)
+    public ResponseBean changePassword(String password, String newPassword) {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        int ret = userService.changePassword(user, password, newPassword);
+
+        if (ret == 1) {
+            ResponseBean res = new ResponseBean("success", "成功修改密码！", user);
+            return res;
+        } else {
+            ResponseBean res = new ResponseBean("error", "修改密码失败！(" + ret + ")", null);
+            return res;
+
+        }
 
     }
 

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-container>
+    <el-container class="home-container">
       <el-header>
         <div class="home-header">
           <span hidefocus="true" class="menuButton" style="float:left;">
@@ -29,7 +29,8 @@
               <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item>个人中心</el-dropdown-item>
                 <el-dropdown-item>设置</el-dropdown-item>
-                <el-dropdown-item command="logout" divided>注销</el-dropdown-item>
+                <el-dropdown-item command="password">修改密码</el-dropdown-item>
+                <el-dropdown-item command="logout" divided>签退</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
           </div>
@@ -70,6 +71,80 @@
           <div style="clear:both"></div>
           <div>
             <router-view></router-view>
+
+            <el-form
+              :model="passwordForm"
+              :rules="rules"
+              ref="passwordForm"
+              style="margin: 0px;padding: 0px;"
+            >
+              <div style="text-align: left">
+                <el-dialog
+                  :title="dialogTitle"
+                  style="padding: 0px;"
+                  :close-on-click-modal="false"
+                  :visible.sync="dialogVisible"
+                  width="40%"
+                >
+                  <el-row>
+                    <el-col :span="12">
+                      <el-form-item label="密码:" prop="password">
+                        <el-input
+                          v-model="passwordForm.password"
+                          size="mini"
+                          style="width: 150px"
+                          :type="passwordType"
+                          placeholder="请输入初始密码"
+                        ></el-input>
+                      </el-form-item>
+                    </el-col>
+                  </el-row>
+                  <el-row>
+                    <el-col :span="12">
+                      <el-form-item label="新密码:" prop="newPassword">
+                        <el-input
+                          v-model="passwordForm.newPassword"
+                          size="mini"
+                          style="width: 150px"
+                          :type="passwordType"
+                          placeholder="请输入新密码"
+                        ></el-input>
+                      </el-form-item>
+                    </el-col>
+
+                    <el-col :span="12">
+                      <el-form-item label="重试密码:" prop="rePassword">
+                        <el-input
+                          v-model="passwordForm.rePassword"
+                          size="mini"
+                          style="width: 150px"
+                          :type="passwordType"
+                          placeholder="请重试密码"
+                        >
+                          <i
+                            class="el-icon-view el-input__icon"
+                            :style="fontstyle"
+                            slot="suffix"
+                            @click="showPassword"
+                          ></i>
+                          <i slot="prefix" class="icon-mima"></i>
+                        </el-input>
+                      </el-form-item>
+                    </el-col>
+                  </el-row>
+
+                  <span slot="footer" class="dialog-footer">
+                    <el-button size="mini" @click="cancelEdit">取 消</el-button>
+                    <el-button
+                      size="mini"
+                      type="primary"
+                      @click="changePassword('passwordForm')"
+                    >确 定</el-button>
+                  </span>
+                </el-dialog>
+              </div>
+            </el-form>
+            <!-- end user edit/add form dialog -->
           </div>
         </el-main>
       </el-container>
@@ -99,10 +174,45 @@ export default {
   },
 
   data() {
+    var validatePass = (rule, value, callback) => {
+      if (value === "") {
+        callback(new Error("请输入重试密码"));
+      } else if (value != this.passwordForm.newPassword) {
+        callback(new Error("密码不一致！"));
+      } else {
+        callback();
+      }
+    };
+
     return {
       isDot: false,
       isMenuShow: false,
-      showMenuClass: "nav-content hideNav"
+      showMenuClass: "nav-content hideNav",
+
+      dialogTitle: "修改密码",
+      dialogVisible: false,
+      passwordType: "password",
+      fontstyle: {},
+
+      passwordForm: {
+        password: "",
+        newPassword: "",
+        rePassword: ""
+      },
+
+      rules: {
+        password: [
+          { required: true, message: "请输入密码", trigger: "blur" },
+          { min: 6, message: "密码长度最少为6位", trigger: "blur" }
+        ],
+        newPassword: [
+          { required: true, message: "请输入密码", trigger: "blur" },
+          { min: 6, message: "密码长度最少为6位", trigger: "blur" }
+        ],
+        rePassword: [
+          { required: true, trigger: "blur", validator: validatePass }
+        ]
+      }
     };
   },
 
@@ -137,25 +247,72 @@ export default {
     },
 
     handleCommand(cmd) {
-      var _this = this;
       if (cmd == "logout") {
-        this.$confirm("注销登录, 是否继续?", "提示", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning"
-        })
-          .then(() => {
-            _this.getRequest("/logout"); //logout
-            _this.$store.commit("logout");
-            _this.$router.replace({ path: "/" });
-          })
-          .catch(() => {
-            _this.$message({
-              type: "info",
-              message: "取消"
-            });
-          });
+        this.doLogout();
+      } else if (cmd == "password") {
+        this.showChangePasswordDialog();
       }
+    },
+
+    showPassword() {
+      this.fontstyle === ""
+        ? (this.fontstyle = "color: red")
+        : (this.fontstyle = ""); // 改变密码可见按钮颜色
+      this.passwordType === ""
+        ? (this.passwordType = "password")
+        : (this.passwordType = "");
+    },
+
+    showChangePasswordDialog() {
+      this.dialogVisible = true;
+    },
+
+    cancelEdit() {
+      this.dialogVisible = false;
+      //     this.emptyEmpData();
+    },
+
+    changePassword(formName) {
+      var _this = this;
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+          //添加
+          this.tableLoading = true;
+          this.postRequest(
+            "/config/user/changepassword",
+            this.passwordForm
+          ).then(resp => {
+            _this.tableLoading = false;
+            if (resp && resp.status == 200) {
+              var data = resp.data;
+              _this.$message({ type: data.status, message: data.message });
+              _this.dialogVisible = false;
+            }
+          });
+        } else {
+          return false;
+        }
+      });
+    },
+
+    doLogout() {
+      var _this = this;
+      this.$confirm("注销登录, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          _this.getRequest("/logout"); //logout
+          _this.$store.commit("logout");
+          _this.$router.replace({ path: "/" });
+        })
+        .catch(() => {
+          _this.$message({
+            type: "info",
+            message: "取消"
+          });
+        });
     }
   },
 

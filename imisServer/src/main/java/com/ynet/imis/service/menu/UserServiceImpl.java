@@ -100,6 +100,29 @@ public class UserServiceImpl implements UserService {
         return userDao.findAll();
     }
 
+    public int changePassword(User user, String password, String newPassword) {
+        logger.info("Change user " + user.getUsername() + "'s password....");
+        User aUser = userDao.findByUserName(user.getUsername());
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+
+        if (!encoder.matches(password, aUser.getPassword())) {
+            return 2; // password not valid
+        }
+        aUser.setPassword(encoder.encode(newPassword));
+        userDao.save(aUser);
+        return 1;
+    }
+
+    public int resetPassword(Long id, String password) {
+        User aUser = userDao.findUserById(id);
+        if (aUser == null)
+            return 2;
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        aUser.setPassword(encoder.encode(password));
+        userDao.save(aUser);
+        return 1;
+    }
+
     @Override
     public boolean verifyUser(String userName, String password) {
 

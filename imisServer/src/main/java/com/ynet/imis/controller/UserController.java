@@ -58,7 +58,18 @@ public class UserController {
         return new ResponseBean("error", "更新失败!");
     }
 
-    @RequestMapping("/{keywords}")
+    @RequestMapping(value = "/resetpassword", method = RequestMethod.POST) // reset user's password
+    public ResponseBean resetUserPassword(long id, String username, String password, String rePassword) {
+        logger.info("reset user " + username + "'s password to: " + password);
+        int ret = userService.resetPassword(id, password); // , newPassword)
+        if (ret == 1) {
+            return new ResponseBean("success", "重置密码成功！");
+        } else
+            return new ResponseBean("success", "重置密码失败！" + ret);
+
+    }
+
+    @RequestMapping("/search/{keywords}")
     public List<User> getUsersByKeywords(@PathVariable(required = false) String keywords) {
         List<User> hrs = userService.getAllUser();
         return hrs;

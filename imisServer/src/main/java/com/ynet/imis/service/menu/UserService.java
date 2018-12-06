@@ -22,4 +22,8 @@ public interface UserService {
     public List<User> getAllUser();
 
     public boolean verifyUser(String userName, String password);
+
+    public int changePassword(User user, String password, String newPassword);
+
+    public int resetPassword(Long id, String password);
 }

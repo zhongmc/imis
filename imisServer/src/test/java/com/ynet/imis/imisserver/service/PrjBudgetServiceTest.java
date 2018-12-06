@@ -33,7 +33,6 @@ public class PrjBudgetServiceTest extends ImisApplicationTests {
     @Autowired
     private PrjMonthBudgetRepository mbDao;
 
-    @Test
     public void whenAddPrjBudgetSuccess() throws Exception {
 
         Page<Project> pgProjects = prjService.getProjectByPage(0, 2, null, null, null, null, null, null, null);
