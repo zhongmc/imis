@@ -53,7 +53,7 @@ public class PrjBudgetServiceTest extends ImisApplicationTests {
         prjBudget.setDepId(depId);
         prjBudget.setProject(project);
         prjBudget.setAvgManMonthCost(new BigDecimal(12000));
-        prjBudget.setPrjNo(project.getPrjNo());
+        prjBudget.setContractNo(project.getContractNo());
         prjBudget.setPrjName(project.getName());
 
         int count = 0;

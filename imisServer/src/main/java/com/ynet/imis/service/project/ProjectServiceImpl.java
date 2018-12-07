@@ -9,7 +9,15 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.transaction.Transactional;
 
+import com.ynet.imis.domain.budget.PrjBudget;
+import com.ynet.imis.domain.budget.PrjCommBudget;
+import com.ynet.imis.domain.budget.PrjMonthBudget;
+import com.ynet.imis.domain.budget.PrjRightsConfirm;
 import com.ynet.imis.domain.project.Project;
+import com.ynet.imis.repository.budget.PrjBudgetRepository;
+import com.ynet.imis.repository.budget.PrjCommBudgetRepository;
+import com.ynet.imis.repository.budget.PrjMonthBudgetRepository;
+import com.ynet.imis.repository.budget.PrjRightsConfirmRepository;
 import com.ynet.imis.repository.project.ProjectRepository;
 
 import org.slf4j.Logger;
@@ -30,6 +38,18 @@ public class ProjectServiceImpl implements ProjectService {
     @Autowired
     private ProjectRepository projectDao;
 
+    @Autowired
+    private PrjBudgetRepository prjBudgetDao;
+
+    @Autowired
+    private PrjMonthBudgetRepository prjMonthBudgetDao;
+
+    @Autowired
+
+    private PrjRightsConfirmRepository prjRightsConfirmDao;
+    @Autowired
+    private PrjCommBudgetRepository prjCommBudgetDao;
+
     @Override
     public Project addProject(Project project) {
 
@@ -43,12 +63,28 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public int deleteProjectById(Long id) {
+
+        // also delete prjBudget,prjRight prjManmonth
+
+        prjBudgetDao.deleteByPrjId(id);
+        prjMonthBudgetDao.deleteByPrjId(id);
+        prjRightsConfirmDao.deleteByPrjId(id);
+        prjCommBudgetDao.deleteByPrjId(id);
+
         projectDao.deleteById(id);
         return 1;
     }
 
     @Override
     public int updateProject(Project project) {
+
+        // update project budget : contractNo, contractAmount, averageManMonth
+
+        PrjBudget prjBudget = prjBudgetDao.getProjectBudgetByPrjId(project.getId());
+
+        if (prjBudget != null)
+            prjBudgetDao.updatePrjInfo(prjBudget.getId(), project.getContractNo(), project.getContractAmount());
+
         projectDao.save(project);
         return 1;
     }

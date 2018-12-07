@@ -349,7 +349,7 @@ export default {
 
       this.commonItem.id = row.id;
       this.commonItem.depId = row.depId;
-      if (type == "chanceC") this.commonItem.prjChanceId = row.prjChanceId;
+      if (this.type == "chanceC") this.commonItem.prjChanceId = row.prjChanceId;
       else this.commonItem.prjId = row.prjId;
       this.commonItem.name = row.name;
       this.commonItem.amount = row.amount;

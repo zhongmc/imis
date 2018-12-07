@@ -3,13 +3,13 @@
     <div style="width:100%;">
       <!-- 确保下面的内容充满 -->
       <el-row>
-        <el-col :span="8">
-          <label class="el-form-item__label">项目机会名称:</label>
-          <div class="el-form-item__content">{{prjChanceBudget.prjChanceName}}</div>
-        </el-col>
-        <el-col :span="8">
-          <label class="el-form-item__label">项目机会编号:</label>
-          <div class="el-form-item__content">{{prjChanceBudget.prjChanceNo}}</div>
+        <el-col :span="16">
+          <label class="el-form-item__label" style="font-weight:bold;">机会名称:</label>
+          <span class="el-form-item__label">{{prjChanceBudget.prjChanceName}}</span>
+          <label class="el-form-item__label" style="font-weight:bold;">机会编号:</label>
+          <span class="el-form-item__label">{{prjChanceBudget.prjChanceNo}}</span>
+          <label class="el-form-item__label" style="font-weight:bold;">合同金额:</label>
+          <span class="el-form-item__label">{{formatMoney(prjChanceBudget.contractAmount, 1)}}</span>
         </el-col>
       </el-row>
 
@@ -48,6 +48,7 @@ export default {
     this.curPrjChanceId = this.$route.params.id;
     this.prjChanceBudget.prjChanceNo = this.$route.params.prjChanceNo;
     this.prjChanceBudget.prjChanceName = this.$route.params.prjChanceName;
+    this.prjChanceBudget.contractAmount = this.$route.params.contractAmount;
     console.log(
       "prjChanceId:" +
         this.curPrjChanceId +

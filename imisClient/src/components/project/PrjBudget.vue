@@ -3,13 +3,13 @@
     <div style="width:100%;">
       <!-- 确保下面的内容充满 -->
       <el-row>
-        <el-col :span="8">
-          <label class="el-form-item__label">项目名称:</label>
-          <div class="el-form-item__content">{{prjBudget.prjName}}</div>
-        </el-col>
-        <el-col :span="8">
-          <label class="el-form-item__label">项目编号:</label>
-          <div class="el-form-item__content">{{prjBudget.prjNo}}</div>
+        <el-col :span="16">
+          <label class="el-form-item__label" style="font-weight:bold;">名称:</label>
+          <span class="el-form-item__label">{{prjBudget.prjName}}</span>
+          <label class="el-form-item__label" style="font-weight:bold;">合同编号:</label>
+          <span class="el-form-item__label">{{prjBudget.contractNo}}</span>
+          <label class="el-form-item__label" style="font-weight:bold;">合同金额:</label>
+          <span class="el-form-item__label">{{formatMoney(prjBudget.contractAmount, 1)}}</span>
         </el-col>
       </el-row>
 
@@ -58,7 +58,9 @@ export default {
   mounted: function() {
     this.depId = this.$route.params.depId;
     this.curPrjId = this.$route.params.id;
-    this.prjBudget.prjNo = this.$route.params.prjNo;
+    this.prjBudget.contractNo = this.$route.params.contractNo;
+    this.prjBudget.contractAmount = this.$route.params.contractAmount;
+
     this.prjBudget.prjName = this.$route.params.prjName;
     console.log(
       "prjId:" +

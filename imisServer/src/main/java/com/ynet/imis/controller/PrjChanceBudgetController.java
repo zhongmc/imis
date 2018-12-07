@@ -141,6 +141,10 @@ public class PrjChanceBudgetController {
     @RequestMapping(value = "/prjChance/confirm", method = RequestMethod.PUT)
     public ResponseBean updatePrjChanceRightsConfirm(PrjChanceRightsConfirm prjChanceRightsConfirm) {
         logger.info("update project Chance PrjRightsConfirm : " + ImisUtils.objectJsonStr(prjChanceRightsConfirm));
+      
+        //delete to update the month budgets
+        prjChanceBudgetService.deletePrjChanceRightsConfirm(prjChanceRightsConfirm.getId());
+
         PrjChanceRightsConfirm pcb = prjChanceBudgetService.savePrjChanceRightsConfirm(prjChanceRightsConfirm);
         if (pcb != null) {
             return new ResponseBean("success", "修改成功!", pcb);

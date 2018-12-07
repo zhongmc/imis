@@ -4,7 +4,7 @@
 * @description 
 * @created Wed Oct 10 2018 10:52:05 GMT+0800 (中国标准时间)
 * @copyright YNET
-* @last-modified Fri Nov 30 2018 14:20:04 GMT+0800 (中国标准时间)
+* @last-modified Thu Dec 06 2018 11:32:22 GMT+0800 (中国标准时间)
 */
 
 package com.ynet.imis.repository.budget;
@@ -27,6 +27,14 @@ public interface PrjBudgetRepository extends JpaRepository<PrjBudget, Long>, Jpa
 
     @Query("select a from PrjBudget a where a.depId=?1")
     public List<PrjBudget> getDepPrjBudgets(Long depId);
+
+    @Modifying
+    @Query("update PrjBudget a set a.contractNo=?2, a.contractAmount=?3 where a.id=?1")
+    public void updatePrjInfo(Long id, String contractNo, BigDecimal contractAmount);
+
+    @Modifying
+    @Query("delete from PrjBudget a where a.prjId =?1")
+    public void deleteByPrjId(Long id);
 
     @Modifying
     @Query("update PrjBudget a set a.avgManMonthCost= :amount where a.id=:id")

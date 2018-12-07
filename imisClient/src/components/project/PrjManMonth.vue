@@ -21,7 +21,7 @@
         </el-row-->
         <el-row>
           <el-col :span="6">
-            <el-form-item label="项目平均人月费用:" prop="avgManMonthCost">
+            <el-form-item label="项目平均人月费用:" style="font-weight:bold;" prop="avgManMonthCost">
               <el-input
                 size="mini"
                 style="width: 130px"
@@ -31,11 +31,24 @@
               />
             </el-form-item>
           </el-col>
-          <el-col :span="16">
-            <span style="margin-left:40px;">人月合计:</span>
-            <span style="margin-left:10px;">{{totalManmonth}}人月</span>
-            <span style="margin-left:20px;">项目费用合计:</span>
-            <span style="margin-left:10px;">{{formatMoney(totalAmount, 1) }}元</span>
+
+          <el-col :span="4">
+            <el-form-item label="增值税率:" style="font-weight:bold;" prop="taxRate">
+              <el-input size="mini" style="width: 60px" v-model.number="prjBudget.taxRate"/>
+            </el-form-item>
+          </el-col>
+
+          <el-col :span="12">
+            <span class="el-form-item__label" style="margin-left:40px;font-weight:bold;">人月合计:</span>
+            <span
+              class="el-form-item__label"
+              style="margin-left:10px;"
+            >{{totalManmonth}}&nbsp;&nbsp;人月</span>
+            <span class="el-form-item__label" style="margin-left:20px;font-weight:bold;">项目费用合计:</span>
+            <span
+              class="el-form-item__label"
+              style="margin-left:10px;"
+            >{{formatMoney(totalAmount, 1) }}&nbsp;&nbsp;元</span>
           </el-col>
         </el-row>
 
@@ -48,6 +61,35 @@
             </el-row>
 
             <el-row :gutter="10">
+              <el-col v-for="item in budget.budgets" :key="item.month" :span="8">
+                <div
+                  style="line-height:40px;font-size:14px;"
+                  v-if="item.realAmount == null ||  item.realAmount <= 10"
+                >
+                  <span style="font-weight:bold;">{{item.month + 1}}月:&nbsp;&nbsp;</span>
+                  <el-input
+                    class="col-input"
+                    v-model.number="item.manMonth"
+                    size="mini"
+                    style="width:60px;"
+                    @blur="handleManMonthChange(item)"
+                    @keyup.enter.native="handleManMonthChange(item)"
+                    prop="manMonth"
+                  ></el-input>
+                  <span>人;&nbsp;</span>
+                  <span>共{{formatMoney(item.amount, 1)}}元.</span>
+                </div>
+
+                <div style="line-height:40px;font-size:14px;" v-else>
+                  <span style="font-weight:bold;">{{item.month + 1}}月:&nbsp;&nbsp;</span>
+                  <span>{{item.realManMonth }}人;&nbsp;</span>
+                  
+                  <span>&nbsp;&nbsp;共{{formatMoney(item.realAmount, 1)}}元.</span>
+                </div>
+              </el-col>
+            </el-row>
+
+            <!-- el-row :gutter="10">
               <el-col v-for="item in budget.budgets" :key="item.month" :span="4">
                 <div
                   style="font-size:14px;padding:5px;"
@@ -81,7 +123,7 @@
                   >共 {{formatMoney(item.realAmount, 1)}} 元</div>
                 </div>
               </el-col>
-            </el-row>
+            </el-row-->
           </template>
         </div>
 
@@ -340,6 +382,10 @@ export default {
         manMonth: [
           { required: true, message: "不能为空", trigger: "blur" },
           { type: "number", message: "人月必须为数字值" }
+        ],
+        taxRate: [
+          { required: true, message: "不能为空", trigger: "blur" },
+          { type: "number", message: "必须为数字值" }
         ]
       }
     };

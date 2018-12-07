@@ -824,6 +824,7 @@ export default {
           id: row.id,
           depId: row.depId,
           prjChanceNo: row.prjChanceNo,
+          contractAmount: row.contractAmount,
           prjChanceName: row.name
         }
       });

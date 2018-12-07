@@ -521,6 +521,10 @@ public class DataImportServiceImpl implements DataImportService {
 
                     prevProject = this.projectDao.save(prevProject);
                     prevPrjBudget.setProject(prevProject);
+
+                    prevPrjBudget.setContractNo(prevProject.getContractNo());
+                    prevPrjBudget.setContractAmount(prevProject.getContractAmount());
+
                     prevPrjBudget = this.prjBudgetDao.save(prevPrjBudget);
 
                     // logger.info("Saved project: " + prevProject.getId() + " " +
@@ -559,6 +563,9 @@ public class DataImportServiceImpl implements DataImportService {
                     project.setDepId(depId);
                     project = this.projectDao.save(project);
                     prjBudget.setProject(project);
+                    prjBudget.setContractNo(project.getContractNo());
+                    prjBudget.setContractAmount(project.getContractAmount());
+
                     prjBudget = this.prjBudgetDao.save(prjBudget);
                     logger.info(" New  project: " + project.getId() + ": " + project.getName() + " budget id: "
                             + prjBudget.getId() + " prj count:" + newPrjCount);
@@ -832,6 +839,10 @@ public class DataImportServiceImpl implements DataImportService {
             project.setDepId(depId);
             project = this.projectDao.save(project);
             prjBudget.setProject(project);
+
+            prjBudget.setContractNo(project.getContractNo());
+            prjBudget.setContractAmount(project.getContractAmount());
+
             prjBudget = this.prjBudgetDao.save(prjBudget);
             logger.info(
                     " New  project! " + project.getId() + ":" + project.getName() + " budgetId: " + prjBudget.getId());

@@ -4,7 +4,7 @@
 * @description 
 * @created Tue Sep 18 2018 16:53:17 GMT+0800 (中国标准时间)
 * @copyright YNET
-* @last-modified Tue Dec 04 2018 09:59:43 GMT+0800 (中国标准时间)
+* @last-modified Fri Dec 07 2018 10:41:40 GMT+0800 (中国标准时间)
 */
 
 package com.ynet.imis.domain.budget;
@@ -43,6 +43,9 @@ public class PrjBudget extends AbstractEntity {
     // private double defferedManMonth;
     // private BigDecimal defferedAmount;
 
+    // 增值税税率
+    // private float taxRate;
+
     private int confirmYear; // 确权年份，是否今年确权
 
     public int getConfirmYear() {
@@ -52,22 +55,6 @@ public class PrjBudget extends AbstractEntity {
     public void setConfirmYear(int confirmYear) {
         this.confirmYear = confirmYear;
     }
-
-    // public double getDefferedManMonth() {
-    // return this.defferedManMonth;
-    // }
-
-    // public void setDefferedManMonth(double defferedManMonth) {
-    // this.defferedManMonth = defferedManMonth;
-    // }
-
-    // public BigDecimal getDefferedAmount() {
-    // return this.defferedAmount;
-    // }
-
-    // public void setDefferedAmount(BigDecimal defferedAmount) {
-    // this.defferedAmount = defferedAmount;
-    // }
 
     @Column(name = "DEP_ID")
     private Long depId;
@@ -87,7 +74,25 @@ public class PrjBudget extends AbstractEntity {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "PRJ_ID", nullable = false, updatable = false, insertable = false)
     private Project project;
-    private String prjNo;
+
+    private String contractNo;
+    private BigDecimal contractAmount;
+
+    public String getContractNo() {
+        return this.contractNo;
+    }
+
+    public void setContractNo(String contractNo) {
+        this.contractNo = contractNo;
+    }
+
+    public BigDecimal getContractAmount() {
+        return this.contractAmount;
+    }
+
+    public void setContractAmount(BigDecimal contractAmount) {
+        this.contractAmount = contractAmount;
+    }
 
     // @Transient
     private String prjName;
@@ -130,14 +135,6 @@ public class PrjBudget extends AbstractEntity {
             this.prjName = project.getName();
         }
 
-    }
-
-    public String getPrjNo() {
-        return this.prjNo;
-    }
-
-    public void setPrjNo(String prjNo) {
-        this.prjNo = prjNo;
     }
 
     public String getPrjName() {
@@ -187,15 +184,16 @@ public class PrjBudget extends AbstractEntity {
     // this.commBudgets = commBudgets;
     // }
 
-    public PrjBudget(Long id, long depId, Long prjId, String prjName, String prjNo, BigDecimal avgMonthCost) {
-        this.id = id;
-        this.depId = depId;
-        this.prjId = prjId;
-        this.prjName = prjName;
-        this.prjNo = prjNo;
-        this.avgManMonthCost = avgMonthCost;
+    // public PrjBudget(Long id, long depId, Long prjId, String prjName, String
+    // prjNo, BigDecimal avgMonthCost) {
+    // this.id = id;
+    // this.depId = depId;
+    // this.prjId = prjId;
+    // this.prjName = prjName;
+    // this.prjNo = prjNo;
+    // this.avgManMonthCost = avgMonthCost;
 
-    }
+    // }
 
     public PrjBudget clone() {
         PrjBudget prjBudget = new PrjBudget();
@@ -204,7 +202,9 @@ public class PrjBudget extends AbstractEntity {
         prjBudget.depId = depId;
         prjBudget.prjId = prjId;
         prjBudget.prjName = prjName;
-        prjBudget.prjNo = prjNo;
+        prjBudget.contractNo = contractNo;
+        prjBudget.contractAmount = contractAmount;
+
         prjBudget.confirmYear = confirmYear;
         // prjBudget.defferedAmount = defferedAmount;
         // prjBudget.defferedManMonth = defferedManMonth;
@@ -219,7 +219,8 @@ public class PrjBudget extends AbstractEntity {
         retMap.put("id", id);
         retMap.put("depId", depId);
         retMap.put("prjId", prjId);
-        retMap.put("prjNo", prjNo);
+        retMap.put("contractNo", contractNo);
+        retMap.put("contractAmount", contractAmount);
         retMap.put("prjName", prjName);
         retMap.put("avgManMonthCost", avgManMonthCost);
 
@@ -239,6 +240,7 @@ public class PrjBudget extends AbstractEntity {
         this.depId = prjChanceBudget.getDepId();
         this.avgManMonthCost = prjChanceBudget.getAvgManMonthCost();
         this.confirmYear = prjChanceBudget.getConfirmYear();
+        this.contractAmount = prjChanceBudget.getContractAmount();
 
         for (PrjChanceMonthBudget prjCMB : prjChanceBudget.getMonthBudgets()) {
             PrjMonthBudget prjMonthBudget = new PrjMonthBudget();

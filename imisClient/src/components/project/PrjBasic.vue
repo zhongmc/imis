@@ -810,7 +810,8 @@ export default {
         params: {
           id: row.id,
           depId: row.depId,
-          prjNo: row.prjNo,
+          contractNo: row.contractNo,
+          contractAmount: row.contractAmount,
           prjName: row.name
         }
       });

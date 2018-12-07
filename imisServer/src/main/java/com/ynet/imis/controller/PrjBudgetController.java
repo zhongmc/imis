@@ -4,7 +4,7 @@
 * @description 
 * @created Wed Oct 10 2018 10:38:38 GMT+0800 (中国标准时间)
 * @copyright YNET
-* @last-modified Sun Nov 04 2018 10:27:24 GMT+0800 (中国标准时间)
+* @last-modified Thu Dec 06 2018 11:29:57 GMT+0800 (中国标准时间)
 */
 
 package com.ynet.imis.controller;
@@ -77,7 +77,8 @@ public class PrjBudgetController {
         PrjBudget prjBudget = new PrjBudget();
         prjBudget.setProject(project);
         // prjBudget.setAvgManMonthCost(new BigDecimal(12000));
-        prjBudget.setPrjNo(project.getPrjNo());
+        prjBudget.setContractNo(project.getContractNo());
+        prjBudget.setContractAmount(project.getContractAmount());
         prjBudget.setPrjName(project.getName());
         prjBudget.setDepId(depId);
 
@@ -152,7 +153,7 @@ public class PrjBudgetController {
     //////// confirm rights confirm
     @RequestMapping(value = "/project/confirm/{prjId}")
     public List<PrjRightsConfirm> getPrjRightsConfirms(@PathVariable Long prjId) {
-        List<PrjRightsConfirm> confirms =  prjBudgetService.getPrjRightsConfirms(prjId);
+        List<PrjRightsConfirm> confirms = prjBudgetService.getPrjRightsConfirms(prjId);
         logger.info("confirms: " + ImisUtils.objectJsonStr(confirms));
         return confirms;
     }
@@ -194,6 +195,10 @@ public class PrjBudgetController {
     @RequestMapping(value = "/project/confirm", method = RequestMethod.PUT)
     public ResponseBean updatePrjRightsConfirm(PrjRightsConfirm prjRightsConfirm) {
         logger.info("update project PrjRightsConfirm : " + ImisUtils.objectJsonStr(prjRightsConfirm));
+
+        // first delete the confirm
+        prjBudgetService.deletePrjRightsConfirm(prjRightsConfirm.getId());
+
         PrjRightsConfirm pcb = prjBudgetService.savePrjRightsConfirm(prjRightsConfirm);
         if (pcb != null) {
             return new ResponseBean("success", "修改成功!", pcb);
