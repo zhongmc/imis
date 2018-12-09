@@ -4,7 +4,7 @@
 * @description 
 * @created Wed Oct 10 2018 10:51:42 GMT+0800 (中国标准时间)
 * @copyright YNET
-* @last-modified Thu Dec 06 2018 11:25:25 GMT+0800 (中国标准时间)
+* @last-modified Sun Dec 09 2018 17:25:19 GMT+0800 (中国标准时间)
 */
 
 package com.ynet.imis.repository.budget;
@@ -26,4 +26,6 @@ public interface PrjCommBudgetRepository extends JpaRepository<PrjCommBudget, Lo
     @Query("delete from PrjCommBudget a where a.prjId =?1")
     public void deleteByPrjId(Long id);
 
+    @Query("select a from PrjCommBudget a where a.depId in ?1 and year(a.expectDate) = ?2")
+    public List<PrjCommBudget> getPrjCommBudgetsByDepId(List<Long> depIds, int year);
 }

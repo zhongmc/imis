@@ -4,7 +4,7 @@
 * @description 项目公共预算条目
 * @created Tue Sep 18 2018 17:37:23 GMT+0800 (中国标准时间)
 * @copyright YNET
-* @last-modified Thu Nov 01 2018 11:06:31 GMT+0800 (中国标准时间)
+* @last-modified Fri Dec 07 2018 14:45:22 GMT+0800 (中国标准时间)
 */
 
 package com.ynet.imis.domain.budget;
@@ -71,13 +71,22 @@ public class PrjCommBudget extends CommBudget {
 
     }
 
-    public PrjCommBudget(Long id, Long prjId, BigDecimal amount, String name, Date expectDate, String desc) {
-        this.id = id;
-        this.prjId = prjId;
-        this.amount = amount;
-        this.name = name;
-        this.expectDate = expectDate;
-        this.desc = desc;
+    public PrjCommBudget copyFrom(PrjChanceCommBudget prjChanceCB) {
+        this.depId = prjChanceCB.getDepId();
+        this.name = prjChanceCB.getName();
+        this.expectDate = prjChanceCB.getExpectDate();
+        this.amount = prjChanceCB.getAmount();
+        return this;
     }
+
+    // public PrjCommBudget(Long id, Long prjId, BigDecimal amount, String name,
+    // Date expectDate, String desc) {
+    // this.id = id;
+    // this.prjId = prjId;
+    // this.amount = amount;
+    // this.name = name;
+    // this.expectDate = expectDate;
+    // this.desc = desc;
+    // }
 
 }

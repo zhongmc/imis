@@ -4,7 +4,7 @@
 * @description 
 * @created Thu Nov 29 2018 14:37:05 GMT+0800 (中国标准时间)
 * @copyright YNET
-* @last-modified Mon Dec 03 2018 19:25:36 GMT+0800 (中国标准时间)
+* @last-modified Sun Dec 09 2018 18:52:19 GMT+0800 (中国标准时间)
 */
 
 package com.ynet.imis.service.budget;
@@ -14,6 +14,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.ynet.imis.domain.budget.PrjChanceBudget;
+import com.ynet.imis.domain.budget.PrjChanceCommBudget;
 import com.ynet.imis.domain.budget.PrjChanceMonthBudget;
 import com.ynet.imis.domain.budget.PrjChanceRightsConfirm;
 
@@ -50,7 +51,16 @@ public interface PrjChanceBudgetService {
     // 根据prjId 取所有的预算
     public List<PrjChanceMonthBudget> getPrjChanceMonthBudgetsByPrjId(List<Long> prjIds, int year);
 
+    // 根据部门id 取所有的项目外采
+    public List<PrjChanceCommBudget> getPrjChanceCommBudgetsByDepId(List<Long> depIds, int year);
+
     public PrjChanceRightsConfirm confirmPrjChanceRight(Long rightId, Date date, BigDecimal amount);
+
+    public List<PrjChanceCommBudget> getPrjChanceCommBudgets(Long prjId);
+
+    public PrjChanceCommBudget savePrjChanceCommBudget(PrjChanceCommBudget prjChanceCommBudget);
+
+    public int deletePrjChanceCommBudget(Long id);
 
     // 清理数据，导入错误时用？
     public void deleteAll();

@@ -4,7 +4,7 @@
 * @description 
 * @created Wed Oct 10 2018 11:11:50 GMT+0800 (中国标准时间)
 * @copyright YNET
-* @last-modified Thu Nov 08 2018 16:30:05 GMT+0800 (中国标准时间)
+* @last-modified Sun Dec 09 2018 17:22:04 GMT+0800 (中国标准时间)
 */
 
 package com.ynet.imis.service.budget;
@@ -55,6 +55,9 @@ public interface PrjBudgetService {
 
     // 根据部门id 取所有的当年确权项目的预算
     public List<PrjMonthBudget> getConfirmedPrjMonthBudgetsByDepId(List<Long> depIds, int year);
+
+    // 根据部门id 取所有的当年外采费用
+    public List<PrjCommBudget> getPrjCommBudgetsByDepId(List<Long> depIds, int year);
 
     // 根据部门id 取所有的项目确权
     public List<PrjRightsConfirm> getPrjRightsConfirmByDepId(List<Long> depIds, int year);

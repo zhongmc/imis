@@ -4,7 +4,7 @@
 * @description 
 * @created Wed Oct 10 2018 11:12:21 GMT+0800 (中国标准时间)
 * @copyright YNET
-* @last-modified Thu Nov 08 2018 14:48:51 GMT+0800 (中国标准时间)
+* @last-modified Sun Dec 09 2018 17:23:32 GMT+0800 (中国标准时间)
 */
 
 package com.ynet.imis.service.budget;
@@ -215,6 +215,11 @@ public class PrjBudgetServiceImpl implements PrjBudgetService {
         prjRIghtsConfirmDao.deleteAllInBatch();
         prjMonthBudgetDao.deleteAllInBatch();
         prjBudgetDao.deleteAllInBatch();
+    }
+
+    @Override
+    public List<PrjCommBudget> getPrjCommBudgetsByDepId(List<Long> depIds, int year) {
+        return prjCommBudgetDao.getPrjCommBudgetsByDepId(depIds, year);
     }
 
 }

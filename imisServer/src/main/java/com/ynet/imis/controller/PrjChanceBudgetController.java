@@ -4,7 +4,7 @@
 * @description 
 * @created Thu Nov 29 2018 14:25:44 GMT+0800 (中国标准时间)
 * @copyright YNET
-* @last-modified Tue Dec 04 2018 10:55:46 GMT+0800 (中国标准时间)
+* @last-modified Fri Dec 07 2018 14:55:00 GMT+0800 (中国标准时间)
 */
 
 package com.ynet.imis.controller;
@@ -15,6 +15,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.ynet.imis.domain.budget.PrjChanceBudget;
+import com.ynet.imis.domain.budget.PrjChanceCommBudget;
 import com.ynet.imis.domain.budget.PrjChanceMonthBudget;
 import com.ynet.imis.domain.budget.PrjChanceRightsConfirm;
 import com.ynet.imis.domain.project.ProjectChance;
@@ -141,8 +142,8 @@ public class PrjChanceBudgetController {
     @RequestMapping(value = "/prjChance/confirm", method = RequestMethod.PUT)
     public ResponseBean updatePrjChanceRightsConfirm(PrjChanceRightsConfirm prjChanceRightsConfirm) {
         logger.info("update project Chance PrjRightsConfirm : " + ImisUtils.objectJsonStr(prjChanceRightsConfirm));
-      
-        //delete to update the month budgets
+
+        // delete to update the month budgets
         prjChanceBudgetService.deletePrjChanceRightsConfirm(prjChanceRightsConfirm.getId());
 
         PrjChanceRightsConfirm pcb = prjChanceBudgetService.savePrjChanceRightsConfirm(prjChanceRightsConfirm);
@@ -154,8 +155,49 @@ public class PrjChanceBudgetController {
 
     @RequestMapping(value = "/prjChance/confirm/{id}", method = RequestMethod.DELETE)
     public ResponseBean deletePrjChanceRightsConfirm(@PathVariable Long id) {
-        logger.info("delete project rights confirm: " + id);
+        logger.info("delete project chance rights confirm: " + id);
         int ret = prjChanceBudgetService.deletePrjChanceRightsConfirm(id);
+
+        if (ret == 1) {
+            return new ResponseBean("success", "删除成功!");
+        }
+        return new ResponseBean("error", "删除失败!");
+    }
+
+    //// prj chance comm costs
+
+    //////// confirm rights confirm
+    @RequestMapping(value = "/prjChance/cost/{prjChanceId}")
+    public List<PrjChanceCommBudget> getPrjChanceCommBudgets(@PathVariable Long prjChanceId) {
+        List<PrjChanceCommBudget> commBudgets = prjChanceBudgetService.getPrjChanceCommBudgets(prjChanceId);
+        return commBudgets;
+    }
+
+    @RequestMapping(value = "/prjChance/cost", method = RequestMethod.POST)
+    public ResponseBean addPrjChanceCommBudget(PrjChanceCommBudget prjChanceCommBudget) {
+        logger.info("add project Chance comm budget: " + ImisUtils.objectJsonStr(prjChanceCommBudget));
+        PrjChanceCommBudget pcb = prjChanceBudgetService.savePrjChanceCommBudget(prjChanceCommBudget);
+        if (pcb != null) {
+            return new ResponseBean("success", "添加成功!", pcb);
+        }
+        return new ResponseBean("error", "添加失败!");
+    }
+
+    @RequestMapping(value = "/prjChance/cost", method = RequestMethod.PUT)
+    public ResponseBean updatePrjChanceCommBudget(PrjChanceCommBudget prjChanceCommBudget) {
+        logger.info("update project Chance PrjRightsConfirm : " + ImisUtils.objectJsonStr(prjChanceCommBudget));
+
+        PrjChanceCommBudget pcb = prjChanceBudgetService.savePrjChanceCommBudget(prjChanceCommBudget);
+        if (pcb != null) {
+            return new ResponseBean("success", "修改成功!", pcb);
+        }
+        return new ResponseBean("error", "修改失败!");
+    }
+
+    @RequestMapping(value = "/prjChance/cost/{id}", method = RequestMethod.DELETE)
+    public ResponseBean deletePrjChanceCommBudget(@PathVariable Long id) {
+        logger.info("delete project Chance comm budget: " + id);
+        int ret = prjChanceBudgetService.deletePrjChanceCommBudget(id);
 
         if (ret == 1) {
             return new ResponseBean("success", "删除成功!");

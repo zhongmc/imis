@@ -94,7 +94,12 @@
 <script>
 export default {
   mounted: function() {
-    this.loadSettings();
+    //   console.log(this.bgsettings);
+    if (this.bgsettings != null) {
+      this.costItems = this.bgsettings.costItems;
+      this.costGroups = this.bgsettings.costGroups;
+    }
+    // this.loadSettings();
   },
 
   methods: {
@@ -127,6 +132,10 @@ export default {
 
     changeDep(depId) {
       this.depId = depId;
+      if (this.bgsettings != null) {
+        this.costItems = this.bgsettings.costItems;
+        this.costGroups = this.bgsettings.costGroups;
+      }
       this.loadData();
     },
 
@@ -354,7 +363,7 @@ export default {
     };
   },
 
-  props: ["budgetTypeId", "editable"]
+  props: ["budgetTypeId", "editable", "bgsettings"]
 };
 </script>
 

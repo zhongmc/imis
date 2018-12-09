@@ -22,11 +22,14 @@ import com.ynet.imis.domain.budget.CostItem;
 import com.ynet.imis.domain.budget.DepCommBudget;
 import com.ynet.imis.domain.budget.PrjBudget;
 import com.ynet.imis.domain.budget.PrjChanceBudget;
+import com.ynet.imis.domain.budget.PrjChanceCommBudget;
 import com.ynet.imis.domain.budget.PrjChanceMonthBudget;
 import com.ynet.imis.domain.budget.PrjChanceRightsConfirm;
+import com.ynet.imis.domain.budget.PrjCommBudget;
 import com.ynet.imis.domain.budget.PrjIncomeForecast;
 import com.ynet.imis.domain.budget.PrjMonthBudget;
 import com.ynet.imis.domain.budget.PrjRightsConfirm;
+import com.ynet.imis.domain.project.Project;
 import com.ynet.imis.domain.project.ProjectChance;
 import com.ynet.imis.service.budget.BudgetAdminService;
 import com.ynet.imis.service.budget.DepBudgetService;
@@ -34,6 +37,7 @@ import com.ynet.imis.service.budget.PrjBudgetService;
 import com.ynet.imis.service.budget.PrjChanceBudgetService;
 import com.ynet.imis.service.org.DepartmentService;
 import com.ynet.imis.service.project.ProjectChanceService;
+import com.ynet.imis.service.project.ProjectService;
 import com.ynet.imis.utils.ImisUtils;
 
 import org.slf4j.Logger;
@@ -63,6 +67,9 @@ public class DepBudgetController {
 
     @Autowired
     private PrjBudgetService prjBudgetService;
+
+    @Autowired
+    private ProjectService projectService;
 
     @Autowired
     private PrjChanceBudgetService prjChanceBudgetService;
@@ -447,13 +454,16 @@ public class DepBudgetController {
 
         // 合同收入
         // CostCollectionItem item1 = new CostCollectionItem("", "合同收入");
-        // 主营业务收入
-        CostCollectionItem item2 = this.loadDeparmentPrjRightConfirms(depIds, year); // shoud have prjIds return
+        // 合同收入、主营业务收入、增值税
+        CostCollectionItem items2[] = this.loadDeparmentPrjRightConfirms(depIds, year); // shoud have prjIds return
         // new CostCollectionItem("", "主营业务收入");
 
+        // 外采统计合同、金额、税
+        CostCollectionItem[] items3 = loadDeparmentPrjCommBudgets(depIds, year);
+
         // 增值税
-        CostCollectionItem item3 = item2.multiply(BigDecimal.valueOf(0.06));
-        item3.setName("增值税");
+        // CostCollectionItem item3 = item2.multiply(BigDecimal.valueOf(0.06));
+        // item3.setName("增值税");
 
         // 主营业务成本
         CostCollectionItem itms[] = this.loadConfirmedDeparmentPrjCosts(depIds, year);
@@ -463,13 +473,14 @@ public class DepBudgetController {
         CostCollectionItem item41 = itms[2];
 
         // 毛利
-        CostCollectionItem item5 = item2.subtract(item3);
-        item5 = item5.subtract(item4);
-        item5 = item5.subtract(item41);
+        CostCollectionItem item5 = items2[1].subtract(items3[0]); // 收入 - 外采
+        item5 = item5.subtract(item4); // - 主营成本
+        item5 = item5.subtract(item41); // - 主营递延
+        item5 = item5.add(items3[2]); // + 税抵扣
         item5.setName("毛利");
 
         // 毛利率
-        CostCollectionItem item6 = item5.divide(item2);
+        CostCollectionItem item6 = item5.divide(items2[1]);
         item6.setName("毛利率");
 
         // 经营费用
@@ -486,17 +497,21 @@ public class DepBudgetController {
         // CostCollectionItem item10 = new CostCollectionItem("", "净利润");
 
         // 净利润率
-        CostCollectionItem item10 = item9.divide(item2);
+        CostCollectionItem item10 = item9.divide(items2[1]);
         item10.setName("净利润率");
-
-        // 概率后机会情况
 
         // 现金流
         CostCollectionItem item11 = this.loadDeparmentPrjIncomes(depIds, year);
 
         // items.add(item1);
-        items.add(item2);
-        items.add(item3);
+        items.add(items2[0]);
+        items.add(items2[1]);
+        items.add(items2[2]);
+
+        items.add(items3[0]);
+        items.add(items3[1]);
+        items.add(items3[2]);
+
         items.add(item4);
         items.add(item41);
         items.add(itms[4]);
@@ -518,13 +533,74 @@ public class DepBudgetController {
 
         ////////// 机会情况统计
 
+        // CostCollectionItem item = new CostCollectionItem("", "机会合同额");
+        // CostCollectionItem item1 = new CostCollectionItem("", "概率后机会合同额");
+        // CostCollectionItem item2 = new CostCollectionItem("", "今年机会投入");
+        // CostCollectionItem item3 = new CostCollectionItem("", "今年机会投入人月");
+        // CostCollectionItem item4 = new CostCollectionItem("", "概率后今年机会投入");
+        // CostCollectionItem item5 = new CostCollectionItem("", "概率后今年机会投入人月");
+        // CostCollectionItem item6 = new CostCollectionItem("", "确权机会主营业务成本");
+        // CostCollectionItem item7 = new CostCollectionItem("", "确权机会主营业务人月数");
+        // CostCollectionItem item8 = new CostCollectionItem("", "概率后确权机会主营业务成本");
+        // CostCollectionItem item9 = new CostCollectionItem("", "概率后确权机会主营业务人月数");
+
         CostCollectionItem[] chanceItems = this.loadDeparmentPrjChanceInfo(depIds, year);
         for (int i = 0; i < chanceItems.length; i++)
             items.add(chanceItems[i]);
 
-        CostCollectionItem[] cits = this.loadDeparmentPrjChanceRightConfirms(depIds, year);
+        // CostCollectionItem item1 = new CostCollectionItem("", "可确权机会合同额");
+        // CostCollectionItem item11 = new CostCollectionItem("", "概率后可确权机会合同额");
+        // CostCollectionItem item12 = new CostCollectionItem("", "概率后可确权机会收入");
+        // CostCollectionItem item13 = new CostCollectionItem("", "概率后可确权机会增值税");
+
+        // CostCollectionItem item2 = new CostCollectionItem("", "外采合同金额");
+        // CostCollectionItem item21 = new CostCollectionItem("", "概率后外采合同金额");
+        // CostCollectionItem item22 = new CostCollectionItem("", "概率后外采金额");
+        // CostCollectionItem item23 = new CostCollectionItem("", "概率后外采增值税抵扣");
+
+        CostCollectionItem[] cits = prjChanceRightsAndCommBudgets(depIds, year); // this.loadDeparmentPrjChanceRightConfirms(depIds,
+                                                                                 // year);
         for (int i = 0; i < cits.length; i++)
             items.add(cits[i]);
+
+        // 含机会的主营业务收入
+        CostCollectionItem item01 = items2[1].add(cits[2]);
+        item01.setName("含机会的主营业务收入");
+        // 含机会的外包成本
+        CostCollectionItem item02 = items3[1].add(cits[5]);
+        item02.setName("含机会的外包成本");
+        // 含机会的外包抵扣
+        CostCollectionItem item03 = items3[2].add(cits[7]);
+        item03.setName("含机会的增值税抵扣");
+        // 含机会的主营业务成本
+        CostCollectionItem item04 = item4.add(item41);
+        item04 = item04.add(chanceItems[8]);
+        item04.setName("含机会的主营业务成本");
+        // 含机会的毛利
+        CostCollectionItem item05 = item01.subtract(item04);
+        item05 = item05.subtract(item02);
+        item05 = item05.add(item03);
+        item05.setName("含机会的毛利");
+        // 含机会的毛利率
+        CostCollectionItem item06 = item05.divide(item01);
+        item06.setName("含机会的毛利率");
+        // 含机会的纯利
+        CostCollectionItem item07 = item05.subtract(item7);
+        item07 = item07.subtract(item8);
+        item07.setName("含机会的纯利");
+
+        // 含机会的纯利率
+        CostCollectionItem item08 = item07.divide(item01);
+        item08.setName("含机会的纯利率");
+
+        items.add(item01);
+        items.add(item02);
+        items.add(item03);
+        items.add(item04);
+        items.add(item05);
+        items.add(item06);
+        items.add(item07);
+        items.add(item08);
 
         return items;
     }
@@ -621,13 +697,18 @@ public class DepBudgetController {
 
         }
 
-        CostCollectionItem[] items = new CostCollectionItem[6];
+        CostCollectionItem[] items = new CostCollectionItem[10];
         items[0] = item;
         items[1] = item1;
-        items[2] = item4;
-        items[3] = item5;
-        items[4] = item2;
-        items[5] = item3;
+        items[2] = item2;
+        items[3] = item3;
+        items[4] = item4;
+        items[5] = item5;
+
+        items[6] = item6;
+        items[7] = item7;
+        items[8] = item8;
+        items[9] = item9;
 
         return items;
 
@@ -636,24 +717,132 @@ public class DepBudgetController {
     /***
      * 确权机会收入统计
      */
-    private CostCollectionItem[] loadDeparmentPrjChanceRightConfirms(List<Long> depIds, int year) {
+    /*
+     * private CostCollectionItem[] loadDeparmentPrjChanceRightConfirms(List<Long>
+     * depIds, int year) {
+     * 
+     * CostCollectionItem item = new CostCollectionItem("", "可确权机会合同额");
+     * CostCollectionItem item1 = new CostCollectionItem("", "概率后可确权机会合同额");
+     * CostCollectionItem item2 = new CostCollectionItem("", "概率后可确权机会收入");
+     * CostCollectionItem item3 = new CostCollectionItem("", "概率后可确权机会增值税");
+     * 
+     * List<PrjChanceRightsConfirm> confirms =
+     * prjChanceBudgetService.getPrjChanceRightsConfirmByDepId(depIds, year);
+     * 
+     * Calendar cal = Calendar.getInstance(); for (PrjChanceRightsConfirm confirm :
+     * confirms) { cal.setTime(confirm.getExpectDate()); int month =
+     * cal.get(Calendar.MONTH); item.addAmount(month, confirm.getAmount());
+     * ProjectChance prj = confirm.getProjectChance(); BigDecimal bgChance = new
+     * BigDecimal(prj.getChance() / 100.0); item1.addAmount(month,
+     * confirm.getAmount().multiply(bgChance)); }
+     * 
+     * CostCollectionItem[] items = new CostCollectionItem[2]; items[0] = item;
+     * items[1] = item1; return items; }
+     */
+    /***
+     * // 机会收入及外采统计
+     */
+    private CostCollectionItem[] prjChanceRightsAndCommBudgets(List<Long> depIds, int year) {
 
-        CostCollectionItem item = new CostCollectionItem("", "可确权机会收入");
-        CostCollectionItem item1 = new CostCollectionItem("", "概率后可确权机会收入");
+        // ArrayList<Long> prjIds = new ArrayList<Long>();
+
+        Map<Long, BigDecimal> prjTaxRates = new HashMap<Long, BigDecimal>();
+        Map<Long, BigDecimal> prjChances = new HashMap<Long, BigDecimal>();
+
+        CostCollectionItem item1 = new CostCollectionItem("", "可确权机会合同额");
+        CostCollectionItem item11 = new CostCollectionItem("", "概率后可确权机会合同额");
+        CostCollectionItem item12 = new CostCollectionItem("", "概率后可确权机会收入");
+        CostCollectionItem item13 = new CostCollectionItem("", "概率后可确权机会增值税");
+
         List<PrjChanceRightsConfirm> confirms = prjChanceBudgetService.getPrjChanceRightsConfirmByDepId(depIds, year);
 
         Calendar cal = Calendar.getInstance();
         for (PrjChanceRightsConfirm confirm : confirms) {
-            cal.setTime(confirm.getBegDate());
-            item.addAmount(cal.get(Calendar.MONTH), confirm.getAmount());
-            ProjectChance prj = confirm.getProjectChance();
-            BigDecimal bgChance = new BigDecimal(prj.getChance() / 100.0);
-            item1.addAmount(cal.get(Calendar.MONTH), confirm.getAmount().multiply(bgChance));
+            cal.setTime(confirm.getExpectDate());
+            int month = cal.get(Calendar.MONTH);
+            item1.addAmount(month, confirm.getAmount());
+
+            BigDecimal rate = new BigDecimal(1.06);
+            BigDecimal chance = prjChances.get(confirm.getPrjChanceId());
+
+            if (chance == null) {
+                ProjectChance prj = this.projectChanceService.getProjectChanceById(confirm.getPrjChanceId());
+                if (prj == null) {
+                    logger.error("project chance with id: " + confirm.getPrjChanceId()
+                            + " not found! when load confirm: " + confirm.getId());
+                } else {
+                    rate = new BigDecimal(1.0 + prj.getTaxRate());
+                    chance = new BigDecimal(prj.getChance() / 100.00);
+                    prjTaxRates.put(prj.getId(), rate);
+                    prjChances.put(prj.getId(), chance);
+                }
+            }
+
+            // ProjectChance prj = confirm.getProjectChance();
+            // BigDecimal bgChance = new BigDecimal(prj.getChance() / 100.0);
+            BigDecimal chancedAmount = confirm.getAmount().multiply(chance);
+            BigDecimal income = chancedAmount.divide(rate, 3);
+            BigDecimal tax = chancedAmount.subtract(income);
+
+            item11.addAmount(month, chancedAmount);
+            item12.addAmount(month, income);
+            item13.addAmount(month, tax);
+
         }
 
-        CostCollectionItem[] items = new CostCollectionItem[2];
-        items[0] = item;
-        items[1] = item1;
+        CostCollectionItem item2 = new CostCollectionItem("", "外采合同金额");
+        CostCollectionItem item21 = new CostCollectionItem("", "概率后外采合同金额");
+        CostCollectionItem item22 = new CostCollectionItem("", "概率后外采金额");
+        CostCollectionItem item23 = new CostCollectionItem("", "概率后外采增值税抵扣");
+
+        List<PrjChanceCommBudget> commBudgets = prjChanceBudgetService.getPrjChanceCommBudgetsByDepId(depIds, year);
+
+        for (int i = 0; i < commBudgets.size(); i++) {
+            PrjChanceCommBudget commBudget = commBudgets.get(i);
+            Date date = commBudget.getExpectDate();
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(date);
+            int month = calendar.get(Calendar.MONTH);
+            BigDecimal amount = commBudget.getAmount();
+            item2.addAmount(month, amount);
+
+            BigDecimal rate = prjTaxRates.get(commBudget.getPrjChanceId());
+            BigDecimal chance = prjChances.get(commBudget.getPrjChanceId());
+
+            if (rate == null) {
+                ProjectChance prj = this.projectChanceService.getProjectChanceById(commBudget.getPrjChanceId());
+                if (prj == null) {
+                    logger.error("project chance with id: " + commBudget.getPrjChanceId()
+                            + " not found! when load commBudget: " + commBudget.getId());
+                } else {
+                    rate = new BigDecimal(1.0 + prj.getTaxRate());
+                    chance = new BigDecimal(prj.getChance() / 100.00);
+                    prjTaxRates.put(prj.getId(), rate);
+                    prjChances.put(prj.getId(), chance);
+                }
+            }
+
+            BigDecimal chanceAmount = amount.multiply(chance);
+            item21.addAmount(month, chanceAmount);
+
+            BigDecimal income = chanceAmount.divide(rate, 3);
+            BigDecimal tax = chanceAmount.subtract(income);
+            item22.addAmount(month, income);
+            item23.addAmount(month, tax);
+
+        }
+
+        CostCollectionItem items[] = new CostCollectionItem[8];
+        items[0] = item1;
+        items[1] = item11;
+        items[2] = item12;
+        items[3] = item13;
+
+        items[4] = item2;
+        items[5] = item21;
+        items[6] = item22;
+        items[7] = item23;
+
         return items;
     }
 
@@ -748,12 +937,17 @@ public class DepBudgetController {
     /***
      * // 确权收入统计
      */
-    private CostCollectionItem loadDeparmentPrjRightConfirms(List<Long> depIds, int year) {
+    private CostCollectionItem[] loadDeparmentPrjRightConfirms(List<Long> depIds, int year) {
 
-        CostCollectionItem item = new CostCollectionItem("", "主营业务收入");
+        CostCollectionItem item = new CostCollectionItem("", "合同收入");
+        CostCollectionItem item1 = new CostCollectionItem("", "主营业务收入");
+        CostCollectionItem item2 = new CostCollectionItem("", "增值税");
+
         List<PrjRightsConfirm> confirms = prjBudgetService.getPrjRightsConfirmByDepId(depIds, year);
 
-        ArrayList<Long> prjIds = new ArrayList<Long>();
+        // ArrayList<Long> prjIds = new ArrayList<Long>();
+
+        Map<Long, Double> prjTaxRates = new HashMap<Long, Double>();
 
         for (int i = 0; i < confirms.size(); i++) {
             PrjRightsConfirm confirm = confirms.get(i);
@@ -764,11 +958,82 @@ public class DepBudgetController {
             BigDecimal amount = confirm.getAmount();
             item.addAmount(month, amount);
 
-            Long prjId = confirm.getPrjId();
-            if (!prjIds.contains(prjId))
-                prjIds.add(prjId);
+            Double rate = prjTaxRates.get(confirm.getPrjId());
+            if (rate == null) {
+                Project prj = this.projectService.getProjectById(confirm.getPrjId());
+                if (prj == null) {
+                    logger.error("project with id: " + confirm.getPrjId() + " not found! when load confirm: "
+                            + confirm.getId());
+                } else {
+                    rate = new Double(prj.getTaxRate());
+                    prjTaxRates.put(prj.getId(), rate);
+                }
+            }
+
+            BigDecimal income = amount.divide(new BigDecimal(1.0 + rate.doubleValue()), 3);
+            BigDecimal tax = amount.subtract(income);
+            item1.addAmount(month, income);
+            item2.addAmount(month, tax);
+
         }
-        return item;
+
+        CostCollectionItem items[] = new CostCollectionItem[3];
+        items[0] = item;
+        items[1] = item1;
+        items[2] = item2;
+
+        return items;
+    }
+
+    /***
+     * // 外采统计
+     */
+    private CostCollectionItem[] loadDeparmentPrjCommBudgets(List<Long> depIds, int year) {
+
+        CostCollectionItem item = new CostCollectionItem("", "外采合同金额");
+        CostCollectionItem item1 = new CostCollectionItem("", "外采金额");
+        CostCollectionItem item2 = new CostCollectionItem("", "增值税抵扣");
+
+        List<PrjCommBudget> commBudgets = prjBudgetService.getPrjCommBudgetsByDepId(depIds, year);
+
+        // ArrayList<Long> prjIds = new ArrayList<Long>();
+
+        Map<Long, Double> prjTaxRates = new HashMap<Long, Double>();
+
+        for (int i = 0; i < commBudgets.size(); i++) {
+            PrjCommBudget commBudget = commBudgets.get(i);
+            Date date = commBudget.getExpectDate();
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(date);
+            int month = calendar.get(Calendar.MONTH);
+            BigDecimal amount = commBudget.getAmount();
+            item.addAmount(month, amount);
+
+            Double rate = prjTaxRates.get(commBudget.getPrjId());
+            if (rate == null) {
+                Project prj = this.projectService.getProjectById(commBudget.getPrjId());
+                if (prj == null) {
+                    logger.error("project with id: " + commBudget.getPrjId() + " not found! when load commBudget: "
+                            + commBudget.getId());
+                } else {
+                    rate = new Double(prj.getTaxRate());
+                    prjTaxRates.put(prj.getId(), rate);
+                }
+            }
+
+            BigDecimal income = amount.divide(new BigDecimal(1.0 + rate.doubleValue()), 3);
+            BigDecimal tax = amount.subtract(income);
+            item1.addAmount(month, income);
+            item2.addAmount(month, tax);
+
+        }
+
+        CostCollectionItem items[] = new CostCollectionItem[3];
+        items[0] = item;
+        items[1] = item1;
+        items[2] = item2;
+
+        return items;
     }
 
     /**
@@ -776,7 +1041,7 @@ public class DepBudgetController {
      */
     private CostCollectionItem loadDeparmentPrjIncomes(List<Long> depIds, int year) {
 
-        CostCollectionItem item = new CostCollectionItem("", "现金流");
+        CostCollectionItem item = new CostCollectionItem("", "现金收入");
         List<PrjIncomeForecast> incomes = prjBudgetService.getPrjIncomesByDepId(depIds, year);
 
         ArrayList<Long> prjIds = new ArrayList<Long>();

@@ -328,10 +328,11 @@
                 </el-select>
               </el-form-item>
             </el-col>
+
             <el-col :span="9">
               <el-form-item label="合同金额:" prop="contractAmount">
                 <el-input
-                  v-model="prj.contractAmount"
+                  v-model.number="prj.contractAmount"
                   size="mini"
                   style="width: 150px"
                   placeholder="合同金额"
@@ -374,6 +375,17 @@
                   type="date"
                   placeholder="结束日期"
                 ></el-date-picker>
+              </el-form-item>
+            </el-col>
+
+            <el-col :span="6">
+              <el-form-item label="增值税率:" prop="taxRate">
+                <el-input
+                  v-model.number="prj.taxRate"
+                  size="mini"
+                  style="width: 60px"
+                  placeholder="请输入增值税率"
+                ></el-input>
               </el-form-item>
             </el-col>
           </el-row>
@@ -486,7 +498,18 @@ export default {
         beginDate: [
           { required: true, message: "必填:启动日期", trigger: "blur" }
         ],
-        endDate: [{ required: true, message: "必填:结束日期", trigger: "blur" }]
+        endDate: [
+          { required: true, message: "必填:结束日期", trigger: "blur" }
+        ],
+
+        taxRate: [
+          { required: true, message: "不能为空", trigger: "blur" },
+          { type: "number", message: "必须为数字值" }
+        ],
+        contractAmount: [
+          { required: true, message: "不能为空", trigger: "blur" },
+          { type: "number", message: "必须为数字值" }
+        ]
       },
       budgetRules: {
         prjManCostAvg: [
@@ -825,6 +848,7 @@ export default {
           depId: row.depId,
           prjChanceNo: row.prjChanceNo,
           contractAmount: row.contractAmount,
+          taxRate: row.taxRate,
           prjChanceName: row.name
         }
       });

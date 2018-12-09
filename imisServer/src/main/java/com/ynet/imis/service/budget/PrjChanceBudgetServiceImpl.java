@@ -4,7 +4,7 @@
 * @description 
 * @created Thu Nov 29 2018 14:37:05 GMT+0800 (中国标准时间)
 * @copyright YNET
-* @last-modified Mon Dec 03 2018 19:25:45 GMT+0800 (中国标准时间)
+* @last-modified Sun Dec 09 2018 18:53:09 GMT+0800 (中国标准时间)
 */
 
 package com.ynet.imis.service.budget;
@@ -15,9 +15,11 @@ import java.util.Date;
 import java.util.List;
 
 import com.ynet.imis.domain.budget.PrjChanceBudget;
+import com.ynet.imis.domain.budget.PrjChanceCommBudget;
 import com.ynet.imis.domain.budget.PrjChanceMonthBudget;
 import com.ynet.imis.domain.budget.PrjChanceRightsConfirm;
 import com.ynet.imis.repository.budget.PrjChanceBudgetRepository;
+import com.ynet.imis.repository.budget.PrjChanceCommBudgetRepository;
 import com.ynet.imis.repository.budget.PrjChanceMonthBudgetRepository;
 import com.ynet.imis.repository.budget.PrjChanceRightsConfirmRepository;
 import com.ynet.imis.repository.project.ProjectChanceRepository;
@@ -41,6 +43,8 @@ public class PrjChanceBudgetServiceImpl implements PrjChanceBudgetService {
 
     @Autowired
     private PrjChanceMonthBudgetRepository prjChanceMonthBudgetDao;
+    @Autowired
+    private PrjChanceCommBudgetRepository prjChanceCommBudgetDao;
 
     @Override
     public PrjChanceBudget getProjectChanceBudgetByPrjId(Long prjId) {
@@ -167,6 +171,29 @@ public class PrjChanceBudgetServiceImpl implements PrjChanceBudgetService {
         prjChanceRightsConfirmDao.deleteAllInBatch();
         prjChanceMonthBudgetDao.deleteAllInBatch();
         prjChanceBudgetDao.deleteAllInBatch();
+    }
+
+    @Override
+    public List<PrjChanceCommBudget> getPrjChanceCommBudgets(Long prjId) {
+        return prjChanceCommBudgetDao.getAllPrjChanceCommBudgetsByPrjId(prjId);
+    }
+
+    @Override
+    public PrjChanceCommBudget savePrjChanceCommBudget(PrjChanceCommBudget prjChanceCommBudget) {
+
+        return prjChanceCommBudgetDao.save(prjChanceCommBudget);
+    }
+
+    @Override
+    public int deletePrjChanceCommBudget(Long id) {
+
+        prjChanceCommBudgetDao.deleteById(id);
+        return 1;
+    }
+
+    @Override
+    public List<PrjChanceCommBudget> getPrjChanceCommBudgetsByDepId(List<Long> depIds, int year) {
+        return prjChanceCommBudgetDao.getAllPrjChanceCommBudgetsByDepIds(depIds, year);
     }
 
 }

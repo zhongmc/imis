@@ -220,7 +220,8 @@ export default {
     this.placeHolder = "请输入新的" + this.name + "名称...";
     (this.label = this.name + "项名称："), this.loadData();
 
-    if (this.type == "chanceC") this.commonItem.prjChanceId = this.prjid;
+    if (this.type == "chanceC" || this.type == "chanceCost")
+      this.commonItem.prjChanceId = this.prjid;
     else this.commonItem.prjId = this.prjid;
 
     // this.commonItem.prjId = this.prjid;
@@ -235,6 +236,8 @@ export default {
       var url;
       if (this.type == "chanceC")
         url = "/budget/prjChance/confirm/" + this.prjid;
+      else if (this.type == "chanceCost")
+        url = "/budget/prjChance/cost/" + this.prjid;
       else url = "/budget/project/" + this.type + "/" + this.prjid;
       //      console.log(url);
 
@@ -242,13 +245,21 @@ export default {
         _this.loading = false;
         if (resp && resp.status == 200) {
           _this.commonItemes = resp.data;
+
+          if (
+            _this.setTotalAmount &&
+            (_this.type == "cost" || _this.type == "chanceCost")
+          ) {
+            _this.setTotalAmount(_this.getTotalAmount()); //call the parent func, trans from props!
+          }
         }
       });
     },
 
     emptyCommonItemData() {
       this.commonItem.id = -1;
-      if (this.type == "chanceC") this.commonItem.prjChanceId = this.prjid;
+      if (this.type == "chanceC" || this.type == "chanceCost")
+        this.commonItem.prjChanceId = this.prjid;
       else this.commonItem.prjId = this.prjid;
       this.commonItem.depId = this.depid;
       this.commonItem.name = "";
@@ -266,6 +277,7 @@ export default {
 
           var url;
           if (this.type == "chanceC") url = "/budget/prjChance/confirm";
+          else if (this.type == "chanceCost") url = "/budget/prjChance/cost";
           else url = "/budget/project/" + this.type;
           this.postRequest(url, this.commonItem).then(resp => {
             _this.tableLoading = false;
@@ -333,6 +345,7 @@ export default {
       var _this = this;
       var url;
       if (this.type == "chanceC") url = "/budget/prjChance/confirm/" + ids;
+      else if (this.type == "chanceCost") url = "/budget/prjChance/cost/" + ids;
       else url = "/budget/project/" + this.type + "/" + ids;
       this.deleteRequest(url).then(resp => {
         _this.tableLoading = false;
@@ -349,7 +362,8 @@ export default {
 
       this.commonItem.id = row.id;
       this.commonItem.depId = row.depId;
-      if (this.type == "chanceC") this.commonItem.prjChanceId = row.prjChanceId;
+      if (this.type == "chanceC" || this.type == "chanceCost")
+        this.commonItem.prjChanceId = row.prjChanceId;
       else this.commonItem.prjId = row.prjId;
       this.commonItem.name = row.name;
       this.commonItem.amount = row.amount;
@@ -406,6 +420,16 @@ export default {
 
       //     console.log("format amount:" + cellValue + "col prop:" + column.property);
       return this.formatMoney(tmp, 1);
+    },
+
+    // 统计总额
+    getTotalAmount() {
+      if (this.commonItemes == null) return 0;
+      var totalAmount = 0.0;
+      for (var i = 0; i < this.commonItemes.length; i++) {
+        totalAmount += this.commonItemes[i].amount;
+      }
+      return totalAmount;
     }
   },
 
@@ -464,8 +488,14 @@ export default {
       }
     };
   },
-
-  props: ["prjid", "type", "depid", "name"]
+  //["prjid", "type", "depid", "name"]
+  props: {
+    prjid: [String, Number],
+    type: String,
+    depid: [String, Number],
+    name: String,
+    setTotalAmount: Function
+  }
 };
 </script>
 

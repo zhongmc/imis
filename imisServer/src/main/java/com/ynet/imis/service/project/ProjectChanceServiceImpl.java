@@ -12,15 +12,19 @@ import javax.transaction.Transactional;
 
 import com.ynet.imis.domain.budget.PrjBudget;
 import com.ynet.imis.domain.budget.PrjChanceBudget;
+import com.ynet.imis.domain.budget.PrjChanceCommBudget;
 import com.ynet.imis.domain.budget.PrjChanceRightsConfirm;
+import com.ynet.imis.domain.budget.PrjCommBudget;
 import com.ynet.imis.domain.budget.PrjRightsConfirm;
 import com.ynet.imis.domain.project.Project;
 import com.ynet.imis.domain.project.ProjectChance;
 import com.ynet.imis.domain.project.ProjectChance.ChanceState;
 import com.ynet.imis.repository.budget.PrjBudgetRepository;
 import com.ynet.imis.repository.budget.PrjChanceBudgetRepository;
+import com.ynet.imis.repository.budget.PrjChanceCommBudgetRepository;
 import com.ynet.imis.repository.budget.PrjChanceMonthBudgetRepository;
 import com.ynet.imis.repository.budget.PrjChanceRightsConfirmRepository;
+import com.ynet.imis.repository.budget.PrjCommBudgetRepository;
 import com.ynet.imis.repository.budget.PrjMonthBudgetRepository;
 import com.ynet.imis.repository.budget.PrjRightsConfirmRepository;
 import com.ynet.imis.repository.project.ProjectChanceRepository;
@@ -61,6 +65,12 @@ public class ProjectChanceServiceImpl implements ProjectChanceService {
     @Autowired
     private PrjRightsConfirmRepository prjRightsConfirmDao;
 
+    @Autowired
+    private PrjCommBudgetRepository prjCommBudgetDao;
+
+    @Autowired
+    private PrjChanceCommBudgetRepository prjChanceCommBudgetDao;
+
     // private PrjMonthBudgetRepository prjMonthBudgetDao;
 
     @Override
@@ -92,6 +102,7 @@ public class ProjectChanceServiceImpl implements ProjectChanceService {
         projectChanceDao.deleteById(id);
         prjChanceBudgetDao.deleteAllByPrjId(id);
         prjChanceMonthBudgetDao.deleteAllByPrjId(id);
+        prjChanceCommBudgetDao.deleteByPrjChanceId(id);
 
         // PrjChanceBudget prjChanceBudget =
         // prjChanceBudgetDao.getProjectChanceBudgetByPrjId(id);
@@ -190,6 +201,8 @@ public class ProjectChanceServiceImpl implements ProjectChanceService {
         List<PrjChanceRightsConfirm> prjChanceConfirms = prjChanceConformDao
                 .getAllPrjChanceRightsConfirmsByPrjChanceId(id);
 
+        List<PrjChanceCommBudget> prjChanceCommBudgets = prjChanceCommBudgetDao.getAllPrjChanceCommBudgetsByPrjId(id);
+
         logger.info("transfer prj chance: " + prjChance.getName() + " to project......");
 
         prj.copyFrom(prjChance);
@@ -214,6 +227,18 @@ public class ProjectChanceServiceImpl implements ProjectChanceService {
                 prjConfirms.add(prjRightsConfirm);
             }
             prjRightsConfirmDao.saveAll(prjConfirms);
+        }
+        if (prjChanceCommBudgets != null && prjChanceCommBudgets.size() > 0) {
+            List<PrjCommBudget> prjCommBudgets = new ArrayList<PrjCommBudget>();
+
+            for (PrjChanceCommBudget prjChanceCommBudget : prjChanceCommBudgets) {
+                PrjCommBudget prjCommBudget = new PrjCommBudget();
+                prjCommBudget.copyFrom(prjChanceCommBudget);
+                prjCommBudget.setPrjId(prj.getId());
+                prjCommBudgets.add(prjCommBudget);
+
+            }
+            prjCommBudgetDao.saveAll(prjCommBudgets);
         }
         projectChanceDao.updateChanceState(id, ChanceState.TO_PRJ);
         prjChanceBudgetDao.deleteAllByPrjId(id);

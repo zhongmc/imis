@@ -15,23 +15,36 @@
 
       <el-tabs type="card" v-model="activeTab">
         <el-tab-pane label="人月" name="manmonth">
-          <man-month v-bind:prjid="this.curPrjId"></man-month>
+          <man-month
+            v-bind:prjid="this.curPrjId"
+            v-bind:contract-amount="this.prjBudget.contractAmount"
+            v-bind:tax-rate="this.taxRate"
+            ref="monthBudget"
+          ></man-month>
         </el-tab-pane>
-        <el-tab-pane label="费用" name="cost">
-          <common-item type="cost" name="费用" v-bind:prjid="this.curPrjId" v-bind:depid="this.depId"></common-item>
-        </el-tab-pane>
-        <el-tab-pane label="收款" name="income">
+        <el-tab-pane label="外采" name="cost">
           <common-item
-            type="income"
-            name="收款"
+            type="cost"
+            name="外采"
+            v-bind:set-total-amount="this.setTotalCostAmount"
             v-bind:prjid="this.curPrjId"
             v-bind:depid="this.depId"
           ></common-item>
         </el-tab-pane>
+
         <el-tab-pane label="确权" name="rights">
           <common-item
             type="confirm"
             name="确权"
+            v-bind:prjid="this.curPrjId"
+            v-bind:depid="this.depId"
+          ></common-item>
+        </el-tab-pane>
+
+        <el-tab-pane label="收款" name="income">
+          <common-item
+            type="income"
+            name="收款"
             v-bind:prjid="this.curPrjId"
             v-bind:depid="this.depId"
           ></common-item>
@@ -51,6 +64,7 @@ export default {
   beforeMount: function() {
     this.curPrjId = this.$route.params.id;
     this.depId = this.$route.params.depId;
+    this.taxRate = this.$route.params.taxRate;
 
     console.log("prjId:" + this.curPrjId + " depId:" + this.depId);
   },
@@ -60,6 +74,7 @@ export default {
     this.curPrjId = this.$route.params.id;
     this.prjBudget.contractNo = this.$route.params.contractNo;
     this.prjBudget.contractAmount = this.$route.params.contractAmount;
+    this.taxRate = this.$route.params.taxRate;
 
     this.prjBudget.prjName = this.$route.params.prjName;
     console.log(
@@ -83,6 +98,11 @@ export default {
           _this.budgetTypes = resp.data.budgetTypes;
         }
       });
+    },
+
+    setTotalCostAmount(totalAmount) {
+      console.log("Total cost amount:" + totalAmount);
+      this.$refs.monthBudget.setTotalCostAmount(totalAmount);
     }
   },
 
@@ -97,95 +117,16 @@ export default {
       activeTab: "manmonth",
       curPrjId: -1,
       depId: -1,
+      taxRate: 0.0,
+
       prjBudget: {
         prjId: -1,
         prjNo: "",
         prjName: "",
+        contractNo: null,
         prjManCostAvg: 0,
         contractAmount: 0,
-        curYearAmount: 0,
-        budgets: [
-          {
-            year: 2017,
-            budgets: [
-              {
-                month: 8,
-                amount: 0,
-                manMonth: 2,
-                costAmount: 0,
-                realManMonth: 0
-              },
-              {
-                month: 9,
-                amount: 0,
-                manMonth: 3,
-                costAmount: 0,
-                realManMonth: 0
-              },
-              {
-                month: 10,
-                amount: 0,
-                manMonth: 1,
-                costAmount: 0,
-                realManMonth: 0
-              },
-              {
-                month: 11,
-                amount: 0,
-                manMonth: 4,
-                costAmount: 0,
-                realManMonth: 0
-              },
-              {
-                month: 12,
-                amount: 0,
-                manMonth: 5,
-                costAmount: 0,
-                realManMonth: 0
-              }
-            ]
-          },
-          {
-            year: 2018,
-            budgets: [
-              {
-                month: 1,
-                amount: 0,
-                manMonth: 3,
-                costAmount: 0,
-                realManMonth: 0
-              },
-              {
-                month: 2,
-                amount: 0,
-                manMonth: 4,
-                costAmount: 0,
-                realManMonth: 0
-              },
-              {
-                month: 3,
-                amount: 0,
-                manMonth: 1,
-                costAmount: 0,
-                realManMonth: 0
-              },
-              {
-                month: 4,
-                amount: 0,
-                manMonth: 2,
-                costAmount: 0,
-                realManMonth: 0
-              },
-              {
-                month: 5,
-                amount: 0,
-                manMonth: 6,
-                costAmount: 0,
-                realManMonth: 0
-              }
-            ]
-          }
-        ]
+        curYearAmount: 0
       }
     };
   }

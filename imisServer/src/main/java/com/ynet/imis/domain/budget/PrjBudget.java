@@ -4,7 +4,7 @@
 * @description 
 * @created Tue Sep 18 2018 16:53:17 GMT+0800 (中国标准时间)
 * @copyright YNET
-* @last-modified Fri Dec 07 2018 10:41:40 GMT+0800 (中国标准时间)
+* @last-modified Fri Dec 07 2018 15:02:06 GMT+0800 (中国标准时间)
 */
 
 package com.ynet.imis.domain.budget;
@@ -42,9 +42,6 @@ public class PrjBudget extends AbstractEntity {
     // 统一计到上年的12月份！！！！
     // private double defferedManMonth;
     // private BigDecimal defferedAmount;
-
-    // 增值税税率
-    // private float taxRate;
 
     private int confirmYear; // 确权年份，是否今年确权
 

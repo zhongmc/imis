@@ -4,7 +4,7 @@
 * @description  项目机会
 * @created Tue Sep 18 2018 18:01:36 GMT+0800 (中国标准时间)
 * @copyright YNET
-* @last-modified Tue Dec 04 2018 09:48:21 GMT+0800 (中国标准时间)
+* @last-modified Fri Dec 07 2018 15:03:45 GMT+0800 (中国标准时间)
 */
 
 package com.ynet.imis.domain.project;
@@ -36,6 +36,17 @@ public class ProjectChance extends AbstractEntity {
 
     public String getName() {
         return this.name;
+    }
+
+    // 增值税税率
+    private double taxRate = 0.06; //
+
+    public double getTaxRate() {
+        return this.taxRate;
+    }
+
+    public void setTaxRate(double taxRate) {
+        this.taxRate = taxRate;
     }
 
     /**

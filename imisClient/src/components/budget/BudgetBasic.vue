@@ -28,7 +28,12 @@
         :label="item.name"
         :name="item.id.toString()"
       >
-        <expense-budget :budgetTypeId="item.id" :editable="true" ref="cost"></expense-budget>
+        <expense-budget
+          :budgetTypeId="item.id"
+          :bgsettings="bgSettings"
+          :editable="true"
+          ref="cost"
+        ></expense-budget>
         <!-- component :is=item.content></component -->
       </el-tab-pane>
 
@@ -77,6 +82,7 @@ export default {
           else _this.activeTab = "" + resp.data.budgetTypes[0].id;
 
           _this.budgetTypes = resp.data.budgetTypes;
+          _this.bgSettings = resp.data;
         }
       });
     },
@@ -115,7 +121,8 @@ export default {
       },
       activeTab: "prjBudget",
       bePrjBudget: false,
-      beCommonBudget: false
+      beCommonBudget: false,
+      bgSettings: null
     };
   }
 };

@@ -15,8 +15,25 @@
 
       <el-tabs type="card" v-model="activeTab">
         <el-tab-pane label="人月" name="manmonth">
-          <man-month v-bind:prjid="this.curPrjChanceId" type="chance"></man-month>
+          <man-month
+            v-bind:prjid="this.curPrjChanceId"
+            v-bind:contract-amount="this.prjChanceBudget.contractAmount"
+            v-bind:tax-rate="this.taxRate"
+            type="chance"
+            ref="monthBudget"
+          ></man-month>
         </el-tab-pane>
+
+        <el-tab-pane label="外采" name="cost">
+          <common-item
+            type="chanceCost"
+            name="外采"
+            v-bind:prjid="this.curPrjChanceId"
+            v-bind:depid="this.depId"
+            v-bind:set-total-amount="this.setTotalCostAmount"
+          ></common-item>
+        </el-tab-pane>
+
         <el-tab-pane label="确权" name="rights">
           <common-item
             type="chanceC"
@@ -40,12 +57,16 @@ export default {
   beforeMount: function() {
     this.curPrjChanceId = this.$route.params.id;
     this.depId = this.$route.params.depId;
+
+    this.taxRate = this.$route.params.taxRate;
+
     console.log("prjChanceId:" + this.curPrjChanceId + " depId:" + this.depId);
   },
 
   mounted: function() {
     this.depId = this.$route.params.depId;
     this.curPrjChanceId = this.$route.params.id;
+    this.taxRate = this.$route.params.taxRate;
     this.prjChanceBudget.prjChanceNo = this.$route.params.prjChanceNo;
     this.prjChanceBudget.prjChanceName = this.$route.params.prjChanceName;
     this.prjChanceBudget.contractAmount = this.$route.params.contractAmount;
@@ -70,6 +91,11 @@ export default {
           _this.budgetTypes = resp.data.budgetTypes;
         }
       });
+    },
+
+    setTotalCostAmount(totalAmount) {
+      console.log("Total cost amount:" + totalAmount);
+      this.$refs.monthBudget.setTotalCostAmount(totalAmount);
     }
   },
 
@@ -83,6 +109,8 @@ export default {
       loading: false,
       activeTab: "manmonth",
       curPrjChanceId: null,
+      taxRate: 0.0,
+
       depId: -1,
       prjChanceBudget: {
         prjChanceId: -1,
@@ -90,89 +118,7 @@ export default {
         prjChanceName: "",
         prjChanceManCostAvg: 0,
         contractAmount: 0,
-        curYearAmount: 0,
-        budgets: [
-          {
-            year: 2017,
-            budgets: [
-              {
-                month: 8,
-                amount: 0,
-                manMonth: 2,
-                costAmount: 0,
-                realManMonth: 0
-              },
-              {
-                month: 9,
-                amount: 0,
-                manMonth: 3,
-                costAmount: 0,
-                realManMonth: 0
-              },
-              {
-                month: 10,
-                amount: 0,
-                manMonth: 1,
-                costAmount: 0,
-                realManMonth: 0
-              },
-              {
-                month: 11,
-                amount: 0,
-                manMonth: 4,
-                costAmount: 0,
-                realManMonth: 0
-              },
-              {
-                month: 12,
-                amount: 0,
-                manMonth: 5,
-                costAmount: 0,
-                realManMonth: 0
-              }
-            ]
-          },
-          {
-            year: 2018,
-            budgets: [
-              {
-                month: 1,
-                amount: 0,
-                manMonth: 3,
-                costAmount: 0,
-                realManMonth: 0
-              },
-              {
-                month: 2,
-                amount: 0,
-                manMonth: 4,
-                costAmount: 0,
-                realManMonth: 0
-              },
-              {
-                month: 3,
-                amount: 0,
-                manMonth: 1,
-                costAmount: 0,
-                realManMonth: 0
-              },
-              {
-                month: 4,
-                amount: 0,
-                manMonth: 2,
-                costAmount: 0,
-                realManMonth: 0
-              },
-              {
-                month: 5,
-                amount: 0,
-                manMonth: 6,
-                costAmount: 0,
-                realManMonth: 0
-              }
-            ]
-          }
-        ]
+        curYearAmount: 0
       }
     };
   }

@@ -20,6 +20,51 @@
             </el-col>
         </el-row-->
         <el-row>
+          <!-- el-col :span="4">
+            <el-form-item label="增值税率:" style="font-weight:bold;" prop="taxRate">
+              <el-input size="mini" style="width: 60px" v-model.number="prjBudget.taxRate"/>
+            </el-form-item>
+          </el-col-->
+          <el-col :span="20">
+            <span class="el-form-item__label" style="margin-left:20px;font-weight:bold;">合同金额:</span>
+            <span
+              class="el-form-item__label"
+              style="margin-left:10px;"
+            >{{formatMoney(contractAmount, 1) }}&nbsp;&nbsp;元</span>
+            
+            <span class="el-form-item__label" style="margin-left:20px;font-weight:bold;">外采:</span>
+            <span
+              class="el-form-item__label"
+              style="margin-left:10px;"
+            >{{formatMoney(totalCostAmount, 1) }}&nbsp;&nbsp;元</span>
+            
+            <span class="el-form-item__label" style="margin-left:20px;font-weight:bold;">收入:</span>
+            <span
+              class="el-form-item__label"
+              style="margin-left:10px;"
+            >{{formatMoney(income, 1) }}&nbsp;&nbsp;元</span>
+            
+            <span class="el-form-item__label" style="margin-left:40px;font-weight:bold;">人月合计:</span>
+            <span
+              class="el-form-item__label"
+              style="margin-left:10px;"
+            >{{totalManmonth}}&nbsp;&nbsp;人月</span>
+            <span class="el-form-item__label" style="margin-left:20px;font-weight:bold;">成本合计:</span>
+            <span
+              class="el-form-item__label"
+              style="margin-left:10px;"
+            >{{formatMoney(totalAmount, 1) }}&nbsp;&nbsp;元</span>
+            
+            <span class="el-form-item__label" style="margin-left:20px;font-weight:bold;">毛利:</span>
+            <span
+              class="el-form-item__label"
+              style="margin-left:10px;"
+            >{{formatMoney(grossProfit, 1) }}&nbsp;&nbsp;元</span>
+            
+            <span class="el-form-item__label" style="margin-left:40px;font-weight:bold;">毛利率:</span>
+            <span class="el-form-item__label" style="margin-left:10px;">{{grossProfitRate}}%</span>
+          </el-col>
+
           <el-col :span="6">
             <el-form-item label="项目平均人月费用:" style="font-weight:bold;" prop="avgManMonthCost">
               <el-input
@@ -30,25 +75,6 @@
                 @keyup.enter.native="handleAvgManMonthChange()"
               />
             </el-form-item>
-          </el-col>
-
-          <el-col :span="4">
-            <el-form-item label="增值税率:" style="font-weight:bold;" prop="taxRate">
-              <el-input size="mini" style="width: 60px" v-model.number="prjBudget.taxRate"/>
-            </el-form-item>
-          </el-col>
-
-          <el-col :span="12">
-            <span class="el-form-item__label" style="margin-left:40px;font-weight:bold;">人月合计:</span>
-            <span
-              class="el-form-item__label"
-              style="margin-left:10px;"
-            >{{totalManmonth}}&nbsp;&nbsp;人月</span>
-            <span class="el-form-item__label" style="margin-left:20px;font-weight:bold;">项目费用合计:</span>
-            <span
-              class="el-form-item__label"
-              style="margin-left:10px;"
-            >{{formatMoney(totalAmount, 1) }}&nbsp;&nbsp;元</span>
           </el-col>
         </el-row>
 
@@ -330,6 +356,8 @@ export default {
       }
       this.totalAmount = totalAmount;
       this.totalManmonth = totalMan;
+
+      this.calculatTheProfit();
       // console.log(totalMan);
       // console.log(this.totalManmonth + ":" + this.totalAmount);
     },
@@ -349,7 +377,33 @@ export default {
       }
       this.totalAmount = totalAmount;
       this.totalManmonth = totalMan;
+      this.calculatTheProfit();
       // console.log(this.totalManmonth + ":" + this.totalAmount);
+    },
+
+    setTotalCostAmount(totalAmount) {
+      this.totalCostAmount = totalAmount;
+      this.calculatTheProfit();
+    },
+
+    calculatTheProfit() {
+      var taxRatePlus = 1.0 + this.taxRate / 100.0;
+
+      this.income =
+        this.contractAmount / taxRatePlus - this.totalCostAmount / taxRatePlus;
+      //    console.log(this.income);
+
+      // console.log(this.contractAmount + ", " + this.totalCostAmount);
+      this.tax =
+        this.contractAmount -
+        this.contractAmount / taxRatePlus -
+        (this.totalCostAmount - this.totalCostAmount / taxRatePlus);
+
+      // console.log("tax: " + this.tax);
+
+      this.grossProfit = this.income - this.totalAmount;
+
+      this.grossProfitRate = (this.grossProfit / this.income) * 100.0;
     }
   }, //methods
 
@@ -369,6 +423,19 @@ export default {
       loading: false,
       multipleSelection: [],
       budgets: [],
+
+      //收入
+      income: 0.0,
+      tax: 0.0,
+      //毛利
+      grossProfit: 0.0,
+
+      //毛利率
+      grossProfitRate: 0,
+
+      //外采
+      totalCostAmount: 0.0,
+      // taxRate: 0.0,
 
       totalManmonth: 0.0,
       totalAmount: 0.0,
@@ -391,6 +458,6 @@ export default {
     };
   }, //data
 
-  props: ["prjid", "type"]
+  props: ["prjid", "type", "contractAmount", "taxRate"]
 };
 </script>
